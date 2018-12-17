@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block title %}Home | ITLab SSL{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-3 col-lg-4 col-lg-offset-4">
+      <!-- <div class="row margin-bottom-20">
+        <div class="col-xs-12">
+          <h2>Hello, <em>{{ user.username }}</em> !</h2>
+        </div>
+      </div> -->
+      <div class="row">
+        <div class="col-xs-12">
+          
+          <!-- <video id=video controls muted>
+            <source src="https://ssl.itlab.ee.ncku.edu.tw:62400/hls/demo.m3u8" type="application/x-mpegURL">
+          </video> -->
+          <video id=video class="video-js vjs-default-skin vjs-big-play-centered" data-setup='{"fluid": true}' controls muted></video>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<!-- <script src="https://cdn.jsdelivr.net/npm/mediaelement@latest/build/mediaelement-and-player.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mediaelement@latest/build/mediaelementplayer.min.css" />
+<script>
+  var player = new MediaElementPlayer('video', {
+    alwaysShowControls: true,
+    forcehls: true,
+    stretching: 'auto',
+    startVolume: 0.0
+  });
+</script> -->
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/video.js@latest/dist/video-js.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/video.js@latest/dist/video.min.js"></script>
+<script>
+  var player = videojs('video', {
+      html5: {
+        hls: {
+          overrideNative: true
+        },
+        nativeAudioTracks: false,
+        nativeVideoTracks: false,
+      }
+  });
+  player.src("https://ssl.itlab.ee.ncku.edu.tw:62400/hls/demo.m3u8");
+</script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+  var video = document.getElementById('video');
+  if(Hls.isSupported()) {
+    console.log('1');
+    var hls = new Hls();
+    hls.loadSource('https://ssl.itlab.ee.ncku.edu.tw:62400/hls/demo.m3u8');
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED,function() {
+      video.play();
+  });
+ }
+  else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    console.log('2');
+    video.src = 'https://ssl.itlab.ee.ncku.edu.tw:62400/hls/demo.m3u8';
+    video.addEventListener('loadedmetadata',function() {
+      video.play();
+    });
+  }
+</script> -->
+
+{% endblock %}

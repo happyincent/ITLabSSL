@@ -1,0 +1,1 @@
+FROM mvertes/alpine-mongo:4.0.3-0

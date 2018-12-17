@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  db:
+    container_name: db-star
+    image: alpine-mongo:star
+    build: ./db
+    restart: always
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - './db/database/:/data/db/'
+
+  web:
+    container_name: web-star
+    image: web:star
+    build: ./web
+    restart: always
+    command: sh -c "tail -f /dev/null"
+    # command: gunicorn star.wsgi:application -c gunicorn.config.py
+    volumes:
+      - './web/app:/www'
+      - '/tmp/key:/tmp/key'
+    depends_on:
+      - db
+  
+  nginx:
+    container_name: nginx-star
+    image: nginx:star
+    build: ./nginx
+    restart: always
+    command: nginx -g 'daemon off;'
+    ports:
+      - "62400:62400"
+      - "1935:1935"
+    volumes:
+      - '/etc/dehydrated/certs/ssl.itlab.ee.ncku.edu.tw/privkey.pem:/opt/nginx/privkey.pem'
+      - '/etc/dehydrated/certs/ssl.itlab.ee.ncku.edu.tw/fullchain.pem:/opt/nginx/fullchain.pem'
+      - './nginx/nginx.conf:/opt/nginx/nginx.conf'
+      - './web/app:/www'
+      - '/tmp/key:/tmp/key'
+    depends_on:
+      - web
