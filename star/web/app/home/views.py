@@ -7,6 +7,14 @@ from django.contrib.auth.decorators import login_required
 class Home(TemplateView):
     template_name = 'home/home.html'
 
+@method_decorator(login_required, name='dispatch')
+class AddDevice(TemplateView):
+    template_name = 'home/add_device.html'
+
+@method_decorator(login_required, name='dispatch')
+class Device(TemplateView):
+    template_name = 'home/device.html'
+
 ###
 
 import os

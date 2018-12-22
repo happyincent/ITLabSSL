@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block bootstrap3_title %}Device Info | ITLab SSL{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row clearfix">
+    <div class="col-md-12 column">
+      <ul class="breadcrumb">
+          <li>
+              <a href="{% url 'home' %}">Home</a>
+          </li>
+          <li class="active">
+              Device Info
+          </li>
+      </ul>
+      <h4>Time: 2018-12-23 00:56</h4>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>
+              溫度
+            </th>
+            <th>
+              濕度
+            </th>
+            <th>
+              光度
+            </th>
+            <th>
+              噪音
+            </th>
+            <th>
+              PM2.5
+            </th>
+            <th>
+              UV
+            </th>
+            <th>
+              IF
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>87'</td><td>87%</td><td>00<td>10-20</td><td>30</td><td>40</td><td>0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row clearfix">
+    <div class="col-md-6 column">
+      <div algin="center" class="embed-responsive embed-responsive-16by9">
+        <video id=video class="embed-responsive-item" controls muted autoplay></video>
+      </div>
+    </div>
+    <div class="col-md-6 column">
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+  var video = document.getElementById('video');
+  if(Hls.isSupported()) {
+    var hls = new Hls();
+    hls.loadSource('https://ssl.itlab.ee.ncku.edu.tw:62400/hls/demo.m3u8');
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED,function() {
+      video.play();
+  });
+ }
+  else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = 'https://ssl.itlab.ee.ncku.edu.tw:62400/hls/demo.m3u8';
+    video.addEventListener('loadedmetadata',function() {
+      video.play();
+    });
+  }
+</script>
+{% endblock %}

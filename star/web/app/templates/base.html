@@ -4,25 +4,18 @@
 {% load staticfiles %}
 
 {% block bootstrap3_title %}
-    {% block title %}
-    {% endblock %}
 {% endblock %}
 
 {# block just before closing </head> #}
 {% block bootstrap3_extra_head %}
     <link rel="shortcut icon" href="/static/home/icon.png"/>
+    <link rel="stylesheet" type="text/css" href="/static/home/footer.css">
     {% block head %}
     {% endblock %}
 {% endblock %}
 
 {% block bootstrap3_content %}
-{% url 'account_login' as login %}
-{% url 'account_signup' as signup %}
-{% url 'account_logout' as logout %}
-{% url 'account_email' as email_url %}
-{% url 'account_change_password' as change_password %}
-{% url 'home' as home %}
-<nav class="navbar navbar-inverse">
+<nav class="navbar navbar-inverse navbar-static-top">
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -30,24 +23,23 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{{ home }}">ITLab Smart Street Light</a>
+            <a class="navbar-brand" href="{% url 'home' %}">ITLab Smart Street Light</a>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
-          <ul class="nav navbar-nav navbar-left">
+          <!-- <ul class="nav navbar-nav navbar-left">
                 {% if user.is_authenticated %}
-                <li><a href="{{ home }}">Home</a></li>
+                <li><a href="{% url 'home' %}">Home</a></li>
                 {% endif %}
-          </ul>
+          </ul> -->
             <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
-                <li><a href="{{ email_url }}">{{ user.email }}</a></li>
-                <li><a href="{{ logout }}">Log Out</a></li>
+                <li><a href="{% url 'account_email' %}">{{ user.email }}</a></li>
+                <li><a href="{% url 'account_logout' %}">Log Out</a></li>
                 {% endif %}
             </ul>
         </div>
     </div>
 </nav>
-
 {% block content %}
 {% endblock %}
 
@@ -55,7 +47,19 @@
 
 {# block just before closing </body> #}
 {% block bootstrap3_extra_script %}
-    <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/autosize.js/3.0.20/autosize.min.js'></script> -->
+<!-- <nav class="navbar navbar-static-bottom">
+        <footer class="page-footer font-small">
+                <div class="footer-copyright text-center py-3">© 2018 happyincent</div>
+            </footer>
+</nav> -->
+
+<footer class="footer">
+<div class="container">
+    <!-- <span class="text-muted">© 2018 happyincent</span> -->
+    <div class="footer-copyright text-center py-3">© 2018 happyincent</div>
+</div>
+</footer>
+
     {% block extra_script %}
     {% endblock %}
 {% endblock %}
