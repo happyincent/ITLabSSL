@@ -10,6 +10,12 @@ class Device(models.Model):
 
     def get_absolute_url(self):
         return reverse('device', kwargs={'name': self.name})
+
+    def update_url(self):
+        return reverse('device_update', kwargs={'pk': self.pk})
+    
+    def delete_url(self):
+        return reverse('device_delete', kwargs={'pk': self.pk})
     
     def __str__(self):
         return self.name

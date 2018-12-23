@@ -50,8 +50,8 @@
                   </td>
                   <td>
                       <div class="btn-group">
-                          <a href="{% url 'device_update' pk=1 %}" class="btn btn-default">Edit</a>
-                          <a href="{% url 'device' %}" class="btn btn-default">Delete</a>
+                          <a href="{{ device.update_url }}" class="btn btn-default">Edit</a>
+                          <a href="{{ device.delete_url }}" class="btn btn-default">Delete</a>
                         </div>
                   </td>
                 </tr>

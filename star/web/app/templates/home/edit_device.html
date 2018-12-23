@@ -19,12 +19,19 @@
                     <a href="{% url 'device_list' %}">Device List</a>
                 </li>
                 <li class="active">
-                    Add Device
+                    Edit Device
                 </li>
             </ul>
-            <form method="post">{% csrf_token %}
+            {% if object %}
+                <h3>Device: {{ object }}</h3>
+            {% else %}
+                <h3>New Device</h3>
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
                 {% bootstrap_form form layout='inline' %}
                 {% bootstrap_button button_type='submit' content='Save' button_class='btn-success' %}
+                <a href="{{request.META.HTTP_REFERER|escape}}" class="btn btn-default">Back</a>
             </form>
         </div>
     </div>

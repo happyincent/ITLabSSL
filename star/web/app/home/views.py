@@ -56,6 +56,14 @@ class DeviceUpdate(UpdateView):
         print(self.object.name)
         return reverse('device_list')
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(verified_email_required, name='dispatch')
+@method_decorator(staff_member_required, name='dispatch')
+class DeviceDelete(DeleteView):
+    model = Device
+    template_name = 'home/delete_device.html'
+    success_url = reverse_lazy('device_list')
+
 ###
 
 @method_decorator(login_required, name='dispatch')
