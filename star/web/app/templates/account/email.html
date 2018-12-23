@@ -60,7 +60,7 @@
 
               <form class="login margin-bottom-20" method="POST" action="">
                 {% csrf_token %}
-                {% bootstrap_form  add_email_form layout='inline' %}
+                {% bootstrap_form add_email_form layout='inline' %}
                 <div class="form-actions margin-top-20">
                   {% bootstrap_button size='small' button_type='submit' name='action_add' content='Add' button_class='btn-info' value='submit' %}
                 </div>
@@ -77,7 +77,7 @@
 
             <div class="panel-footer">
               {% url 'account_change_password' as change_password %}
-              {% bootstrap_button button_type='link' content='Change password' button_class='btn-warning' href=change_password %}
+              {% bootstrap_button button_type='link' content='Change password' button_class='btn-warning btn-block' href=change_password %}
             </div>
           </div>
         </div>

@@ -15,10 +15,14 @@
           <li>
               <a href="{% url 'home' %}">Home</a>
           </li>
+          <li>
+              <a href="{% url 'device_list' %}">Device List</a>
+          </li>
           <li class="active">
               Device Info
           </li>
       </ul>
+      <h2>Device: {{ device_name }}</h2>
       <h4>Time: 2018-12-23 00:56</h4>
       <table class="table table-striped">
         <thead>
@@ -48,7 +52,7 @@
         </thead>
         <tbody>
           <tr>
-            <td>87'</td><td>87%</td><td>00<td>10-20</td><td>30</td><td>40</td><td>0</td>
+            <td>87°C</td><td>87%</td><td>00<td>10-20</td><td>30</td><td>40</td><td>0</td>
           </tr>
         </tbody>
       </table>

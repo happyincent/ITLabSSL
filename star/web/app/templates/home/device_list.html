@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block bootstrap3_title %}Device List | ITLab SSL{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row clearfix">
+    <div class="col-md-12 column">
+      <ul class="breadcrumb">
+        <li>
+            <a href="{% url 'home' %}">Home</a>
+        </li>
+        <li class="active">
+            Device List
+        </li>
+      </ul>
+      <div class="row clearfix">
+        <div class="col-md-6 column">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>
+                  Name
+                </th>
+                <th>
+                  Longitude
+                </th>
+                <th>
+                  Latitude
+                </th>
+                <th>
+                  Status
+                </th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for device in devices %}
+                <tr>
+                  <td>{{device.name}}</td>
+                  <td>{{device.longitude}}</td>
+                  <td>{{device.latitude}}</td>
+                  <td>
+                    <a href="{% url 'device' %}" class="btn btn-default">Show</a>
+                  </td>
+                  <td>
+                      <div class="btn-group">
+                          <a href="{% url 'device_update' pk=1 %}" class="btn btn-default">Edit</a>
+                          <a href="{% url 'device' %}" class="btn btn-default">Delete</a>
+                        </div>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr><td>None</td><td>None</td><td>None</td><td>None</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% if request.user.is_staff %}
+            <a href="{% url 'device_create' %}" class="btn btn-primary">Add New Device</a>
+          {% endif %}
+        </div>
+        <div class="col-md-6 column">
+          <img src="https://i.imgur.com/mM82YXg.png" class="img-responsive"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}

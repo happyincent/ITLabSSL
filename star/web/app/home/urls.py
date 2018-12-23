@@ -4,7 +4,10 @@ from . import views
 
 urlpatterns = [
     path('', views.Home.as_view(), name='home'),
-    path('device', views.Device.as_view(), name='device'),
-    path('add_device', views.AddDevice.as_view(), name='add_device'),
+    path('device_list', views.DeviceList.as_view(), name='device_list'),
+    path('device', views.DeviceInfo.as_view(), name='device'),
+    path('device/<slug:name>', views.DeviceInfo.as_view(), name='device'),
+    path('device_create', views.DeviceCreate.as_view(), name='device_create'),
+    path('device_update/<int:pk>', views.DeviceUpdate.as_view(), name='device_update'),
     path('key/<str:stream>', views.key, name='key'),
 ]
