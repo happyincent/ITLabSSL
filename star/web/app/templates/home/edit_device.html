@@ -9,30 +9,27 @@
 
 {% block content %}
 <div class="container">
-    <div class="row clearfix">
-        <div class="col-md-12 column">
-            <ul class="breadcrumb">
-                <li>
-                    <a href="{% url 'home' %}">Home</a>
-                </li>
-                <li>
-                    <a href="{% url 'device_list' %}">Device List</a>
-                </li>
-                <li class="active">
-                    Edit Device
-                </li>
-            </ul>
-            {% if object %}
-                <h3>Device: {{ object }}</h3>
-            {% else %}
-                <h3>New Device</h3>
-            {% endif %}
-            <form method="post">
-                {% csrf_token %}
-                {% bootstrap_form form layout='inline' %}
-                {% bootstrap_button button_type='submit' content='Save' button_class='btn-success' %}
-                <a href="{{request.META.HTTP_REFERER|escape}}" class="btn btn-default">Back</a>
-            </form>
+    <div class="row">
+        <div class="col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-3 col-lg-4 col-lg-offset-4">
+            <div class="page-header">
+                <h1>
+                    {% if object %}
+                        Edit Device <small>{{ object }}</small>
+                    {% else %}
+                        New Device
+                    {% endif %}
+                </h1>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <form method="post">
+                        {% csrf_token %}
+                        {% bootstrap_form form layout='inline' %}
+                        {% bootstrap_button button_type='submit' content='Save' button_class='btn-success' %}
+                        <a href="{{request.META.HTTP_REFERER|escape}}" class="btn btn-default">Back</a>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
