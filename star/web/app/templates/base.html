@@ -47,12 +47,11 @@
 
 {# block just before closing </body> #}
 {% block bootstrap3_extra_script %}
+    {% block extra_script %}
+    {% endblock %}
     <footer class="footer">
         <div class="container">
             <div class="footer-copyright text-muted text-center">© 2018 happyincent</div>
         </div>
     </footer>
-
-    {% block extra_script %}
-    {% endblock %}
 {% endblock %}
