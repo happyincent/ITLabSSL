@@ -27,8 +27,9 @@
             <thead>
               <tr>
                 <th>Name</th>
-                <th>Longitude</th>
-                <th>Latitude</th>
+                <th>Location</th>
+                <!-- <th>Longitude</th>
+                <th>Latitude</th> -->
                 <th>Info</th>
                 <th>Control</th>
               </tr>
@@ -37,15 +38,15 @@
               {% for device in devices %}
                 <tr>
                   <td>{{device.name}}</td>
-                  <td>{{device.longitude}}</td>
-                  <td>{{device.latitude}}</td>
+                  <td>({{device.longitude}}, {{device.latitude}})</td>
+                  <!-- <td>{{device.latitude}}</td> -->
                   <td>
-                    <a href="{{ device.info_url }}" class="btn btn-default btn-block btn-xs">Now</a>
-                    <a href="{{ device.history_url }}" class="btn btn-default btn-block btn-xs">History</a>
+                    <a href="{{ device.info_url }}" class="btn btn-default btn-block btn-sm">Now</a>
+                    <a href="{{ device.history_url }}" class="btn btn-default btn-block btn-sm">History</a>
                   </td>
                   <td>
-                    <a href="{{ device.update_url }}" class="btn btn-default btn-block btn-xs">Edit</a>
-                    <a href="{{ device.delete_url }}" class="btn btn-default btn-block btn-xs">Delete</a>
+                    <a href="{{ device.update_url }}" class="btn btn-default btn-block btn-sm">Edit</a>
+                    <a href="{{ device.delete_url }}" class="btn btn-default btn-block btn-sm">Delete</a>
                   </td>
                 </tr>
               {% empty %}

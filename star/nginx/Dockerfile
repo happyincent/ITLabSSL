@@ -115,6 +115,13 @@ RUN cd /tmp/ffmpeg-${FFMPEG_VERSION} && \
   --extra-libs="-lpthread -lm" && \
   make && make install && make distclean
 
+# Setting the timezone
+RUN apk add tzdata && \
+  cp /usr/share/zoneinfo/Asia/Taipei /etc/localtime && \
+  echo "Asia/Taipei" >  /etc/timezone && \
+  date && \
+  apk del tzdata
+
 # Cleanup.
 RUN rm -rf /var/cache/* /tmp/*
 

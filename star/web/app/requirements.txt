@@ -4,10 +4,12 @@
 #gevent==1.3.7
 #django-allauth==0.38.0
 #django-bootstrap3==11.0.0
+#django-revproxy==0.9.15
 
 Django>2
 djongo
 gunicorn
 gevent
-django-allauth
+django-allauth==0.38.0
 django-bootstrap3
+django-revproxy

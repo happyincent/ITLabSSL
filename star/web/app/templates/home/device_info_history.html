@@ -124,9 +124,12 @@ $(".form_datetime[data-view='hour']").datetimepicker({
 });
 </script>
 
+<!-- load video src -->
 <script>
 function loadVideo() {
-  document.getElementById('video1').setAttribute("src", "https://media.w3.org/2010/05/sintel/trailer.mp4");
+  var url = "https://ssl.itlab.ee.ncku.edu.tw:62400/vod/demo-1545757196.mp4";
+  // var url = "https://media.w3.org/2010/05/sintel/trailer.mp4";
+  document.getElementById('video1').setAttribute("src", url);
 }
 </script>
 {% endblock %}

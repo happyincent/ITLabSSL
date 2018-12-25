@@ -32,6 +32,7 @@ services:
     command: nginx -g 'daemon off;'
     ports:
       - "62400:62400"
+      - "127.0.0.1:62401:62401"
       - "1935:1935"
     volumes:
       - '/etc/dehydrated/certs/ssl.itlab.ee.ncku.edu.tw/privkey.pem:/opt/nginx/privkey.pem'

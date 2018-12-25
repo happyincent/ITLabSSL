@@ -1,19 +1,19 @@
 import os
 from django.http import HttpResponse, Http404
 from django.core import serializers
-
-from django.views.generic import TemplateView
+from django.urls import reverse, reverse_lazy
 
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
-from allauth.account.decorators import verified_email_required
-from django.contrib.auth.decorators import login_required
 
-from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView
 from django.views.generic import UpdateView
 from django.views.generic import DeleteView
+from django.views.generic import TemplateView
+
+from allauth.account.decorators import verified_email_required
+from revproxy.views import ProxyView
 
 from .models import Device
 
@@ -93,6 +93,7 @@ class DeviceInfoHistory(TemplateView):
 HLS_KEY_DIR = '/tmp/key'
 
 @login_required
+@verified_email_required
 def key(request, stream):
     file_path = os.path.join(HLS_KEY_DIR, stream)
 
@@ -100,3 +101,11 @@ def key(request, stream):
         with open(file_path, 'rb') as f:
             return HttpResponse(f.read(), content_type='application/octet-stream')
     raise Http404
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(verified_email_required, name='dispatch')
+class Vod(ProxyView):
+    upstream = 'http://nginx:62401/record/'
+
+# @login_required
+# def key(request, stream):
