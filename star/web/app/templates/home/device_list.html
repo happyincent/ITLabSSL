@@ -22,20 +22,15 @@
         </li>
       </ul>
       <div class="row clearfix">
-        <div class="col-md-6 column">
+        <div class="col-md-6 column table-responsive">
           <table class="table table-hover">
             <thead>
               <tr>
-                <th>
-                  Name
-                </th>
-                <th>
-                  Longitude
-                </th>
-                <th>
-                  Latitude
-                </th>
-                <th></th>
+                <th>Name</th>
+                <th>Longitude</th>
+                <th>Latitude</th>
+                <th>Info</th>
+                <th>Control</th>
               </tr>
             </thead>
             <tbody>
@@ -45,9 +40,12 @@
                   <td>{{device.longitude}}</td>
                   <td>{{device.latitude}}</td>
                   <td>
-                    <a href="{% url 'device' %}" class="btn btn-default btn-block">Show</a>
-                    <a href="{{ device.update_url }}" class="btn btn-default btn-block">Edit</a>
-                    <a href="{{ device.delete_url }}" class="btn btn-default btn-block">Delete</a>
+                    <a href="{{ device.info_url }}" class="btn btn-default btn-block btn-xs">Now</a>
+                    <a href="{{ device.history_url }}" class="btn btn-default btn-block btn-xs">History</a>
+                  </td>
+                  <td>
+                    <a href="{{ device.update_url }}" class="btn btn-default btn-block btn-xs">Edit</a>
+                    <a href="{{ device.delete_url }}" class="btn btn-default btn-block btn-xs">Delete</a>
                   </td>
                 </tr>
               {% empty %}
@@ -61,7 +59,7 @@
           <p></p>
         </div>
         <div class="col-md-6 column">
-          <div id="map" style="width: 100%; height: 450px;"></div>
+          <div id="map" style="width: 100%; height: 400px;"></div>
         </div>
       </div>
     </div>
@@ -83,11 +81,19 @@
 
   // Add Markers
   var devices = jQuery.parseJSON('{{ devices_json|escapejs }}');
+  var myIcon = L.icon({
+      iconUrl: '/static/home/street-lamp.png',
+      iconSize: [40, 40],
+      iconAnchor: [40, 20],
+  });
 
   for (i in devices) {
-    var arr = devices[i].fields;
-    L.marker([arr['latitude'], arr['longitude']])
-    .bindTooltip(arr['name'], {permanent: true, direction: 'right'})
+    var dict = devices[i].fields;
+    L.marker(
+      [dict['latitude'], dict['longitude']],
+      {icon: myIcon}
+    )
+    .bindTooltip(dict['name'], {permanent: true, direction: 'right'})
     .addTo(mymap);
   }
 </script>

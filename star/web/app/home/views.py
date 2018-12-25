@@ -73,6 +73,21 @@ class DeviceDelete(DeleteView):
 class DeviceInfo(TemplateView):
     template_name = 'home/device_info.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['device_name'] = kwargs['device_name']
+        return context
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(verified_email_required, name='dispatch')
+class DeviceInfoHistory(TemplateView):
+    template_name = 'home/device_info_history.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['device_name'] = kwargs['device_name']
+        return context
+
 ###
 
 HLS_KEY_DIR = '/tmp/key'

@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block bootstrap3_title %}Device History | ITLab SSL{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/smalot-bootstrap-datetimepicker/2.4.4/css/bootstrap-datetimepicker.min.css" />
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row clearfix">
+    <div class="col-md-12 column">
+      <ul class="breadcrumb">
+          <li>
+              <a href="{% url 'home' %}">Home</a>
+          </li>
+          <li>
+              <a href="{% url 'device_list' %}">Device List</a>
+          </li>
+          <li class="active">
+              Device History
+          </li>
+      </ul>
+      
+      <div class="page-header">
+          <h3>{{ device_name }}</h3>
+      </div>
+      
+      <div class="form-group">
+        <div class="input-group date form_datetime" data-view="hour">
+          <input type='text' class="form-control" value="" readonly style="background-color: transparent;"/>
+          <span class="input-group-addon"><i class="icon-remove glyphicon glyphicon-remove"></i></span>
+          <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Temperature</th>
+              <th>Humidity</th>
+              <th>PM2.5</th>
+              <th>Loudness</th>
+              <th>Light Intensity</th>
+              <th>UV Intensity</th>
+              <th>Load Video</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2018-12-25 16:00</td>
+              <td>87 °C</td>
+              <td>87 %</td>
+              <td>87 μg/m<sup>3</sup></td>
+              <td>87 dB</td>
+              <td>87 lux</td>
+              <td>87 mW/cm<sup>2</sup></td>
+              <td><button onclick="loadVideo()" type="button" class="btn btn-default btn-block">Load</button></td>
+            </tr>
+            <tr>
+              <td>2018-12-25 16:15</td>
+              <td>87 °C</td>
+              <td>87 %</td>
+              <td>87 μg/m<sup>3</sup></td>
+              <td>87 dB</td>
+              <td>87 lux</td>
+              <td>87 mW/cm<sup>2</sup></td>
+              <td><button onclick="loadVideo()" type="button" class="btn btn-default btn-block">Load</button></td>
+            </tr>
+            <tr>
+              <td>2018-12-25 16:30</td>
+              <td>87 °C</td>
+              <td>87 %</td>
+              <td>87 μg/m<sup>3</sup></td>
+              <td>87 dB</td>
+              <td>87 lux</td>
+              <td>87 mW/cm<sup>2</sup></td>
+              <td><button onclick="loadVideo()" type="button" class="btn btn-default btn-block">Load</button></td>
+            </tr>
+            <tr>
+              <td>2018-12-25 16:45</td>
+              <td>87 °C</td>
+              <td>87 %</td>
+              <td>87 μg/m<sup>3</sup></td>
+              <td>87 dB</td>
+              <td>87 lux</td>
+              <td>87 mW/cm<sup>2</sup></td>
+              <td><button onclick="loadVideo()" type="button" class="btn btn-default btn-block">Load</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div algin="center" class="embed-responsive embed-responsive-16by9">
+    <video id='video1' poster="https://www.srsd.net/images/video-poster.png" class="embed-responsive-item" width="100%" controls preload="none" onclick="this.play();"></video>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_script %}
+<!-- Show DateTimePicker -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/smalot-bootstrap-datetimepicker/2.4.4/js/bootstrap-datetimepicker.min.js"></script>
+<script>
+$(".form_datetime[data-view='hour']").datetimepicker({
+  format: "yyyy-mm-dd hh:ii",
+  setStartDate: '2018-12-25 13:00',
+  minuteStep: 15,
+  startView: 0,
+  minView: 0,
+  autoclose: true
+})
+.on('changeDate', function(ev) {
+  if (ev.date)
+    console.log(ev.date.valueOf());
+  else
+    console.log(null);
+});
+</script>
+
+<script>
+function loadVideo() {
+  document.getElementById('video1').setAttribute("src", "https://media.w3.org/2010/05/sintel/trailer.mp4");
+}
+</script>
+{% endblock %}

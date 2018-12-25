@@ -8,8 +8,11 @@ class Device(models.Model):
     latitude = models.FloatField(default=22.996)
     uri = models.CharField(max_length=200, unique=True)
 
-    def get_absolute_url(self):
-        return reverse('device', kwargs={'name': self.name})
+    def info_url(self):
+        return reverse('device', kwargs={'device_name': self.name})
+    
+    def history_url(self):
+        return reverse('device_history', kwargs={'device_name': self.name})        
 
     def update_url(self):
         return reverse('device_update', kwargs={'pk': self.pk})

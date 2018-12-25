@@ -5,6 +5,7 @@
 {% block bootstrap3_title %}Device Info | ITLab SSL{% endblock %}
 
 {% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/smalot-bootstrap-datetimepicker/2.4.4/css/bootstrap-datetimepicker.min.css" />
 {% endblock %}
 
 {% block content %}
@@ -22,46 +23,74 @@
               Device Info
           </li>
       </ul>
-      <h2>Device: {{ device_name }}</h2>
-      <h4>Time: 2018-12-23 00:56</h4>
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>
-              溫度
-            </th>
-            <th>
-              濕度
-            </th>
-            <th>
-              光度
-            </th>
-            <th>
-              噪音
-            </th>
-            <th>
-              PM2.5
-            </th>
-            <th>
-              UV
-            </th>
-            <th>
-              IF
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>87°C</td><td>87%</td><td>00<td>10-20</td><td>30</td><td>40</td><td>0</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="page-header">
+          <h3>{{ device_name }}</h3>
+      </div>
+      <div class="panel panel-info" style="border: none;">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+              2018-12-25 17:20
+            </h3>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <!-- <thead>
+            <tr>
+              <th>Temperature</th>
+              <th>Humidity</th>
+              <th>PM2.5</th>
+              <th>Loudness</th>
+              <th>Light Intensity</th>
+              <th>UV Intensity</th>
+              <th>IR Sensor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>87 °C</td>
+              <td>87 %</td>
+              <td>87 μg/m<sup>3</sup></td>
+              <td>87 dB</td>
+              <td>87 lux</td>
+              <td>87 mW/cm<sup>2</sup></td>
+              <td>not sensed</td>
+            </tr>
+          </tbody> -->
+          <tbody>
+            <tr>
+              <th>Temperature</th>
+              <td>87 °C</td>
+              <th>Humidity</th>
+              <td>87 %</td>
+            </tr>
+            <tr>
+              <th>PM2.5</th>
+              <td>87 μg/m<sup>3</sup></td>
+              <th>Loudness</th>
+              <td>87 dB</td>
+            </tr>
+            <tr>
+              <th>Light Intensity</th>
+              <td>87 lux</td>
+              <th>UV Intensity</th>
+              <td>87 mW/cm<sup>2</sup></td>
+            </tr>
+            <tr>
+              <th>IR Sensor</th>
+              <td>not sensed</td>
+              <th></th>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
   <div class="row clearfix">
     <div class="col-md-6 column">
       <div algin="center" class="embed-responsive embed-responsive-16by9">
-        <video id=video class="embed-responsive-item" controls muted autoplay></video>
+        <video id="video1" class="embed-responsive-item" controls muted autoplay></video>
       </div>
     </div>
     <div class="col-md-6 column">
@@ -71,6 +100,7 @@
 {% endblock %}
 
 {% block extra_script %}
+<!-- Play HLS Video -->
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script>
   var video = document.getElementById('video');

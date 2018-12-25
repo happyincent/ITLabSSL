@@ -39,5 +39,6 @@ services:
       - './nginx/nginx.conf:/opt/nginx/nginx.conf'
       - './web/app:/www'
       - '/tmp/key:/tmp/key'
+      - '/media/data:/media/data'
     depends_on:
       - web
