@@ -16,7 +16,7 @@
         <div class="col-xs-12">
           <form class="login" method="POST" action="{% url 'account_login' %}">
             {% csrf_token %}
-            {% bootstrap_form form layout='inline' %}
+            {% bootstrap_form form %}
             {% if redirect_field_value %}
             <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
             {% endif %}

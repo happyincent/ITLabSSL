@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block bootstrap3_title %}About us | ITLab SSL{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+  <div class="row clearfix">
+    <div class="col-md-12 column">
+      <div class="page-header">
+        <h1>
+            About us
+        </h1>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <strong>Beargoer</strong>
+            </h3>
+        </div>
+        <div class="panel-body">
+          <p>beargoer@gmail.com</p>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <strong>DDL</strong>
+            </h3>
+        </div>
+        <div class="panel-body">
+          <p>ddl.itlab@gmail.com</p>
+        </div>
+      </div>
+      <div class="center-block" style="width: 60%;">
+        <a href="https://itlab.ee.ncku.edu.tw/">
+          <img src="/static/home/itlab.png" class="img-responsive" alt="ITLab Logo">
+        </a>
+      </div>
+    </div>
+  </div>
+  </div>
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}

@@ -90,6 +90,11 @@ class DeviceInfoHistory(TemplateView):
 
 ###
 
+class Aboutus(TemplateView):
+    template_name = 'home/aboutus.html'
+
+###
+
 HLS_KEY_DIR = '/tmp/key'
 
 @login_required
@@ -106,6 +111,3 @@ def key(request, stream):
 @method_decorator(verified_email_required, name='dispatch')
 class Vod(ProxyView):
     upstream = 'http://nginx:62401/record/'
-
-# @login_required
-# def key(request, stream):

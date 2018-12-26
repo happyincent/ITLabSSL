@@ -24,7 +24,7 @@ ffmpeg -f mjpeg -i http://10.27.164.151:5000/video_feed \
 ```
 ffmpeg -rtsp_transport tcp -i rtsp://root:itlabcsyang92633@10.27.164.152/live3.sdp \
     -flags +low_delay -tune zerolatency -preset:v ultrafast -probesize 32 \
-    -c:v libx264 -r 30 \
+    -c:v libx264 -r 15 \
     -x264opts "keyint=1:min-keyint=1:no-scenecut" \
     -force_key_frames "expr:gte(t,n_forced*2)" \
     -f flv -an rtmp://localhost:1935/itlab/demo -nostdin -loglevel quiet

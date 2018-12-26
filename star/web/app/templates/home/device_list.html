@@ -28,8 +28,6 @@
               <tr>
                 <th>Name</th>
                 <th>Location</th>
-                <!-- <th>Longitude</th>
-                <th>Latitude</th> -->
                 <th>Info</th>
                 <th>Control</th>
               </tr>
@@ -39,14 +37,18 @@
                 <tr>
                   <td>{{device.name}}</td>
                   <td>({{device.longitude}}, {{device.latitude}})</td>
-                  <!-- <td>{{device.latitude}}</td> -->
                   <td>
                     <a href="{{ device.info_url }}" class="btn btn-default btn-block btn-sm">Now</a>
                     <a href="{{ device.history_url }}" class="btn btn-default btn-block btn-sm">History</a>
                   </td>
                   <td>
-                    <a href="{{ device.update_url }}" class="btn btn-default btn-block btn-sm">Edit</a>
-                    <a href="{{ device.delete_url }}" class="btn btn-default btn-block btn-sm">Delete</a>
+                    {% if request.user.is_staff %}
+                      <a href="{{ device.update_url }}" class="btn btn-default btn-block btn-sm">Edit</a>
+                      <a href="{{ device.delete_url }}" class="btn btn-default btn-block btn-sm">Delete</a>
+                    {% else %}
+                      <a href="{{ device.update_url }}" class="btn btn-default btn-block btn-sm disabled">Edit</a>
+                      <a href="{{ device.delete_url }}" class="btn btn-default btn-block btn-sm disabled">Delete</a>
+                    {% endif %}
                   </td>
                 </tr>
               {% empty %}

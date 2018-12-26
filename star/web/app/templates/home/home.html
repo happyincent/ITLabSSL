@@ -11,16 +11,31 @@
 <div class="container">
   <div class="row clearfix">
     <div class="col-md-12 column">
-      <div class="jumbotron">
-        <h1>
-          Show Device List
-        </h1>
+      <div class="jumbotron center-block" style="padding-top: 20px; padding-bottom: 40px;">
+        <h2>
+          Wellcome to ITLab Smart Street Light !
+        </h2>
         <p>
-          This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.
+          This is a demo website.
         </p>
         <p>
-            <a class="btn btn-primary btn-large" href="{% url 'device_list' %}">Learn more</a>
+          <a class="btn btn-primary btn-large" href="{% url 'device_list' %}">Show Device List</a>
+          <a class="btn btn-info btn-large" href="{% url 'aboutus' %}">About us</a>
         </p>
+        {% if user.is_superuser %}
+          <p>
+            <a class="btn btn-warning btn-large" href="{% url 'admin:auth_user_changelist' %}">Change User Permission</a>
+          </p>
+        {% endif %}
+        <br></br>
+        <!-- <p>
+            <a class="btn btn-primary btn-large" href="{% url 'device_list' %}">Show Device List</a>
+            <a class="btn btn-info btn-large" href="{% url 'aboutus' %}">About us</a>
+            {% if user.is_superuser %}
+            <a class="btn btn-warning btn-large" href="{% url 'admin:auth_user_changelist' %}">Change User Permission</a>
+            {% endif %}
+        </p> -->
+        <img src="/static/home/arch.png" alt="ITLab Logo" class="img-responsive center-block" style="width: 90%;">
       </div>
     </div>
   </div>

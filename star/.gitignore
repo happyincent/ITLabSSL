@@ -1,4 +1,5 @@
-database/
 *.pyc
 **/app/static/
 *.sock
+db/database/
+# web/app/account/
