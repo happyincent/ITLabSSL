@@ -50,5 +50,10 @@ ssh -N \
     -i /home/itlab/.ssh/id_rsa
 
 # tunnel
-ssh -o "ServerAliveInterval 60" -o "ServerAliveCountMax 3" -N -L localhost:1935:localhost:1935 -p 22018 itlab@ssl.itlab.ee.ncku.edu.tw -i /home/nvidia/.ssh/id_rsa
+ssh -N \
+-o "ServerAliveInterval 60" \
+-o "ServerAliveCountMax 3" \
+-L localhost:1935:localhost:1935 \
+-p 22018 itlab@ssl.itlab.ee.ncku.edu.tw \
+-i /home/nvidia/.ssh/id_rsa
 ```
