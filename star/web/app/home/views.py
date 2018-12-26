@@ -90,6 +90,8 @@ class DeviceInfoHistory(TemplateView):
 
 ###
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(verified_email_required, name='dispatch')
 class Aboutus(TemplateView):
     template_name = 'home/aboutus.html'
 
