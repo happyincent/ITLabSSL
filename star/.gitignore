@@ -2,4 +2,4 @@
 **/app/static/
 *.sock
 db/database/
-# web/app/account/
+web/app/account/
