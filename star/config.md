@@ -26,15 +26,17 @@ ffmpeg -rtsp_transport tcp -i rtsp://root:itlabcsyang92633@10.27.164.152/live3.s
     -flags +low_delay -tune zerolatency -preset:v ultrafast -probesize 32 \
     -c:v libx264 -r 15 \
     -x264opts "keyint=1:min-keyint=1:no-scenecut" \
-    -force_key_frames "expr:gte(t,n_forced*2)" \
-    -f flv -an rtmp://localhost:1935/itlab/demo -nostdin -loglevel quiet
+    -force_key_frames "expr:gte(t,n_forced*1)" \
+    -bsf:v h264_mp4toannexb -f flv -an rtmp://localhost:1935/itlab/demo -nostdin -loglevel quiet
 
-ffmpeg -f mjpeg -i http://root:itlabcsyang92633@10.27.164.152/video4.mjpg \
+ffmpeg -err_detect ignore_err -use_wallclock_as_timestamps 1 -rtsp_transport tcp \
+    -r 15 \
+    -i rtsp://root:itlabcsyang92633@10.27.164.152/live3.sdp \
     -flags +low_delay -tune zerolatency -preset:v ultrafast -probesize 32 \
-    -c:v libx264 -r 15 \
     -x264opts "keyint=1:min-keyint=1:no-scenecut" \
-    -force_key_frames "expr:gte(t,n_forced*2)" \
-    -f flv -an rtmp://localhost:1935/itlab/demo -nostdin
+    -force_key_frames "expr:gte(t,n_forced*1)" \
+    -vcodec copy -an -bsf:v h264_mp4toannexb \
+    -f flv -y rtmp://localhost:1935/itlab/demo -nostdin
 ```
 
 ## SSH Tunnel
