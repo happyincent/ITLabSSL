@@ -1,5 +1,5 @@
 import os
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, JsonResponse
 from django.core import serializers
 from django.urls import reverse, reverse_lazy
 
@@ -20,6 +20,11 @@ from .models import Device
 @method_decorator(login_required, name='dispatch')
 class Home(TemplateView):
     template_name = 'home/home.html'
+
+@method_decorator(login_required, name='dispatch')
+@method_decorator(verified_email_required, name='dispatch')
+class Aboutus(TemplateView):
+    template_name = 'home/aboutus.html'
 
 ###
 
@@ -70,12 +75,18 @@ class DeviceDelete(DeleteView):
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(verified_email_required, name='dispatch')
-class DeviceInfo(TemplateView):
-    template_name = 'home/device_info.html'
+class DeviceInfoNow(TemplateView):
+    template_name = 'home/device_info_now.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['device_name'] = kwargs['device_name']
+        device_name = kwargs['device_name']
+        
+        if not Device.objects.filter(name=device_name).exists():
+            raise Http404('Page Not Found')
+        
+        context['device_name'] = device_name
+        context['message'] = 'test'
         return context
 
 @method_decorator(login_required, name='dispatch')
@@ -90,10 +101,7 @@ class DeviceInfoHistory(TemplateView):
 
 ###
 
-@method_decorator(login_required, name='dispatch')
-@method_decorator(verified_email_required, name='dispatch')
-class Aboutus(TemplateView):
-    template_name = 'home/aboutus.html'
+
 
 ###
 

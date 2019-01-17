@@ -1,5 +1,6 @@
 *.pyc
 **/app/static/
 *.sock
-db/database/
 web/app/account/
+db/data/
+redis/data/

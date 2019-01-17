@@ -1,4 +1,5 @@
-FROM python:3.7.1-alpine3.8
+# FROM python:3.7.2-alpine3.8
+FROM python:3-alpine3.8
 MAINTAINER ddl <itlab.ee.ncku.edu.tw>
 
 ENV PYTHONUNBUFFERED 1

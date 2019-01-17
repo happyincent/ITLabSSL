@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block bootstrap3_title %}Device Info | ITLab SSL{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row clearfix">
+    <div class="col-md-12 column">
+      <ul class="breadcrumb">
+          <li>
+              <a href="{% url 'home' %}">Home</a>
+          </li>
+          <li>
+              <a href="{% url 'device_list' %}">Device List</a>
+          </li>
+          <li class="active">
+              Device Info
+          </li>
+      </ul>
+      <div class="page-header">
+          <h3>{{ device_name }}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="row clearfix">
+    <div class="col-md-6 column">
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <tbody>
+            <tr>
+              <th>Temperature</th>
+              <td id="temperature">25 °C</td>
+            </tr>
+            <tr>
+              <th>Humidity</th>
+              <td id="humidity">67 %</td>
+            </tr>
+            <tr>
+              <th>PM2.5</th>
+              <td id="pm2_5">18 μg/m<sup>3</sup></td>
+            </tr>
+            <tr>
+              <th>Loudness</th>
+              <td id="loudness">20 dB</td>
+            </tr>
+            <tr>
+              <th>Light Intensity</th>
+              <td id="light_intensity">400 lux</td>
+            </tr>
+            <tr>
+              <th>UV Intensity</th>
+              <td id="uv_intensity">5.5 mW/cm<sup>2</sup></td>
+            </tr>
+            <tr>
+              <th>IR Sensor</th>
+              <td id="ir_sensed">sensed</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-md-6 column">
+      <div algin="center" class="embed-responsive embed-responsive-16by9">
+        <!-- <video id="video1" class="embed-responsive-item" controls muted autoplay></video> -->
+        <div class="panel panel-default">
+          <div class="panel-heading text-align-center">
+            <span class="panel-title">Test Message</span>
+          </div>
+          <div class="panel-body">
+            <p id="message">{{ message }}</p>
+            <input id="chat-message-input" type="text"/><br/>
+            <input id="chat-message-submit" type="button" value="Send"/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<!-- Play HLS Video -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+var video = document.getElementById('video1');
+if(Hls.isSupported()) {
+  var hls = new Hls();
+  hls.loadSource('https://ssl.itlab.ee.ncku.edu.tw:62400/hls/demo.m3u8');
+  hls.attachMedia(video);
+  hls.on(Hls.Events.MANIFEST_PARSED,function() {
+    video.play();
+});
+}
+else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+  video.src = 'https://ssl.itlab.ee.ncku.edu.tw:62400/hls/demo.m3u8';
+  video.addEventListener('loadedmetadata',function() {
+    video.play();
+  });
+}
+</script> -->
+
+<!-- Websocket Get Info -->
+<script>
+var device_name = '{{ device_name }}';
+
+var ws_scheme = window.location.protocol == "https:" ? "wss://" : "ws://";
+
+var socket = new WebSocket(ws_scheme + window.location.host + '/ws/device/' + device_name + '/');
+
+socket.onmessage = function(e) {
+  var data = JSON.parse(e.data);
+  document.querySelector('#message').innerHTML = data['message'];
+};
+
+socket.onclose = function(e) {
+  console.error('socket closed unexpectedly');
+};
+
+document.querySelector('#chat-message-submit').onclick = function(e) {
+    var messageInputDom = document.querySelector('#chat-message-input');
+    var message = messageInputDom.value;
+    socket.send(JSON.stringify({
+        'message': message
+    }));
+
+    messageInputDom.value = '';
+};
+</script>
+{% endblock %}

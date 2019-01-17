@@ -9,7 +9,17 @@ services:
     ports:
       - "127.0.0.1:27017:27017"
     volumes:
-      - './db/database/:/data/db/'
+      - './db/data/:/data/db/'
+  
+  redis:
+    container_name: redis-star
+    image: alpine-redis:star
+    build: ./redis
+    restart: always
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - ./redis/data:/data
 
   web:
     container_name: web-star
@@ -23,6 +33,7 @@ services:
       - '/tmp/key:/tmp/key'
     depends_on:
       - db
+      - redis
   
   nginx:
     container_name: nginx-star

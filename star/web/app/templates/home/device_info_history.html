@@ -29,10 +29,11 @@
       </div>
       
       <div class="form-group">
-        <div class="input-group date form_datetime" data-view="hour">
+        <div id="datetimepicker1" class="input-group date form_datetime">
           <input type='text' class="form-control" value="" readonly style="background-color: transparent;"/>
           <span class="input-group-addon"><i class="icon-remove glyphicon glyphicon-remove"></i></span>
           <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+          <span class="input-group-addon"><i class="glyphicon glyphicon-search" onclick="loadHistory();" ></i></span>
         </div>
       </div>
 
@@ -108,23 +109,37 @@
 <!-- Show DateTimePicker -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/smalot-bootstrap-datetimepicker/2.4.4/js/bootstrap-datetimepicker.min.js"></script>
 <script>
-$(".form_datetime[data-view='hour']").datetimepicker({
-  format: "yyyy-mm-dd hh:ii",
-  minuteStep: 15,
-  startView: 0,
-  minView: 0,
+$("#datetimepicker1").datetimepicker({
+  format: "yyyy-mm-dd hh:00",
+  minuteStep: 60,
+  startView: 2,
+  minView: 1,
   autoclose: true
 })
 .on('changeDate', function(ev) {
-  if (ev.date)
-    console.log(ev.date.valueOf());
-  else
-    console.log(null);
+  console.log( (ev.date ? ev.date.getTime()/1000 | 0 : null) );
 });
 </script>
 
-<!-- load video src -->
+<!-- function: load history list, load video src -->
 <script>
+function getTimestamp() {
+  var the_date = $('#datetimepicker1').data("datetimepicker").viewDate;
+  if (the_date) {
+    the_date = new Date(the_date.getTime() + (new Date().getTimezoneOffset()*60000));
+    the_date.setMinutes(0);
+    the_date.setSeconds(0);
+    the_date.setMilliseconds(0);
+    return the_date.getTime()/1000 | 0;
+  }
+  else
+    return null;
+}
+
+function loadHistory() {
+  console.log(getTimestamp());
+}
+
 function loadVideo() {
   var url = "https://ssl.itlab.ee.ncku.edu.tw:62400/vod/demo-1545757196.mp4";
   // var url = "https://media.w3.org/2010/05/sintel/trailer.mp4";

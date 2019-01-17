@@ -35,8 +35,8 @@
             <tbody>
               {% for device in devices %}
                 <tr>
-                  <td>{{device.name}}</td>
-                  <td>({{device.longitude}}, {{device.latitude}})</td>
+                  <td>{{ device.name }}</td>
+                  <td>({{ device.longitude }}, {{ device.latitude }})</td>
                   <td>
                     <a href="{{ device.info_url }}" class="btn btn-default btn-block btn-sm">Now</a>
                     <a href="{{ device.history_url }}" class="btn btn-default btn-block btn-sm">History</a>
@@ -96,7 +96,7 @@
       [dict['latitude'], dict['longitude']],
       {icon: myIcon}
     )
-    .bindTooltip(dict['name'], {permanent: true, direction: 'right'})
+    .bindTooltip(devices[i].pk, {permanent: true, direction: 'right'})
     .addTo(mymap);
   }
 </script>
