@@ -10,4 +10,7 @@ application = ProtocolTypeRouter({
             tx2.routing.websocket_urlpatterns
         )
     ),
+    # 'websocket':  URLRouter(
+    #     tx2.routing.websocket_urlpatterns
+    # ),
 })

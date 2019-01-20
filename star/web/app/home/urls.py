@@ -12,7 +12,7 @@ urlpatterns = [
     path('device_update/<str:pk>', views.DeviceUpdate.as_view(), name='device_update'),
     path('device_delete/<str:pk>', views.DeviceDelete.as_view(), name='device_delete'),
 
-    path('device/<slug:device_name>', views.DeviceInfoNow.as_view(), name='device'),
+    path('device/<slug:device_name>', views.DeviceInfo.as_view(), name='device'),
     path('device_history/<slug:device_name>', views.DeviceInfoHistory.as_view(), name='device_history'),
 
     path('key/<str:stream>', views.key, name='key'),

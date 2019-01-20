@@ -16,6 +16,7 @@ from allauth.account.decorators import verified_email_required
 from revproxy.views import ProxyView
 
 from .models import Device
+from tx2.models import DeviceInfoNow
 
 @method_decorator(login_required, name='dispatch')
 class Home(TemplateView):
@@ -75,7 +76,7 @@ class DeviceDelete(DeleteView):
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(verified_email_required, name='dispatch')
-class DeviceInfoNow(TemplateView):
+class DeviceInfo(TemplateView):
     template_name = 'home/device_info_now.html'
 
     def get_context_data(self, **kwargs):
@@ -86,7 +87,7 @@ class DeviceInfoNow(TemplateView):
             raise Http404('Page Not Found')
         
         context['device_name'] = device_name
-        context['message'] = 'test'
+        context['device_info'] = DeviceInfoNow.objects.filter(device=device_name).first()
         return context
 
 @method_decorator(login_required, name='dispatch')
