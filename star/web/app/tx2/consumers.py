@@ -4,7 +4,7 @@ import datetime
 
 from channels.db import database_sync_to_async
 from home.models import Device
-from .models import DeviceInfoNow
+from .models import InstantInfo
 
 class InfoConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
@@ -60,7 +60,7 @@ class InfoConsumer(AsyncJsonWebsocketConsumer):
         if device == None:
             return
 
-        DeviceInfoNow.objects.update_or_create(
+        InstantInfo.objects.update_or_create(
             device = device,
             defaults = {
                 'temperature': content.get('temperature', None),

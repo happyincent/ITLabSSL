@@ -3,8 +3,8 @@ from django.db import models
 # Create your models here.
 from home.models import Device
 
-class DeviceInfoNow(models.Model):
-    device = models.ForeignKey(Device, related_name='infos', on_delete=models.CASCADE)
+class InstantInfo(models.Model):
+    device = models.ForeignKey(Device, related_name='info_now', on_delete=models.CASCADE)
     temperature = models.FloatField(default=0.0)
     humidity = models.FloatField(default=0.0)
     pm2_5 = models.FloatField(default=0.0)

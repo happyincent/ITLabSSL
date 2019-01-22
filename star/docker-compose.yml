@@ -26,10 +26,11 @@ services:
     image: web:star
     build: ./web
     restart: always
-    command: sh -c "tail -f /dev/null"
-    # command: gunicorn star.wsgi:application -c gunicorn.config.py
+    command: sh -c "/run.sh"
     volumes:
       - './web/app:/www'
+      - './web/run.sh:/run.sh'
+      - './web/crontab:/crontab'
       - '/tmp/key:/tmp/key'
     depends_on:
       - db

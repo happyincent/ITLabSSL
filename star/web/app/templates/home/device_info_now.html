@@ -131,24 +131,24 @@
 
 {% block extra_script %}
 <!-- Play HLS Video -->
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script>
 var video = document.getElementById('video1');
 if(Hls.isSupported()) {
   var hls = new Hls();
-  hls.loadSource('https://ssl.itlab.ee.ncku.edu.tw:62400/hls/rpi.m3u8');
+  hls.loadSource('https://ssl.itlab.ee.ncku.edu.tw:62400/hls/demo.m3u8');
   hls.attachMedia(video);
   hls.on(Hls.Events.MANIFEST_PARSED,function() {
     video.play();
 });
 }
 else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-  video.src = 'https://ssl.itlab.ee.ncku.edu.tw:62400/hls/rpi.m3u8';
+  video.src = 'https://ssl.itlab.ee.ncku.edu.tw:62400/hls/demo.m3u8';
   video.addEventListener('loadedmetadata',function() {
     video.play();
   });
 }
-</script>
+</script> -->
 
 <!-- Websocket Get Info -->
 <script>

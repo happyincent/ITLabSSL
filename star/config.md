@@ -11,7 +11,7 @@ ffmpeg -rtsp_transport tcp -i rtsp://10.27.164.151:5000/unicast \
 -flags +low_delay  -tune zerolatency  -preset:v ultrafast  -probesize 32  -c:v libx264 \
 -x264opts "keyint=1:min-keyint=1:no-scenecut" \
 -force_key_frames "expr:gte(t,n_forced*1)" \
--r 15 -f flv -an rtmp://localhost:1935/itlab/rpi -nostdin
+-r 15 -f flv -an rtmp://localhost:1935/itlab/demo -nostdin
 
 ffmpeg -err_detect ignore_err \
     -use_wallclock_as_timestamps 1 -flags global_header \
@@ -21,13 +21,13 @@ ffmpeg -err_detect ignore_err \
     -x264opts "keyint=1:min-keyint=1:no-scenecut" \
     -force_key_frames "expr:gte(t,n_forced*1)" \
     -fflags +genpts -vcodec copy -an -bsf:v h264_mp4toannexb \
-    -f flv -y rtmp://localhost:1935/itlab/rpi -nostdin
+    -f flv -y rtmp://localhost:1935/itlab/demo -nostdin
 
 ffmpeg -f mjpeg -i http://10.27.164.151:5000/video_feed \
 -flags +low_delay  -tune zerolatency  -preset:v ultrafast  -probesize 32  -c:v libx264 \
 -x264opts "keyint=1:min-keyint=1:no-scenecut" \
 -force_key_frames "expr:gte(t,n_forced*1)" \
--r 15 -f flv -an rtmp://localhost:1935/itlab/rpi -nostdin
+-r 15 -f flv -an rtmp://localhost:1935/itlab/demo -nostdin
 ```
 
 ## IP Camera

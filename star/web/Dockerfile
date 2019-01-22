@@ -2,24 +2,32 @@
 FROM python:3-alpine3.8
 MAINTAINER ddl <itlab.ee.ncku.edu.tw>
 
+# Environment
 ENV PYTHONUNBUFFERED 1
+ENV TZ=Asia/Taipei
 
+RUN mkdir -p mkdir /www
+WORKDIR /www
+
+# Installation
 RUN apk update
 RUN apk add --no-cache \
         nano \
         gcc musl-dev
-
-RUN mkdir -p mkdir /www
-WORKDIR /www
 
 COPY ./app/requirements.txt /www/requirements.txt
 RUN pip install -r requirements.txt
 
 RUN sed -i "s|return uri|return 'https://ssl.itlab.ee.ncku.edu.tw:62400/' + uri.partition('//')[2].partition('/')[2]|" /usr/local/lib/python3*/site-packages/allauth/utils.py
 
-# Setting the timezone
-RUN apk add tzdata && \
-  cp /usr/share/zoneinfo/Asia/Taipei /etc/localtime && \
-  echo "Asia/Taipei" >  /etc/timezone && \
-  date && \
-  apk del tzdata
+# Setup timezone
+RUN apk add --no-cache tzdata && \
+    cp /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone && \
+    date && \
+    apk del tzdata
+
+# Setup scripts
+COPY crontab /crontab
+COPY run.sh /run.sh
+RUN chmod 775 /run.sh

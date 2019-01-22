@@ -7,6 +7,7 @@
 #django-revproxy==0.9.15
 #channels==2.1.6
 #channels-redis==2.3.3
+#django-cron==0.5.1
 
 Django>2
 djongo
@@ -17,3 +18,4 @@ django-bootstrap3
 django-revproxy
 channels
 channels-redis
+django-cron
