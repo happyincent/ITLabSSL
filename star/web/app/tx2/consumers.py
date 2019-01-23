@@ -1,6 +1,8 @@
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 import json
+
 import datetime
+from django.utils import timezone
 
 from channels.db import database_sync_to_async
 from home.models import Device
@@ -42,6 +44,9 @@ class InfoConsumer(AsyncJsonWebsocketConsumer):
     async def send_info(self, event):
         content = event['content']
 
+        ts = datetime.datetime.now(datetime.timezone.utc)
+        ts = timezone.localtime(ts)
+
         await self.send_json({
             'temperature': content.get('temperature', None),
             'humidity': content.get('humidity', None),
@@ -50,8 +55,7 @@ class InfoConsumer(AsyncJsonWebsocketConsumer):
             'light_intensity': content.get('light_intensity', None),
             'uv_intensity': content.get('uv_intensity', None),
             'ir_sensed': content.get('ir_sensed', None),
-            'timestamp': datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S'),
-            # 'timestamp': datetime.datetime.utcnow().strftime('%s'),
+            'timestamp': ts.strftime('%Y-%m-%d %H:%M:%S %z'),
         })
 
     @database_sync_to_async

@@ -8,6 +8,7 @@
 #channels==2.1.6
 #channels-redis==2.3.3
 #django-cron==0.5.1
+#djangoajax==3.0.3
 
 Django>2
 djongo
@@ -19,3 +20,4 @@ django-revproxy
 channels
 channels-redis
 django-cron
+djangoajax

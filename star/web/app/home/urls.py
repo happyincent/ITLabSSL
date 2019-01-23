@@ -15,6 +15,8 @@ urlpatterns = [
     path('device/<slug:pk>', views.DeviceInfo.as_view(), name='device'),
     path('device_history/<slug:pk>', views.DeviceInfoHistory.as_view(), name='device_history'),
 
+    path('get_history_info', views.get_history_info, name='get_history_info'),
+
     path('key/<str:stream>', views.key, name='key'),
     path('vod/<str:path>', views.Vod.as_view(), name='vod'),
 ]

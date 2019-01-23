@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
 {% load static %}
-{% load tz %}
 
 {% block bootstrap3_title %}Device Info | ITLab SSL{% endblock %}
 
@@ -35,46 +34,45 @@
   <div class="row clearfix">
     <div class="col-md-6 column">
       {% if device_info %}
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title" id="timestamp">
-            {{ device_info.timestamp | utc | date:"Y-m-d H:i:s" | default_if_none:"null" }} UTC
-          </h3>
-        </div>
-        <div class="panel-body table-responsive">
-          <table class="table table-striped">
-            <tbody>
-              <tr>
-                <th class="col-xs-8">Temperature</th>
-                <td id="temperature">{{ device_info.temperature | default_if_none:"null" }} °C</td>
-              </tr>
-              <tr>
-                <th>Humidity</th>
-                <td id="humidity">{{ device_info.humidity | default_if_none:"null" }} %</td>
-              </tr>
-              <tr>
-                <th>PM2.5</th>
-                <td id="pm2_5">{{ device_info.pm2_5 | default_if_none:"null" }} μg/m<sup>3</sup></td>
-              </tr>
-              <tr>
-                <th>Loudness</th>
-                <td id="loudness">{{ device_info.loudness | default_if_none:"null" }} dB</td>
-              </tr>
-              <tr>
-                <th>Light Intensity</th>
-                <td id="light_intensity">{{ device_info.light_intensity | default_if_none:"null" }} lux</td>
-              </tr>
-              <tr>
-                <th>UV Intensity</th>
-                <td id="uv_intensity">{{ device_info.uv_intensity | default_if_none:"null" }} mW/cm<sup>2</sup></td>
-              </tr>
-              <tr>
-                <th>IR Sensor</th>
-                <td id="ir_sensed">{{ device_info.ir_sensed | default_if_none:"null" }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div class="alert alert-info">
+        <strong id="timestamp">
+          {{ device_info.timestamp | date:"Y-m-d H:i:s O" | default_if_none:"null" }}
+        </strong>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <tbody>
+            <tr>
+              <th class="col-xs-8">Temperature</th>
+              <td id="temperature">{{ device_info.temperature | default_if_none:"null" }} °C</td>
+            </tr>
+            <tr>
+              <th>Humidity</th>
+              <td id="humidity">{{ device_info.humidity | default_if_none:"null" }} %</td>
+            </tr>
+            <tr>
+              <th>PM2.5</th>
+              <td id="pm2_5">{{ device_info.pm2_5 | default_if_none:"null" }} μg/m<sup>3</sup></td>
+            </tr>
+            <tr>
+              <th>Loudness</th>
+              <td id="loudness">{{ device_info.loudness | default_if_none:"null" }} dB</td>
+            </tr>
+            <tr>
+              <th>Light Intensity</th>
+              <td id="light_intensity">{{ device_info.light_intensity | default_if_none:"null" }} lux</td>
+            </tr>
+            <tr>
+              <th>UV Intensity</th>
+              <td id="uv_intensity">{{ device_info.uv_intensity | default_if_none:"null" }} mW/cm<sup>2</sup></td>
+            </tr>
+            <tr>
+              <th>IR Sensor</th>
+              <td id="ir_sensed">{{ device_info.ir_sensed | default_if_none:"null" }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       {% else %}
       <div class="panel panel-default">
@@ -131,24 +129,24 @@
 
 {% block extra_script %}
 <!-- Play HLS Video -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script>
 var video = document.getElementById('video1');
 if(Hls.isSupported()) {
   var hls = new Hls();
-  hls.loadSource('https://ssl.itlab.ee.ncku.edu.tw:62400/hls/demo.m3u8');
+  hls.loadSource('https://ssl.itlab.ee.ncku.edu.tw:62400/hls/{{ device_name }}.m3u8');
   hls.attachMedia(video);
   hls.on(Hls.Events.MANIFEST_PARSED,function() {
     video.play();
 });
 }
 else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-  video.src = 'https://ssl.itlab.ee.ncku.edu.tw:62400/hls/demo.m3u8';
+  video.src = 'https://ssl.itlab.ee.ncku.edu.tw:62400/hls/{{ device_name }}.m3u8';
   video.addEventListener('loadedmetadata',function() {
     video.play();
   });
 }
-</script> -->
+</script>
 
 <!-- Websocket Get Info -->
 <script>
@@ -160,7 +158,7 @@ var socket = new WebSocket(ws_scheme + window.location.host + '/ws/device/' + de
 
 socket.onmessage = function(e) {
   var data = JSON.parse(e.data);
-  document.querySelector('#timestamp').innerHTML = data['timestamp'] + ' UTC';
+  document.querySelector('#timestamp').innerHTML = data['timestamp'];
   document.querySelector('#temperature').innerHTML = data['temperature'] + ' °C';
   document.querySelector('#humidity').innerHTML = data['humidity'] + ' %';
   document.querySelector('#pm2_5').innerHTML = data['pm2_5'] + ' μg/m<sup>3</sup>';
@@ -171,7 +169,8 @@ socket.onmessage = function(e) {
 };
 
 socket.onclose = function(e) {
-  console.error('socket closed unexpectedly');
+  alert('Connection closed unexpectedly.\nPlease refresh the page.');
+  document.querySelector('#timestamp').innerHTML = 'Disconnected.'
 };
 </script>
 {% endblock %}

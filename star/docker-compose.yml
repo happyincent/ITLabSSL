@@ -32,6 +32,7 @@ services:
       - './web/run.sh:/run.sh'
       - './web/crontab:/crontab'
       - '/tmp/key:/tmp/key'
+      - '/media/data:/media/data'
     depends_on:
       - db
       - redis
