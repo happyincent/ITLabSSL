@@ -149,12 +149,12 @@ function loadHistory() {
         $('#history_table > tbody').append(
           '<tr>' + 
           '<td>' + v.timestamp + '</td>' + 
-          '<td>' + v.temperature + '</td>' + 
-          '<td>' + v.humidity + '</td>' + 
-          '<td>' + v.pm2_5 + '</td>' + 
-          '<td>' + v.loudness + '</td>' + 
-          '<td>' + v.light_intensity + '</td>' + 
-          '<td>' + v.uv_intensity + '</td>' + 
+          '<td>' + v.temperature + ' °C' + '</td>' + 
+          '<td>' + v.humidity + ' %' + '</td>' + 
+          '<td>' + v.pm2_5 + ' μg/m<sup>3</sup>' + '</td>' + 
+          '<td>' + v.loudness + ' dB' + '</td>' + 
+          '<td>' + v.light_intensity + ' lux' + '</td>' + 
+          '<td>' + v.uv_intensity + ' mW/cm<sup>2</sup>' + '</td>' + 
           '<td><button onclick="' + js + '" type="button" class="btn btn-default btn-block btn-sm">Load</button></td>' + 
           '</tr>'
         );
