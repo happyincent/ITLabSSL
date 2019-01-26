@@ -1,6 +1,7 @@
 *.pyc
 **/app/static/
 *.sock
+*.pid
 web/app/account/
 db/data/
 redis/data/

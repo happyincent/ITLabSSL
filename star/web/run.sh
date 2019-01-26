@@ -5,7 +5,11 @@ python /www/manage.py migrate
 python /www/manage.py migrate django_cron
 python /www/manage.py collectstatic --noinput
 
-cat /crontab > /var/spool/cron/crontabs/root && crond
+supervisord -c /etc/supervisord.conf
+supervisorctl start gunicorn
+supervisorctl start daphne
 
-tail -f /dev/null
-# gunicorn star.wsgi:application -c /www/gunicorn.config.py
+cat /crontab > /var/spool/cron/crontabs/root
+crond -f
+
+# tail -f /dev/null

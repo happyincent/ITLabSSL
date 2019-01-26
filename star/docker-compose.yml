@@ -28,9 +28,10 @@ services:
     restart: always
     command: sh -c "/run.sh"
     volumes:
-      - './web/app:/www'
       - './web/run.sh:/run.sh'
       - './web/crontab:/crontab'
+      - './web/supervisord.conf:/etc/supervisord.conf'
+      - './web/app:/www'
       - '/tmp/key:/tmp/key'
       - '/media/data:/media/data'
     depends_on:

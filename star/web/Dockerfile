@@ -31,3 +31,7 @@ RUN apk add --no-cache tzdata && \
 COPY crontab /crontab
 COPY run.sh /run.sh
 RUN chmod 775 /run.sh
+
+# Setup supervisord
+RUN apk add --no-cache supervisor
+COPY supervisord.conf /etc/supervisord.conf
