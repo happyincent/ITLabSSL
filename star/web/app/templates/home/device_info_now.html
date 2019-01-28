@@ -122,6 +122,10 @@
       <div algin="center" class="embed-responsive embed-responsive-16by9">
         <video id="video1" class="embed-responsive-item" controls muted autoplay></video>
       </div>
+      <p></p>
+      <div algin="center" class="embed-responsive embed-responsive-16by9">
+        <video id="video2" class="embed-responsive-item" controls muted autoplay></video>
+      </div>
     </div>
   </div>
 </div>
@@ -147,6 +151,27 @@ else if (video.canPlayType('application/vnd.apple.mpegurl')) {
   });
 }
 </script>
+
+
+<!-- Play FLV Video -->
+<script src="https://cdn.jsdelivr.net/npm/flv.js@latest"></script>
+<script>
+  if (flvjs.isSupported()) {
+      var video = document.getElementById('video2');
+      var flvPlayer = flvjs.createPlayer({
+          type: 'flv',
+          url: 'https://itlab7f.ddns.net:7777/live/{{ device_name }}.flv',
+          hasVideo: true,
+          hasAudio: false,
+          withCredentials: false,
+          isLive: true
+      });
+      flvPlayer.attachMediaElement(video);
+      flvPlayer.load();
+      flvPlayer.play();
+  }
+</script>
+
 
 <!-- Websocket Get Info -->
 <script>

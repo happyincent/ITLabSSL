@@ -22,11 +22,25 @@
             </div>
             <div class="row">
                 <div class="col-xs-12">
+                    {% if object %}
+                    <form id="ResetForm" action="{% url 'reset_token' pk=object %}" method="post">{% csrf_token %}</form>
+                    {% endif %}
                     <form method="post">
                         {% csrf_token %}
                         {% bootstrap_form form %}
+                        {% if object %}
+                        <div class="form-group">
+                            <label class="control-label" for="id_token">Token</label>
+                            <div class="input-group">
+                                <input type="text" name="token" value="{{ form.instance.token }}" class="form-control" placeholder="Error" id="id_token" disabled="disabled">
+                                <span class="input-group-btn">
+                                    <input type="submit" value="Reset" form="ResetForm" class="btn btn-danger"/>
+                                </span>
+                            </div>
+                        </div>
+                        {% endif %}
                         {% bootstrap_button button_type='submit' content='Save' button_class='btn-success' %}
-                        <a href="{{request.META.HTTP_REFERER|escape}}" class="btn btn-default">Back</a>
+                        <a href="{% url 'device_list' %}" class="btn btn-default">Back</a>
                     </form>
                 </div>
             </div>

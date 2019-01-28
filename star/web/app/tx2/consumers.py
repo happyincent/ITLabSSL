@@ -31,6 +31,10 @@ class InfoConsumer(AsyncJsonWebsocketConsumer):
         )
 
     async def receive_json(self, content):
+        if not str(self.scope['user']) == self.device_name:
+            await self.close()
+            return
+
         await self.updateDB(content)
 
         await self.channel_layer.group_send(

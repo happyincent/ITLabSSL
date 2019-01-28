@@ -1,13 +1,15 @@
 from django.db import models
 from django.urls import reverse
 import datetime
+import uuid
 
 # Create your models here.
 class Device(models.Model):
     name = models.CharField(max_length=200, primary_key=True)
     longitude = models.FloatField(default=120.22283)
     latitude = models.FloatField(default=22.99672)
-    uri = models.CharField(max_length=200, unique=True)
+    token = models.UUIDField(default=uuid.uuid4)
+    ssh_pub = models.CharField(default='', blank=True, max_length=1000, verbose_name="SSH Public Key")
 
     def info_url(self):
         return reverse('device', kwargs={'pk': self.pk})
