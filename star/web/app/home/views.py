@@ -108,7 +108,17 @@ class ResetToken(View):
 class DeviceDelete(DeleteView):
     model = Device
     template_name = 'home/delete_device.html'
-    success_url = reverse_lazy('device_list')
+    
+    def form_valid(self, form):
+        if not User.objects.filter(username=form.instance.name).exists():
+            self.object = form.save()
+            return HttpResponseRedirect(self.get_success_url())
+        
+        return HttpResponseRedirect(reverse('device_edit_fail', kwargs={'pk': form.instance.name}))
+        
+    def get_success_url(self):
+        User.objects.filter(username=self.object.name).delete()
+        return reverse('device_list')
 
 @method_decorator(decorator_legal_user, name='dispatch')
 @method_decorator(staff_member_required, name='dispatch')
