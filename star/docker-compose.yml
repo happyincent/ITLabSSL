@@ -3,7 +3,7 @@ version: '3'
 services:
   db:
     container_name: db-star
-    image: alpine-mongo:star
+    image: mongo:star
     build: ./db
     restart: always
     ports:
@@ -13,7 +13,7 @@ services:
   
   redis:
     container_name: redis-star
-    image: alpine-redis:star
+    image: redis:star
     build: ./redis
     restart: always
     ports:
@@ -57,3 +57,15 @@ services:
       - '/media/data:/media/data'
     depends_on:
       - web
+
+  sshd:
+    container_name: sshd-star
+    image: sshd:star
+    build: ./sshd
+    restart: always
+    command: sh -c "/run.sh"
+    ports:
+      - "22019:22"
+    volumes:
+      - './sshd/host_keys:/host_keys'
+      - './sshd/authorized_keys:/home/limited-user/.ssh/authorized_keys'
