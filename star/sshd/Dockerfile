@@ -3,6 +3,7 @@ MAINTAINER  ddl <itlab.ee.ncku.edu.tw>
 
 ENV         USERNAME=limited-user
 ENV         OPENSSH_VERSION=7.9_p1-r2
+ENV         PORT=22019
 
 # Mod: https://github.com/Hermsi1337/docker-sshd
 
@@ -20,6 +21,7 @@ RUN         chmod 604 /home/${USERNAME}/.ssh/authorized_keys
 RUN         apk add --update --no-cache openssh=${OPENSSH_VERSION} && \
             rm -rf /var/cache/apk/* /tmp/*
 
+RUN         sed -i "s|#Port [0-9]*|Port ${PORT}|" /etc/ssh/sshd_config
 RUN         echo -e "\n\
 Match User ${USERNAME}\n\
     PasswordAuthentication no\n\
@@ -31,5 +33,5 @@ Match User ${USERNAME}\n\
 
 # Setup config
 COPY        run.sh /run.sh
-RUN         chmod +x /run.sh
+RUN         chmod 775 /run.sh
 RUN         mkdir /host_keys
