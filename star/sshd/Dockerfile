@@ -3,7 +3,7 @@ MAINTAINER  ddl <itlab.ee.ncku.edu.tw>
 
 ENV         USERNAME=limited-user
 ENV         OPENSSH_VERSION=7.9_p1-r2
-ENV         PORT=22019
+ENV         PORT=62422
 
 # Mod: https://github.com/Hermsi1337/docker-sshd
 

@@ -48,19 +48,40 @@ services:
     restart: always
     command: nginx -g 'daemon off;'
     ports:
+      - "80:80"
       - "62400:62400"
-      - "127.0.0.1:62401:62401"
-      - "1935:1935"
+      # - "127.0.0.1:62401:62401"
+      # - "127.0.0.1:1935:1935"
     # network_mode: "host"
     volumes:
-      - '/etc/dehydrated/certs/ssl.itlab.ee.ncku.edu.tw/privkey.pem:/opt/nginx/privkey.pem'
-      - '/etc/dehydrated/certs/ssl.itlab.ee.ncku.edu.tw/fullchain.pem:/opt/nginx/fullchain.pem'
+      # - './nginx/nginx_init.conf:/opt/nginx/nginx.conf'
       - './nginx/nginx.conf:/opt/nginx/nginx.conf'
       - './web/app:/www'
       - '/tmp/key:/tmp/key'
       - '/media/data:/media/data'
+      - '/etc/letsencrypt:/etc/letsencrypt'
+      - './letsencrypt/letsencrypt-www:/tmp/letsencrypt'
     depends_on:
       - web
+  
+  letsencrypt:
+    container_name: letsencrypt-star
+    restart: always
+    build: ./letsencrypt
+    image: letsencrypt:star
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/letsencrypt:/etc/letsencrypt
+      - './letsencrypt/letsencrypt-www:/tmp/letsencrypt'
+    environment:
+      LE_RENEW_ID: nginx-star  # nginx's container name
+      DOMAINS: ssl.itlab.ee.ncku.edu.tw
+      EMAIL: ddl.itlab@gmail.com
+      WEBROOT_PATH: /tmp/letsencrypt
+      EXP_LIMIT: 30
+      CHECK_FREQ: 30
+    depends_on:
+      - nginx
 
   sshd:
     container_name: sshd-star
@@ -69,7 +90,7 @@ services:
     restart: always
     command: sh -c "/run.sh"
     ports:
-      - "22019:22019"
+      - "62422:62422"
     # network_mode: "host"
     volumes:
       - './sshd/host_keys:/host_keys'
