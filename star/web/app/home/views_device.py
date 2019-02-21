@@ -72,6 +72,7 @@ class DeviceDelete(DeleteView):
         
     def get_success_url(self):
         User.objects.filter(username=self.object.name).delete()
+        cache.delete(self.object.name)
         return reverse('device_list')
 
 @method_decorator(legal_user, name='dispatch')
