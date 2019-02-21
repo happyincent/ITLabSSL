@@ -7,6 +7,7 @@ from .views_decorator import *
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse
 from django.core import serializers
+from django.core.cache import cache
 
 from django.contrib.auth.models import User
 from .models import Device
@@ -41,6 +42,9 @@ class DeviceCreate(CreateView):
             email='{}@itlab.ee.ncku.edu.tw'.format(self.object.name),
             password=str(self.object.token)
         )
+
+        cache.set(self.object.name, str(self.object.token), timeout=None)
+
         return reverse('device_update', kwargs={'pk': self.object.name})
 
 @method_decorator(legal_user, name='dispatch')
@@ -75,9 +79,7 @@ class DeviceDelete(DeleteView):
 class ResetToken(View):
 
     @method_decorator(csrf_protect)
-    def post(self, request, **kwargs):
-        print(kwargs['pk'])
-        
+    def post(self, request, **kwargs):        
         if not (Device.objects.filter(name=kwargs['pk']).exists() and 
                 User.objects.filter(username=kwargs['pk']).exists()):
             raise Http404('Page Not Found')
@@ -87,6 +89,8 @@ class ResetToken(View):
         user = User.objects.filter(username=kwargs['pk']).first()
         user.set_password(str(new_token))
         user.save()
+
+        cache.set(kwargs['pk'], str(new_token), timeout=None)
 
         return HttpResponseRedirect(reverse('device_update', kwargs={'pk': kwargs['pk']}))
 

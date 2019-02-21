@@ -4,6 +4,7 @@ from . import views
 from . import views_device
 from . import views_now
 from . import views_history
+from . import views_nginx_rtmp
 
 urlpatterns = [
     path('', views.Home.as_view(), name='home'),
@@ -19,10 +20,10 @@ urlpatterns = [
     # channels' url is defined in star.routing.application
     path('device/<slug:pk>', views_now.DeviceInfo.as_view(), name='device'),
     path('key/<str:path>', views_now.key, name='key'),
-    
-    # path('hls/<str:path>', views_now.Live.as_view(), name='live'),
 
     path('device_history/<slug:pk>', views_history.DeviceInfoHistory.as_view(), name='device_history'),
     path('get_history_info', views_history.get_history_info, name='get_history_info'),
     path('vod/<str:path>', views_history.Vod.as_view(), name='vod'),
+
+    path('hooks/on_publish', views_nginx_rtmp.on_publish, name='on_publish'),
 ]
