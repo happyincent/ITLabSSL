@@ -1,16 +1,18 @@
-from django_cron import CronJobBase, Schedule
 import datetime
 
-from django.forms import model_to_dict
-from .models import Device, HistoryInfo
+from django_cron import CronJobBase, Schedule
+
+from home.models import Device, HistoryInfo
 from tx2.models import InstantInfo
 
-class CronJob_UpdateHistory(CronJobBase):
+from django.forms import model_to_dict
+
+class UpdateHistory(CronJobBase):
     RUN_EVERY_MINS = 15
     RUN_AT_TIMES = ['00:00']
 
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS, run_at_times=RUN_AT_TIMES)
-    code = 'home.cron.CronJob_UpdateHistory'
+    code = 'cron.update.UpdateHistory'
 
     def do(self):
         now = datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
