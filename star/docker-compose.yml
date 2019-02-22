@@ -96,3 +96,6 @@ services:
     volumes:
       - './sshd/host_keys:/host_keys'
       - './sshd/authorized_keys:/home/limited-user/.ssh/authorized_keys'
+    depends_on:
+      - web
+      - nginx

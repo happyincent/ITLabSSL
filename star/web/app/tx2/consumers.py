@@ -1,12 +1,14 @@
-from channels.generic.websocket import AsyncJsonWebsocketConsumer
 import json
-
 import datetime
+
 from django.utils import timezone
+from django.core.cache import cache
 
 from channels.db import database_sync_to_async
 from home.models import Device
 from .models import InstantInfo
+
+from channels.generic.websocket import AsyncJsonWebsocketConsumer
 
 class InfoConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
@@ -17,9 +19,11 @@ class InfoConsumer(AsyncJsonWebsocketConsumer):
             self.channel_name
         )
 
-        # await self.accept()
-
-        if self.scope['user'].is_authenticated:
+        if (
+            self.scope['user'].is_authenticated 
+            or 
+            self.scope['token'] != None and (self.scope['token'] == cache.get(self.device_name))
+        ):
             await self.accept()
         else:
             await self.close()
@@ -31,19 +35,18 @@ class InfoConsumer(AsyncJsonWebsocketConsumer):
         )
 
     async def receive_json(self, content):
-        if not str(self.scope['user']) == self.device_name:
+        if self.scope['token'] != None and (self.scope['token'] == cache.get(self.device_name)):
+            await self.updateDB(content)
+
+            await self.channel_layer.group_send(
+                self.device_name,
+                {
+                    'type': 'send_info',
+                    'content': content
+                }
+            )
+        else:
             await self.close()
-            return
-
-        await self.updateDB(content)
-
-        await self.channel_layer.group_send(
-            self.device_name,
-            {
-                'type': 'send_info',
-                'content': content
-            }
-        )
     
     async def send_info(self, event):
         content = event['content']

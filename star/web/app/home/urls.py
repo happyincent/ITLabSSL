@@ -15,7 +15,6 @@ urlpatterns = [
     path('device_update/<slug:pk>', views_device.DeviceUpdate.as_view(), name='device_update'),
     path('device_delete/<slug:pk>', views_device.DeviceDelete.as_view(), name='device_delete'),
     path('reset_token/<slug:pk>', views_device.ResetToken.as_view(), name='reset_token'),
-    path('device_edit_fail/<slug:pk>', views_device.DeviceEditFail.as_view(), name='device_edit_fail'),
 
     # channels' url is defined in star.routing.application
     path('device/<slug:pk>', views_now.DeviceInfo.as_view(), name='device'),

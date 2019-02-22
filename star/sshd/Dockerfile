@@ -14,9 +14,6 @@ RUN         adduser -h /home/${USERNAME} -s /bin/false -D ${USERNAME} && \
             sed -i "s/${USERNAME}:!/${USERNAME}:*/" /etc/shadow && \
             mkdir /home/${USERNAME}/.ssh
 
-COPY        authorized_keys /home/${USERNAME}/.ssh/authorized_keys
-RUN         chmod 604 /home/${USERNAME}/.ssh/authorized_keys
-
 # Install SSHD
 RUN         apk add --update --no-cache openssh=${OPENSSH_VERSION} && \
             rm -rf /var/cache/apk/* /tmp/*
@@ -27,7 +24,7 @@ Match User ${USERNAME}\n\
     PasswordAuthentication no\n\
     AllowAgentForwarding no\n\
     AllowTcpForwarding yes\n\
-    PermitOpen nginx:1935\n\
+    PermitOpen nginx:1935 web:8000 web:8001\n\
     ForceCommand echo 'This account can only be used for tunneling'" \
             >> /etc/ssh/sshd_config
 
