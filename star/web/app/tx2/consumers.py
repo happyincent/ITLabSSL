@@ -18,12 +18,10 @@ class InfoConsumer(AsyncJsonWebsocketConsumer):
             self.device_name,
             self.channel_name
         )
+        
+        self.is_token_valid = self.scope['token'] != None and self.scope['token'] == cache.get(self.device_name)
 
-        if (
-            self.scope['user'].is_authenticated 
-            or 
-            self.scope['token'] != None and (self.scope['token'] == cache.get(self.device_name))
-        ):
+        if self.is_token_valid or self.scope['user'].is_authenticated:
             await self.accept()
         else:
             await self.close()
@@ -35,7 +33,7 @@ class InfoConsumer(AsyncJsonWebsocketConsumer):
         )
 
     async def receive_json(self, content):
-        if self.scope['token'] != None and (self.scope['token'] == cache.get(self.device_name)):
+        if self.is_token_valid:
             await self.updateDB(content)
 
             await self.channel_layer.group_send(
