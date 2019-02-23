@@ -1,5 +1,5 @@
-# FROM python:3.7.2-alpine3.8
-FROM python:3-alpine3.8
+# FROM python:3.7.2-alpine3.9
+FROM python:3-alpine3.9
 MAINTAINER ddl <itlab.ee.ncku.edu.tw>
 
 # Environment
@@ -13,7 +13,8 @@ WORKDIR /www
 RUN apk update
 RUN apk add --no-cache \
         nano \
-        gcc musl-dev
+        gcc musl-dev \
+        libffi-dev openssl-dev
 
 COPY ./app/requirements.txt /www/requirements.txt
 RUN pip install -r requirements.txt
@@ -35,3 +36,6 @@ RUN chmod 775 /run.sh
 # Setup supervisord
 RUN apk add --no-cache supervisor
 COPY supervisord.conf /etc/supervisord.conf
+
+# Cleanup
+RUN rm -rf /var/cache/* /tmp/*

@@ -31,11 +31,12 @@ services:
     restart: always
     command: sh -c "/run.sh"
     # network_mode: "host"
-    volumes:
-      - './web/run.sh:/run.sh'
-      - './web/crontab:/crontab'
-      - './web/supervisord.conf:/etc/supervisord.conf'
+    volumes:      
       - './web/app:/www'
+      - './web/supervisord.conf:/etc/supervisord.conf'
+      - './web/crontab:/crontab'
+      - './web/run.sh:/run.sh'
+      - './sshd/authorized_keys:/authorized_keys'
       - '/tmp/key:/tmp/key'
       - '/media/data:/media/data'
     depends_on:
