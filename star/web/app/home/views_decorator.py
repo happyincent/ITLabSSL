@@ -8,3 +8,4 @@ from django_ajax.decorators import ajax
 from django.views.decorators.csrf import csrf_protect
 
 legal_user = [login_required, verified_email_required]
+legal_staff_user = [login_required, verified_email_required, staff_member_required]

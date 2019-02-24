@@ -5,6 +5,6 @@ from .views_decorator import *
 class Home(TemplateView):
     template_name = 'home/home.html'
 
-@method_decorator(legal_user, name='dispatch')
+# @method_decorator(legal_user, name='dispatch')
 class Aboutus(TemplateView):
     template_name = 'home/aboutus.html'

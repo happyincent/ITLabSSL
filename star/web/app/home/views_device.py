@@ -23,8 +23,7 @@ class DeviceList(TemplateView):
         context['devices_json'] = serializers.serialize("json", context['devices'])
         return context  
 
-@method_decorator(legal_user, name='dispatch')
-@method_decorator(staff_member_required, name='dispatch')
+@method_decorator(legal_staff_user, name='dispatch')
 class DeviceCreate(CreateView):
     model = Device
     template_name = 'home/edit_device.html'
@@ -42,8 +41,7 @@ class DeviceCreate(CreateView):
     def get_success_url(self):
         return reverse('device_update', kwargs={'pk': self.object.name})
 
-@method_decorator(legal_user, name='dispatch')
-@method_decorator(staff_member_required, name='dispatch')
+@method_decorator(legal_staff_user, name='dispatch')
 class DeviceUpdate(UpdateView):
     model = Device
     template_name = 'home/edit_device.html'
@@ -61,8 +59,7 @@ class DeviceUpdate(UpdateView):
     def get_success_url(self):
         return reverse('device_list')
 
-@method_decorator(legal_user, name='dispatch')
-@method_decorator(staff_member_required, name='dispatch')
+@method_decorator(legal_staff_user, name='dispatch')
 class DeviceDelete(DeleteView):
     model = Device
     template_name = 'home/delete_device.html'
@@ -72,8 +69,7 @@ class DeviceDelete(DeleteView):
         cache.delete(self.object.name)
         return reverse('device_list')
 
-@method_decorator(legal_user, name='dispatch')
-@method_decorator(staff_member_required, name='dispatch')
+@method_decorator(legal_staff_user, name='dispatch')
 class DeviceEditFail(TemplateView):
     template_name = 'home/edit_device_err.html'
     def get_context_data(self, **kwargs):
@@ -83,8 +79,7 @@ class DeviceEditFail(TemplateView):
 
 ##
 
-@method_decorator(legal_user, name='dispatch')
-@method_decorator(staff_member_required, name='dispatch')
+@method_decorator(legal_staff_user, name='dispatch')
 class ResetToken(View):
 
     @method_decorator(csrf_protect)

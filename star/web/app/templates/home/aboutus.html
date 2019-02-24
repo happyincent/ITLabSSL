@@ -5,6 +5,24 @@
 {% block bootstrap3_title %}About us | ITLab SSL{% endblock %}
 
 {% block head %}
+<style>
+  .iframe-wrapper {
+    position: relative;
+    height: 0;
+    overflow: hidden;
+    padding-bottom: 50%;
+    width: 90%;
+  }
+
+  .iframe-wrapper iframe,
+  .iframe-wrapper div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -52,14 +70,21 @@
                 <img src="/static/home/itlab.png" class="img-responsive" alt="ITLab Logo">
               </a>
             </div> -->
-          <div class="center-block embed-responsive embed-responsive-16by9" style="width: 70%;">
+          <div class="embed-responsive embed-responsive-16by9">
             <a href="https://itlab.ee.ncku.edu.tw/" target="_blank" style="display:inline-block;">
-              <div class="embed-responsive-item"
-                style="width: 100%; height: 70%; z-index: 2; background-color: transparent;"></div>
-              <iframe class="embed-responsive-item" style="height: 70%; z-index: 1;" src="/static/home/pac-man.html"
+              <div class="embed-responsive-item" style="z-index: 2; background-color: transparent;"></div>
+              <iframe class="embed-responsive-item" style="z-index: 1;" src="/static/home/pac-man.html"
                 frameborder="0"></iframe>
             </a>
           </div>
+
+          <!-- <div class="center-block iframe-wrapper">
+            <a href="https://itlab.ee.ncku.edu.tw/" target="_blank" style="display:inline-block;">
+              <div style="z-index: 2; background-color: transparent;"></div>
+              <iframe src="/static/home/pac-man.html" frameborder="0"></iframe>
+            </a>
+          </div> -->
+
         </div>
       </div>
     </div>
