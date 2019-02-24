@@ -8,37 +8,42 @@
 
 {# block just before closing </head> #}
 {% block bootstrap3_extra_head %}
-    <link rel="shortcut icon" href="/static/home/icon.png"/>
-    <link rel="stylesheet" type="text/css" href="/static/home/footer.css">
-    {% block head %}
-    {% endblock %}
+<link rel="shortcut icon" href="/static/home/icon.png" />
+<link rel="stylesheet" type="text/css" href="/static/home/footer.css">
+<style>
+  .page-header {
+    margin-top: 0;
+  }
+</style>
+{% block head %}
+{% endblock %}
 {% endblock %}
 
 {% block bootstrap3_content %}
 <nav class="navbar navbar-inverse navbar-static-top">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="{% url 'home' %}">ITLab Smart Street Light</a>
-        </div>
-        <div class="collapse navbar-collapse" id="myNavbar">
-          <!-- <ul class="nav navbar-nav navbar-left">
-                {% if user.is_authenticated %}
-                <li><a href="{% url 'home' %}">Home</a></li>
-                {% endif %}
-          </ul> -->
-            <ul class="nav navbar-nav navbar-right">
-                {% if user.is_authenticated %}
-                <li><a href="{% url 'account_email' %}">{{ user.email }}</a></li>
-                <li><a href="{% url 'account_logout' %}">Log Out</a></li>
-                {% endif %}
-            </ul>
-        </div>
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{% url 'home' %}">ITLab Smart Street Light</a>
     </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <!-- <ul class="nav navbar-nav navbar-left">
+        {% if user.is_authenticated %}
+        <li><a href="{% url 'home' %}">Home</a></li>
+        {% endif %}
+      </ul> -->
+      <ul class="nav navbar-nav navbar-right">
+        {% if user.is_authenticated %}
+        <li><a href="{% url 'account_email' %}">{{ user.email }}</a></li>
+        <li><a href="{% url 'account_logout' %}">Log Out</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
 </nav>
 {% block content %}
 {% endblock %}
@@ -47,11 +52,11 @@
 
 {# block just before closing </body> #}
 {% block bootstrap3_extra_script %}
-    {% block extra_script %}
-    {% endblock %}
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-copyright text-muted text-center">© 2018 happyincent</div>
-        </div>
-    </footer>
+{% block extra_script %}
+{% endblock %}
+<footer class="footer">
+  <div class="container">
+    <div class="footer-copyright text-muted text-center">© 2019 happyincent</div>
+  </div>
+</footer>
 {% endblock %}

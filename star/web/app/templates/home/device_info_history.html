@@ -5,7 +5,8 @@
 {% block bootstrap3_title %}Device History | ITLab SSL{% endblock %}
 
 {% block head %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/smalot-bootstrap-datetimepicker/2.4.4/css/bootstrap-datetimepicker.min.css" />
+<link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/smalot-bootstrap-datetimepicker/2.4.4/css/bootstrap-datetimepicker.min.css" />
 {% endblock %}
 
 {% block content %}
@@ -13,32 +14,33 @@
   <div class="row clearfix">
     <div class="col-md-12 column">
       <ul class="breadcrumb">
-          <li>
-              <a href="{% url 'home' %}">Home</a>
-          </li>
-          <li>
-              <a href="{% url 'device_list' %}">Device List</a>
-          </li>
-          <li class="active">
-              Device History
-          </li>
+        <li>
+          <a href="{% url 'home' %}">Home</a>
+        </li>
+        <li>
+          <a href="{% url 'device_list' %}">Device List</a>
+        </li>
+        <li class="active">
+          Device History
+        </li>
       </ul>
-      
+
       <div class="page-header">
-          <h3>{{ device_name }}</h3>
+        <h3>{{ device_name }}</h3>
       </div>
 
       <div class="alert alert-info">
         <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
         Get records for <strong>one hour</strong> from the selected <strong>DateTime</strong>.
       </div>
-      
+
       <div class="form-group">
         <div id="datetimepicker1" class="input-group date form_datetime">
-          <input id='datetimepicker1_val' type='text' class="form-control" value="" readonly style="background-color: transparent;"/>
+          <input id='datetimepicker1_val' type='text' class="form-control" value="" readonly
+            style="background-color: transparent;" />
           <span class="input-group-addon"><i class="icon-remove glyphicon glyphicon-remove"></i></span>
           <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-          <span class="input-group-addon"><i class="glyphicon glyphicon-search" onclick="loadHistory();" ></i></span>
+          <span class="input-group-addon"><i class="glyphicon glyphicon-search" onclick="loadHistory();"></i></span>
         </div>
       </div>
 
@@ -64,7 +66,8 @@
   </div>
 
   <div algin="center" class="embed-responsive embed-responsive-16by9">
-    <video id='video1' class="embed-responsive-item" width="100%" controls preload="none" onclick="this.play();"></video>
+    <video id='video1' class="embed-responsive-item" width="100%" controls preload="none"
+      onclick="this.play();"></video>
   </div>
 </div>
 
@@ -72,95 +75,96 @@
 
 {% block extra_script %}
 <!-- Show DateTimePicker -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/smalot-bootstrap-datetimepicker/2.4.4/js/bootstrap-datetimepicker.min.js"></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/smalot-bootstrap-datetimepicker/2.4.4/js/bootstrap-datetimepicker.min.js"></script>
 <script>
-$("#datetimepicker1").datetimepicker({
-  format: "yyyy-mm-dd hh:00",
-  minuteStep: 60,
-  startView: 2,
-  minView: 1,
-  autoclose: true
-})
-.on('changeDate', function(ev) {
-  console.log( (ev.date ? ev.date.getTime()/1000 | 0 : null) );
-  if (ev.date == null) clearUI();
-});
+  $("#datetimepicker1").datetimepicker({
+    format: "yyyy-mm-dd hh:00",
+    minuteStep: 60,
+    startView: 2,
+    minView: 1,
+    autoclose: true
+  })
+    .on('changeDate', function (ev) {
+      console.log((ev.date ? ev.date.getTime() / 1000 | 0 : null));
+      if (ev.date == null) clearUI();
+    });
 </script>
 
 <!-- function: load history list, load video src -->
 <script>
-function clearUI() {
-  $("#history_table > tbody").html("");
-  document.getElementById('video1').removeAttribute("src");
-  document.getElementById('video1').load();
-}
-
-function getTimestamp() {
-  var the_date = $('#datetimepicker1').data("datetimepicker").viewDate;
-  if (the_date) {
-    the_date = new Date(the_date.getTime() + (new Date().getTimezoneOffset()*60000));
-    the_date.setMinutes(0);
-    the_date.setSeconds(0);
-    the_date.setMilliseconds(0);
-    return the_date.getTime()/1000 | 0;
-  }
-  else
-    return null;
-}
-
-function loadHistory() {
-  clearUI();
-
-  if ($('#datetimepicker1_val').val() == "") {
-    alert('Please select Datetime first.');
-    return;
+  function clearUI() {
+    $("#history_table > tbody").html("");
+    document.getElementById('video1').removeAttribute("src");
+    document.getElementById('video1').load();
   }
 
-  var ts = getTimestamp();
-  console.log(ts);
-  if (ts == null) return;
+  function getTimestamp() {
+    var the_date = $('#datetimepicker1').data("datetimepicker").viewDate;
+    if (the_date) {
+      the_date = new Date(the_date.getTime() + (new Date().getTimezoneOffset() * 60000));
+      the_date.setMinutes(0);
+      the_date.setSeconds(0);
+      the_date.setMilliseconds(0);
+      return the_date.getTime() / 1000 | 0;
+    }
+    else
+      return null;
+  }
 
-  $.ajax({
-    url: "{% url 'get_history_info' %}",
-    type: "POST",
-    data: {
-      csrfmiddlewaretoken: '{{ csrf_token }}',
-      pk: '{{ device_name }}',
-      ts: ts,
-    },
-    success: function(data){
-      if (data.status != 200) {
-        console.log(data.statusText);
-        return;
-      }
+  function loadHistory() {
+    clearUI();
 
-      if ($.isEmptyObject(data.content)){
-        alert('No Data.');
-      }
+    if ($('#datetimepicker1_val').val() == "") {
+      alert('Please select Datetime first.');
+      return;
+    }
 
-      $.each(data.content, function(k, v) {
-        if (v.vod == '')
-          js = "javascript: alert('Video not found.');";
-        else {
-          url = 'https://ssl.itlab.ee.ncku.edu.tw:62400/vod/' + v.vod;
-          js = "javascript: document.getElementById('video1').setAttribute('src', '" + url + "');";
+    var ts = getTimestamp();
+    console.log(ts);
+    if (ts == null) return;
+
+    $.ajax({
+      url: "{% url 'get_history_info' %}",
+      type: "POST",
+      data: {
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+        pk: '{{ device_name }}',
+        ts: ts,
+      },
+      success: function (data) {
+        if (data.status != 200) {
+          console.log(data.statusText);
+          return;
         }
-        
-        $('#history_table > tbody').append(
-          '<tr>' + 
-          '<td>' + v.timestamp + '</td>' + 
-          '<td>' + v.temperature + ' °C' + '</td>' + 
-          '<td>' + v.humidity + ' %' + '</td>' + 
-          '<td>' + v.pm2_5 + ' μg/m<sup>3</sup>' + '</td>' + 
-          '<td>' + v.loudness + ' dB' + '</td>' + 
-          '<td>' + v.light_intensity + ' lux' + '</td>' + 
-          '<td>' + v.uv_intensity + ' mW/cm<sup>2</sup>' + '</td>' + 
-          '<td><button onclick="' + js + '" type="button" class="btn btn-default btn-block btn-sm">Load</button></td>' + 
-          '</tr>'
-        );
-      });
-    },
-  });
-}
+
+        if ($.isEmptyObject(data.content)) {
+          alert('No Data.');
+        }
+
+        $.each(data.content, function (k, v) {
+          if (v.vod == '')
+            js = "javascript: alert('Video not found.');";
+          else {
+            url = 'https://ssl.itlab.ee.ncku.edu.tw:62400/vod/' + v.vod;
+            js = "javascript: document.getElementById('video1').setAttribute('src', '" + url + "');";
+          }
+
+          $('#history_table > tbody').append(
+            '<tr>' +
+            '<td>' + v.timestamp + '</td>' +
+            '<td>' + v.temperature + ' °C' + '</td>' +
+            '<td>' + v.humidity + ' %' + '</td>' +
+            '<td>' + v.pm2_5 + ' μg/m<sup>3</sup>' + '</td>' +
+            '<td>' + v.loudness + ' dB' + '</td>' +
+            '<td>' + v.light_intensity + ' lux' + '</td>' +
+            '<td>' + v.uv_intensity + ' mW/cm<sup>2</sup>' + '</td>' +
+            '<td><button onclick="' + js + '" type="button" class="btn btn-default btn-block btn-sm">Load</button></td>' +
+            '</tr>'
+          );
+        });
+      },
+    });
+  }
 </script>
 {% endblock %}

@@ -6,8 +6,13 @@
 
 {% block head %}
 <style>
-.panel-body {padding: 0;}
-.panel-body > .table{margin-bottom: 0px;}
+  .panel-body {
+    padding: 0;
+  }
+
+  .panel-body>.table {
+    margin-bottom: 0px;
+  }
 </style>
 {% endblock %}
 
@@ -16,18 +21,18 @@
   <div class="row clearfix">
     <div class="col-md-12 column">
       <ul class="breadcrumb">
-          <li>
-              <a href="{% url 'home' %}">Home</a>
-          </li>
-          <li>
-              <a href="{% url 'device_list' %}">Device List</a>
-          </li>
-          <li class="active">
-              Device Info
-          </li>
+        <li>
+          <a href="{% url 'home' %}">Home</a>
+        </li>
+        <li>
+          <a href="{% url 'device_list' %}">Device List</a>
+        </li>
+        <li class="active">
+          Device Info
+        </li>
       </ul>
       <div class="page-header">
-          <h3>{{ device_name }}</h3>
+        <h3>{{ device_name }}</h3>
       </div>
     </div>
   </div>
@@ -135,21 +140,21 @@
 <!-- Play HLS Video -->
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script>
-var video = document.getElementById('video1');
-if(Hls.isSupported()) {
-  var hls = new Hls();
-  hls.loadSource('https://ssl.itlab.ee.ncku.edu.tw:62400/hls/{{ device_name }}.m3u8');
-  hls.attachMedia(video);
-  hls.on(Hls.Events.MANIFEST_PARSED,function() {
-    video.play();
-});
-}
-else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-  video.src = 'https://ssl.itlab.ee.ncku.edu.tw:62400/hls/{{ device_name }}.m3u8';
-  video.addEventListener('loadedmetadata',function() {
-    video.play();
-  });
-}
+  var video = document.getElementById('video1');
+  if (Hls.isSupported()) {
+    var hls = new Hls();
+    hls.loadSource('https://ssl.itlab.ee.ncku.edu.tw:62400/hls/{{ device_name }}.m3u8');
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED, function () {
+      video.play();
+    });
+  }
+  else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = 'https://ssl.itlab.ee.ncku.edu.tw:62400/hls/{{ device_name }}.m3u8';
+    video.addEventListener('loadedmetadata', function () {
+      video.play();
+    });
+  }
 </script>
 
 
@@ -175,27 +180,27 @@ else if (video.canPlayType('application/vnd.apple.mpegurl')) {
 
 <!-- Websocket Get Info -->
 <script>
-var device_name = '{{ device_name }}';
+  var device_name = '{{ device_name }}';
 
-var ws_scheme = window.location.protocol == "https:" ? "wss://" : "ws://";
+  var ws_scheme = window.location.protocol == "https:" ? "wss://" : "ws://";
 
-var socket = new WebSocket(ws_scheme + window.location.host + '/ws/device/' + device_name);
+  var socket = new WebSocket(ws_scheme + window.location.host + '/ws/device/' + device_name);
 
-socket.onmessage = function(e) {
-  var data = JSON.parse(e.data);
-  document.querySelector('#timestamp').innerHTML = data['timestamp'];
-  document.querySelector('#temperature').innerHTML = data['temperature'] + ' °C';
-  document.querySelector('#humidity').innerHTML = data['humidity'] + ' %';
-  document.querySelector('#pm2_5').innerHTML = data['pm2_5'] + ' μg/m<sup>3</sup>';
-  document.querySelector('#loudness').innerHTML = data['loudness'] + ' dB';
-  document.querySelector('#light_intensity').innerHTML = data['light_intensity'] + ' lux';
-  document.querySelector('#uv_intensity').innerHTML = data['uv_intensity'] + ' mW/cm<sup>2</sup>';
-  document.querySelector('#ir_sensed').innerHTML = data['ir_sensed'];
-};
+  socket.onmessage = function (e) {
+    var data = JSON.parse(e.data);
+    document.querySelector('#timestamp').innerHTML = data['timestamp'];
+    document.querySelector('#temperature').innerHTML = data['temperature'] + ' °C';
+    document.querySelector('#humidity').innerHTML = data['humidity'] + ' %';
+    document.querySelector('#pm2_5').innerHTML = data['pm2_5'] + ' μg/m<sup>3</sup>';
+    document.querySelector('#loudness').innerHTML = data['loudness'] + ' dB';
+    document.querySelector('#light_intensity').innerHTML = data['light_intensity'] + ' lux';
+    document.querySelector('#uv_intensity').innerHTML = data['uv_intensity'] + ' mW/cm<sup>2</sup>';
+    document.querySelector('#ir_sensed').innerHTML = data['ir_sensed'];
+  };
 
-socket.onclose = function(e) {
-  alert('Connection closed unexpectedly.\nPlease refresh the page.');
-  document.querySelector('#timestamp').innerHTML = 'Disconnected.'
-};
+  socket.onclose = function (e) {
+    alert('Connection closed unexpectedly.\nPlease refresh the page.');
+    document.querySelector('#timestamp').innerHTML = 'Disconnected.'
+  };
 </script>
 {% endblock %}

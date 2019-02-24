@@ -8,42 +8,63 @@
 {% endblock %}
 
 {% block content %}
-  <div class="container">
+<div class="container">
   <div class="row clearfix">
     <div class="col-md-12 column">
-      <div class="page-header">
-        <h1>
-            About us
-        </h1>
-      </div>
-      <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">
-                <strong>Beargoer</strong>
-            </h3>
-        </div>
-        <div class="panel-body">
-          <p>beargoer@gmail.com</p>
-        </div>
-      </div>
-      <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">
+      <ul class="breadcrumb">
+        <li>
+          <a href="{% url 'home' %}">Home</a>
+        </li>
+        <li class="active">
+          About us
+        </li>
+      </ul>
+      <div class="row clearfix">
+        <div class="col-md-6 column">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">
                 <strong>DDL</strong>
-            </h3>
+                <small>Full-Stack Developer</small>
+              </h3>
+            </div>
+            <div class="panel-body">
+              <p>happyincent@gmail.com</p>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">
+                <strong>Beargoer</strong>
+                <small>Advisor</small>
+              </h3>
+            </div>
+            <div class="panel-body">
+              <p>beargoer@gmail.com</p>
+            </div>
+          </div>
         </div>
-        <div class="panel-body">
-          <p>ddl.itlab@gmail.com</p>
+
+        <div class="col-md-6 column">
+          <!-- <div class="col-md-6 column"> -->
+          <!-- <div class="center-block" style="width: 80%;">
+              <a href="https://itlab.ee.ncku.edu.tw/" target="_blank">
+                <img src="/static/home/itlab.png" class="img-responsive" alt="ITLab Logo">
+              </a>
+            </div> -->
+          <div class="center-block embed-responsive embed-responsive-16by9" style="width: 70%;">
+            <a href="https://itlab.ee.ncku.edu.tw/" target="_blank" style="display:inline-block;">
+              <div class="embed-responsive-item"
+                style="width: 100%; height: 70%; z-index: 2; background-color: transparent;"></div>
+              <iframe class="embed-responsive-item" style="height: 70%; z-index: 1;" src="/static/home/pac-man.html"
+                frameborder="0"></iframe>
+            </a>
+          </div>
         </div>
-      </div>
-      <div class="center-block" style="width: 60%;">
-        <a href="https://itlab.ee.ncku.edu.tw/" target="_blank">
-          <img src="/static/home/itlab.png" class="img-responsive" alt="ITLab Logo">
-        </a>
       </div>
     </div>
   </div>
-  </div>
+</div>
 {% endblock %}
 
 {% block extra_script %}

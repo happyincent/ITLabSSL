@@ -23,18 +23,11 @@
           <a class="btn btn-info btn-large" href="{% url 'aboutus' %}">About us</a>
         </p>
         {% if user.is_superuser %}
-          <p>
-            <a class="btn btn-warning btn-large" href="{% url 'admin:auth_user_changelist' %}">Change User Permission</a>
-          </p>
+        <p>
+          <a class="btn btn-warning btn-large" href="{% url 'admin:auth_user_changelist' %}">Change User Permission</a>
+        </p>
         {% endif %}
-        <br/>
-        <!-- <p>
-            <a class="btn btn-primary btn-large" href="{% url 'device_list' %}">Show Device List</a>
-            <a class="btn btn-info btn-large" href="{% url 'aboutus' %}">About us</a>
-            {% if user.is_superuser %}
-            <a class="btn btn-warning btn-large" href="{% url 'admin:auth_user_changelist' %}">Change User Permission</a>
-            {% endif %}
-        </p> -->
+        <br />
         <img src="/static/home/arch.png" alt="ITLab Logo" class="img-responsive center-block" style="width: 90%;">
       </div>
     </div>
