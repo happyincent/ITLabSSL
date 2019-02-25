@@ -33,12 +33,13 @@ services:
     # network_mode: "host"
     volumes:      
       - './web/app:/www'
-      - './web/supervisord.conf:/etc/supervisord.conf'
+      - './web/supervisord.conf:/supervisord.conf'
       - './web/crontab:/crontab'
       - './web/run.sh:/run.sh'
-      - './sshd/authorized_keys:/authorized_keys'
       - '/tmp/key:/tmp/key'
       - '/media/data:/media/data'
+      - './sshd/authorized_keys:/authorized_keys'
+      - './log/web/:/var/log/'
     depends_on:
       - db
       - redis
@@ -48,7 +49,7 @@ services:
     image: nginx:star
     build: ./nginx
     restart: always
-    command: nginx -g 'daemon off;'
+    command: sh -c "/run.sh"
     ports:
       - "80:80"
       - "62400:62400"
@@ -58,11 +59,14 @@ services:
     volumes:
       # - './nginx/nginx_init.conf:/opt/nginx/nginx.conf'
       - './nginx/nginx.conf:/opt/nginx/nginx.conf'
+      - './nginx/run.sh:/run.sh'
+      - './nginx/logrotate.conf:/logrotate.conf'
       - './web/app:/www'
       - '/tmp/key:/tmp/key'
       - '/media/data:/media/data'
       - '/etc/letsencrypt:/etc/letsencrypt'
       - './letsencrypt/letsencrypt-www:/tmp/letsencrypt'
+      - './log/nginx/:/opt/nginx/logs/'
     depends_on:
       - web
   

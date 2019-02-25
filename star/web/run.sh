@@ -5,7 +5,7 @@ python /www/manage.py migrate
 python /www/manage.py migrate django_cron
 python /www/manage.py collectstatic --noinput
 
-supervisord -c /etc/supervisord.conf
+supervisord -c /supervisord.conf
 supervisorctl start gunicorn
 supervisorctl start daphne
 

@@ -1,28 +1,46 @@
 FROM alpine:3.8
 MAINTAINER ddl <itlab.ee.ncku.edu.tw>
+# Mod: https://github.com/alfg/docker-nginx-rtmp/blob/master/Dockerfile
 
 ENV NGINX_VERSION=1.14.2
 ENV NGINX_RTMP_VERSION=1.2.1
-ENV FFMPEG_VERSION=4.1
+ENV FFMPEG_VERSION=4.1.1
+ENV TZ=Asia/Taipei
 
 ENV MAKEFLAGS="-j4"
 
-# Mod: https://github.com/alfg/docker-nginx-rtmp/blob/master/Dockerfile
+###############################
+# Install packages
+RUN apk add --update --no-cache \
+    nano logrotate
 
-##############################
+# Setup scripts
+COPY crontab /crontab
+COPY run.sh /run.sh
+RUN chmod 775 /run.sh
+RUN find /etc/periodic/ -type f -exec rm {} \;
 
-# Get nginx source.
+# Setup timezone
+RUN apk add --no-cache tzdata && \
+    cp /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone && \
+    date && \
+    apk del tzdata
+
+###############################
+
+# Get nginx source
 RUN cd /tmp && \
   wget https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && \
   tar zxf nginx-${NGINX_VERSION}.tar.gz && \
   rm nginx-${NGINX_VERSION}.tar.gz
 
-# # Get nginx-rtmp module.
+# # Get nginx-rtmp module
 RUN cd /tmp && \
   wget https://github.com/arut/nginx-rtmp-module/archive/v${NGINX_RTMP_VERSION}.tar.gz && \
   tar zxf v${NGINX_RTMP_VERSION}.tar.gz && rm v${NGINX_RTMP_VERSION}.tar.gz
 
-# Build dependencies.
+# Build dependencies
 RUN apk add --update \
   build-base \
   ca-certificates \
@@ -41,7 +59,7 @@ RUN apk add --update \
   pkgconfig \
   zlib-dev
 
-# Compile nginx with nginx-rtmp module.
+# Compile nginx with nginx-rtmp module
 RUN cd /tmp/nginx-${NGINX_VERSION} && \
   ./configure \
   --prefix=/opt/nginx \
@@ -54,7 +72,7 @@ RUN cd /tmp/nginx-${NGINX_VERSION} && \
   && \
   cd /tmp/nginx-${NGINX_VERSION} && make && make install
 
-###############################
+################################
 ENV FF_PREFIX=/usr/local
 
 # FFmpeg build dependencies.
@@ -81,12 +99,12 @@ RUN	apk add --update \
 RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories
 RUN apk add --update fdk-aac-dev
 
-# Get FFmpeg source.
+# Get FFmpeg source
 RUN cd /tmp/ && \
   wget http://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.gz && \
   tar zxf ffmpeg-${FFMPEG_VERSION}.tar.gz && rm ffmpeg-${FFMPEG_VERSION}.tar.gz
 
-# Compile ffmpeg.
+# Compile ffmpeg
 RUN cd /tmp/ffmpeg-${FFMPEG_VERSION} && \
   ./configure \
   --prefix=${FF_PREFIX} \
@@ -115,14 +133,10 @@ RUN cd /tmp/ffmpeg-${FFMPEG_VERSION} && \
   --extra-libs="-lpthread -lm" && \
   make && make install && make distclean
 
-# Setting the timezone
-RUN apk add tzdata && \
-  cp /usr/share/zoneinfo/Asia/Taipei /etc/localtime && \
-  echo "Asia/Taipei" >  /etc/timezone && \
-  date && \
-  apk del tzdata
+###############################
 
-# Cleanup.
+# Cleanup
 RUN rm -rf /var/cache/* /tmp/*
 
+# Setup PATH
 ENV PATH "/opt/nginx/sbin:${PATH}"

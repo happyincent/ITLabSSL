@@ -11,8 +11,8 @@ WORKDIR /www
 
 # Installation
 RUN apk update
-RUN apk add --no-cache \
-        nano \
+RUN apk add --update --no-cache \
+        nano logrotate \
         gcc musl-dev \
         libffi-dev openssl-dev
 
@@ -32,6 +32,7 @@ RUN apk add --no-cache tzdata && \
 COPY crontab /crontab
 COPY run.sh /run.sh
 RUN chmod 775 /run.sh
+RUN find /etc/periodic/ -type f -exec rm {} \;
 
 # Setup supervisord
 RUN apk add --no-cache supervisor
