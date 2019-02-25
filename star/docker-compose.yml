@@ -37,7 +37,7 @@ services:
       - './web/crontab:/crontab'
       - './web/run.sh:/run.sh'
       - '/tmp/key:/tmp/key'
-      - '/media/data:/media/data'
+      - '/media/data/record:/media/data/record'
       - './sshd/authorized_keys:/authorized_keys'
       - './log/web/:/var/log/'
     depends_on:
@@ -59,11 +59,12 @@ services:
     volumes:
       # - './nginx/nginx_init.conf:/opt/nginx/nginx.conf'
       - './nginx/nginx.conf:/opt/nginx/nginx.conf'
+      - './nginx/crontab:/crontab'
       - './nginx/run.sh:/run.sh'
       - './nginx/logrotate.conf:/logrotate.conf'
       - './web/app:/www'
       - '/tmp/key:/tmp/key'
-      - '/media/data:/media/data'
+      - '/media/data/record:/media/data/record'
       - '/etc/letsencrypt:/etc/letsencrypt'
       - './letsencrypt/letsencrypt-www:/tmp/letsencrypt'
       - './log/nginx/:/opt/nginx/logs/'

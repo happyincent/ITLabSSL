@@ -1,6 +1,7 @@
 import datetime
 
 from django_cron import CronJobBase, Schedule
+from django.conf import settings
 
 from home.models import Device, HistoryInfo
 from tx2.models import InstantInfo
@@ -8,7 +9,7 @@ from tx2.models import InstantInfo
 from django.forms import model_to_dict
 
 class UpdateHistory(CronJobBase):
-    RUN_EVERY_MINS = 15
+    RUN_EVERY_MINS = settings.UPDATE_HISTORY_EVERY_MINS
     RUN_AT_TIMES = ['00:00']
 
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS, run_at_times=RUN_AT_TIMES)

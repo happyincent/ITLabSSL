@@ -10,6 +10,7 @@ from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse
 from django.core import serializers
 from django.core.cache import cache
+from django.conf import settings
 
 from .models import Device
 
@@ -97,7 +98,7 @@ class ResetToken(View):
 
 class UpdatePubKey:
     def __init__(self, device_name, ssh_pub=None):
-        self.path = '/authorized_keys'
+        self.path = settings.SSH_KEY_PATH
         self.comment = device_name
         self.key = ssh_pub
 

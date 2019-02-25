@@ -143,14 +143,14 @@
   var video = document.getElementById('video1');
   if (Hls.isSupported()) {
     var hls = new Hls();
-    hls.loadSource('https://ssl.itlab.ee.ncku.edu.tw:62400/hls/{{ device_name }}.m3u8');
+    hls.loadSource('{{ hls_url }}{{ device_name }}.m3u8');
     hls.attachMedia(video);
     hls.on(Hls.Events.MANIFEST_PARSED, function () {
       video.play();
     });
   }
   else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src = 'https://ssl.itlab.ee.ncku.edu.tw:62400/hls/{{ device_name }}.m3u8';
+    video.src = '{{ hls_url }}{{ device_name }}.m3u8';
     video.addEventListener('loadedmetadata', function () {
       video.play();
     });

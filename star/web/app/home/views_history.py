@@ -7,12 +7,9 @@ from revproxy.views import ProxyView
 from .views_decorator import *
 
 from django.http import Http404
+from django.conf import settings
 
 from .models import Device
-
-VOD_DIR = '/media/data/record'
-VOD_EXT = '.mp4'
-VOD_LEN = 15 # minutes
 
 @method_decorator(legal_user, name='dispatch')
 class DeviceInfoHistory(TemplateView):
@@ -25,6 +22,7 @@ class DeviceInfoHistory(TemplateView):
             raise Http404('Page Not Found')
         
         context['device_name'] = kwargs['pk']
+        context['vod_url'] = settings.VOD_URL
         return context
 
 @ajax # -> would catch exceptions
@@ -43,16 +41,16 @@ def get_history_info(request):
     
     ts = datetime.datetime.fromtimestamp(int(ts), datetime.timezone.utc)
     ts_next = ts + datetime.timedelta(hours=1)
-    ts_last = ts - datetime.timedelta(minutes=VOD_LEN) + datetime.timedelta(seconds=1)
+    ts_last = ts - datetime.timedelta(minutes=settings.VOD_LEN) + datetime.timedelta(seconds=1)
 
     ## Get possible filenames
     filenames = sorted([
         int(
             e.name.replace('{}-'.format(pk), '')\
-                  .replace(VOD_EXT, '')
+                  .replace(settings.VOD_EXT, '')
         ) 
-        for e in os.scandir(VOD_DIR)
-        if e.name.startswith(pk) and e.name.endswith(VOD_EXT)
+        for e in os.scandir(settings.VOD_DIR)
+        if e.name.startswith(pk) and e.name.endswith(settings.VOD_EXT)
     ])
 
     filenames = [i for i in filenames if i in range(int(ts_last.strftime('%s')), int(ts_next.strftime('%s')))]
@@ -70,11 +68,11 @@ def get_history_info(request):
         
         names = [name for name in filenames if name <= ts_i_int]
         
-        data[i]['vod'] = '{}-{}{}'.format(pk, names[-1], VOD_EXT) if names else ''
+        data[i]['vod'] = '{}-{}{}'.format(pk, names[-1], settings.VOD_EXT) if names else ''
         data[i]['timestamp'] = timezone.localtime(ts_i).strftime('%Y-%m-%d %H:%M:%S %z')
 
     return data
 
 @method_decorator(legal_user, name='dispatch')
 class Vod(ProxyView):
-    upstream = 'http://nginx:62401/record/'
+    upstream = settings.VOD_UPSTREAM

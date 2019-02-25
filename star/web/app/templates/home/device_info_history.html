@@ -91,7 +91,7 @@
     });
 </script>
 
-<!-- function: load history list, load video src -->
+<!-- Load history list & history video src -->
 <script>
   function clearUI() {
     $("#history_table > tbody").html("");
@@ -146,7 +146,7 @@
           if (v.vod == '')
             js = "javascript: alert('Video not found.');";
           else {
-            url = 'https://ssl.itlab.ee.ncku.edu.tw:62400/vod/' + v.vod;
+            url = '{{ vod_url }}' + v.vod;
             js = "javascript: document.getElementById('video1').setAttribute('src', '" + url + "');";
           }
 
