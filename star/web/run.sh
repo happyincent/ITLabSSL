@@ -9,6 +9,9 @@ supervisord -c /supervisord.conf
 supervisorctl start gunicorn
 supervisorctl start daphne
 
+chmod 644 /logrotate.conf
+chown root:root /logrotate.conf
+
 cat /crontab > /var/spool/cron/crontabs/root
 crond -f
 

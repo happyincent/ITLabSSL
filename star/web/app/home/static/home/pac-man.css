@@ -569,10 +569,10 @@ h1 {
   position: relative;
 }
 .b .ghost {
-  width: 31%;
-  height: 16%;
-  top: 68%;
-  left: 41%;
+  width: 36%;
+  height: 20%;
+  top: 69%;
+  left: 39%;
   -webkit-animation: bounce-ghost 3s infinite;
           animation: bounce-ghost 3s infinite;
 }

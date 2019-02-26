@@ -60,7 +60,7 @@ le_fixpermissions() {
 }
 
 le_renew() {
-    certbot certonly --webroot --agree-tos --renew-by-default --text --email ${EMAIL_ADDRESS} -w ${WEBROOT_PATH} ${LE_DOMAINS}
+    certbot certonly --rsa-key-size 4096 --webroot --agree-tos --renew-by-default --text --email ${EMAIL_ADDRESS} -w ${WEBROOT_PATH} ${LE_DOMAINS}
     le_fixpermissions
     le_hook
 }

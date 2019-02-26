@@ -64,6 +64,7 @@ RUN cd /tmp/nginx-${NGINX_VERSION} && \
   ./configure \
   --prefix=/opt/nginx \
   --with-http_ssl_module \
+  --with-http_v2_module \
   --with-threads \
   --with-file-aio \
   # --with-debug \
