@@ -18,6 +18,8 @@ class DeviceInfoHistory(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        print(self.request.META['HTTP_USER_AGENT'])
+
         if not Device.objects.filter(pk=kwargs['pk']).exists():
             raise Http404('Page Not Found')
         
