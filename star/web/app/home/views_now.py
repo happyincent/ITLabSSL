@@ -16,7 +16,7 @@ class DeviceInfo(TemplateView):
         context = super().get_context_data(**kwargs)
         
         if not Device.objects.filter(pk=kwargs['pk']).exists():
-            raise Http404('Page Not Found')
+            raise Http404
         
         context['device_name'] = kwargs['pk']
         context['hls_url'] = settings.HLS_URL

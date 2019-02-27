@@ -27,5 +27,6 @@ class LimitDiskUsage(CronJobBase):
             
                 print('LimitDiskUsage: clean up {} files'.format(len(del_files)))
             
+            print('LimitDiskUsage: SUCCESS without clean up files')
         except Exception as e:
             print('LimitDiskUsage FAIL: {}'.format(e))

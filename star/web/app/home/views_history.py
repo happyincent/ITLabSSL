@@ -3,13 +3,13 @@ import datetime
 from django.utils import timezone
 
 from django.views.generic import TemplateView
-from revproxy.views import ProxyView
 from .views_decorator import *
 
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.conf import settings
 
 from .models import Device
+from allauth.account.models import EmailAddress
 
 @method_decorator(legal_user, name='dispatch')
 class DeviceInfoHistory(TemplateView):
@@ -21,7 +21,7 @@ class DeviceInfoHistory(TemplateView):
         print(self.request.META['HTTP_USER_AGENT'])
 
         if not Device.objects.filter(pk=kwargs['pk']).exists():
-            raise Http404('Page Not Found')
+            raise Http404
         
         context['device_name'] = kwargs['pk']
         context['vod_url'] = settings.VOD_URL
@@ -33,13 +33,13 @@ class DeviceInfoHistory(TemplateView):
 @verified_email_required
 def get_history_info(request):
     if request.method != 'POST':
-        raise Http404('Page Not Found')
+        raise Http404
 
     pk = request.POST.get('pk', None)
     ts = request.POST.get('ts', None)
     
     if pk == None or ts == None:
-        raise Http404('Page Not Found')
+        raise Http404
     
     ts = datetime.datetime.fromtimestamp(int(ts), datetime.timezone.utc)
     ts_next = ts + datetime.timedelta(hours=1)
@@ -75,6 +75,7 @@ def get_history_info(request):
 
     return data
 
-@method_decorator(legal_user, name='dispatch')
-class Vod(ProxyView):
-    upstream = settings.VOD_UPSTREAM
+def vod_auth(request):
+    if request.user.is_authenticated and EmailAddress.objects.filter(user=request.user, verified=True).exists():
+        return HttpResponse(status=200)
+    return HttpResponse(status=403)

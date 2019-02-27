@@ -86,7 +86,7 @@ class ResetToken(View):
     @method_decorator(csrf_protect)
     def post(self, request, **kwargs):        
         if not Device.objects.filter(name=kwargs['pk']).exists():
-            raise Http404('Page Not Found')
+            raise Http404
         
         new_token = uuid.uuid4()
         Device.objects.filter(name=kwargs['pk']).update(token=new_token)

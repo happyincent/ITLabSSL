@@ -31,7 +31,7 @@ daphne
 
 django-allauth==0.38.0
 django-bootstrap3
-django-revproxy
+#django-revproxy
 django-cron
 djangoajax
 

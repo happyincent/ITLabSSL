@@ -23,7 +23,7 @@ urlpatterns = [
 
     path('device_history/<slug:pk>', views_history.DeviceInfoHistory.as_view(), name='device_history'),
     path('get_history_info', views_history.get_history_info, name='get_history_info'),
-    path('vod/<str:path>', views_history.Vod.as_view(), name='vod'),
+    path('vod_auth', views_history.vod_auth, name='vod_auth'),
 
     path('hooks/on_publish', views_nginx_rtmp.on_publish, name='on_publish'),
 ]
