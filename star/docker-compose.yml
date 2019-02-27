@@ -6,9 +6,6 @@ services:
     image: mongo:star
     build: ./db
     restart: always
-    # ports:
-    #   - "127.0.0.1:27017:27017"
-    # network_mode: "host"
     volumes:
       - './db/data/:/data/db/'
   
@@ -18,9 +15,6 @@ services:
     build: ./redis
     restart: always
     command: redis-server --appendonly yes
-    # ports:
-    #   - "127.0.0.1:6379:6379"
-    # network_mode: "host"
     volumes:
       - ./redis/data:/data
 
@@ -30,7 +24,6 @@ services:
     build: ./web
     restart: always
     command: sh -c "/run.sh"
-    # network_mode: "host"
     volumes:      
       - './web/app:/www'
       - './web/supervisord.conf:/supervisord.conf'
@@ -54,8 +47,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      # - "127.0.0.1:1935:1935"
-    # network_mode: "host"
     volumes:
       # - './nginx/nginx_init.conf:/opt/nginx/nginx.conf'
       - './nginx/nginx.conf:/opt/nginx/nginx.conf'
@@ -98,7 +89,6 @@ services:
     command: sh -c "/run.sh"
     ports:
       - "62422:62422"
-    # network_mode: "host"
     volumes:
       - './sshd/host_keys:/host_keys'
       - './sshd/authorized_keys:/home/limited-user/.ssh/authorized_keys'

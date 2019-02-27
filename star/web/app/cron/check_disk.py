@@ -1,16 +1,18 @@
 import os
 import psutil
+import datetime
 
 from django_cron import CronJobBase, Schedule
 from django.conf import settings
 
 class LimitDiskUsage(CronJobBase):
-    RUN_AT_TIMES = settings.CHECK_DISK_USAGE_AT
 
-    schedule = Schedule(run_at_times=RUN_AT_TIMES)
+    schedule = Schedule(run_at_times=settings.CHECK_DISK_USAGE_AT)
     code = 'cron.check_disk.LimitDiskUsage'
 
     def do(self):
+        now = datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
+
         try:
             curr = psutil.disk_usage(settings.VOD_DIR).percent
             
@@ -25,8 +27,8 @@ class LimitDiskUsage(CronJobBase):
                 for file in del_files:
                     os.remove(os.path.join(settings.VOD_DIR, file))
             
-                print('LimitDiskUsage: clean up {} files'.format(len(del_files)))
+                print('LimitDiskUsage: delete {} vods ... {}'.format(len(del_files), now))
             
-            print('LimitDiskUsage: SUCCESS without clean up files')
+            print('LimitDiskUsage: delete 0 vods ... {}'.format(now))
         except Exception as e:
-            print('LimitDiskUsage FAIL: {}'.format(e))
+            print('LimitDiskUsage FAIL: {} ... {}'.format(e, now))

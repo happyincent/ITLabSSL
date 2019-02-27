@@ -13,7 +13,7 @@ class UpdateHistory(CronJobBase):
     RUN_AT_TIMES = ['00:00']
 
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS, run_at_times=RUN_AT_TIMES)
-    code = 'cron.update.UpdateHistory'
+    code = 'cron.update_db.UpdateHistory'
 
     def do(self):
         now = datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
@@ -37,5 +37,4 @@ class UpdateHistory(CronJobBase):
                 
             print('UpdateHistory SUCCESS ... {}'.format(now))
         except Exception as e:
-            print(e)
-            print('UpdateHistory FAIL ... {}'.format(now))
+            print('UpdateHistory FAIL: {} ... {}'.format(e, now))
