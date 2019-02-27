@@ -65,7 +65,7 @@
   </div>
 
   <div algin="center" class="embed-responsive embed-responsive-16by9">
-    <video id='video1' class="embed-responsive-item" width="100%" controls preload="none"
+    <video id='video1' class="embed-responsive-item" width="100%" playsinline controls muted autoplay preload="none"
       onclick="this.play();"></video>
   </div>
 </div>
@@ -145,7 +145,7 @@
             js = "javascript: alert('Video not found.');";
           else {
             url = '{{ vod_url }}' + v.vod;
-            js = "javascript: document.getElementById('video1').setAttribute('src', '" + url + "');";
+            js = "javascript: document.getElementById('video1').setAttribute('src', '" + url + "'); document.getElementById('video1').load();";
           }
 
           $('#history_table > tbody').append(
