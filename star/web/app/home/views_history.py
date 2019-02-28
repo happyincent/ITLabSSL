@@ -5,11 +5,10 @@ from django.utils import timezone
 from django.views.generic import TemplateView
 from .views_decorator import *
 
-from django.http import Http404, HttpResponse
+from django.http import Http404
 from django.conf import settings
 
 from .models import Device
-from allauth.account.models import EmailAddress
 
 @method_decorator(legal_user, name='dispatch')
 class DeviceInfoHistory(TemplateView):
@@ -74,8 +73,3 @@ def get_history_info(request):
         data[i]['timestamp'] = timezone.localtime(ts_i).strftime('%Y-%m-%d %H:%M:%S %z')
 
     return data
-
-def vod_auth(request):
-    if request.user.is_authenticated and EmailAddress.objects.filter(user=request.user, verified=True).exists():
-        return HttpResponse(status=200)
-    return HttpResponse(status=403)

@@ -4,7 +4,7 @@ from . import views
 from . import views_device
 from . import views_now
 from . import views_history
-from . import views_nginx_rtmp
+from . import views_nginx
 
 urlpatterns = [
     path('', views.Home.as_view(), name='home'),
@@ -23,7 +23,7 @@ urlpatterns = [
 
     path('device_history/<slug:pk>', views_history.DeviceInfoHistory.as_view(), name='device_history'),
     path('get_history_info', views_history.get_history_info, name='get_history_info'),
-    path('vod_auth', views_history.vod_auth, name='vod_auth'),
 
-    path('hooks/on_publish', views_nginx_rtmp.on_publish, name='on_publish'),
+    path('hooks/on_publish', views_nginx.on_publish, name='on_publish'),
+    path('check_user', views_nginx.check_user, name='check_user'),
 ]

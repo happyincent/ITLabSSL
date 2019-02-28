@@ -4,14 +4,20 @@
 
 ```
 $ cat <(echo "OS:     " `lsb_release -d | cut -f2`) <(echo "Kernel: " `uname -a | cut -d' ' -f1,3,14`) <(docker --version) <(docker-compose --version)
-OS:      Ubuntu 16.04.5 LTS
+OS:      Ubuntu 16.04.6 LTS
 Kernel:  Linux 4.15.0-45-generic x86_64
 Docker version 18.09.2, build 6247962
 docker-compose version 1.23.2, build 1110ad01
 ```
 
+## Installation
+[INSTALL.md](/ddl/star/blob/master/INSTALL.md)
+
 ## Run without `supervisord`
 ```
+# Comment out "supervisorctl start xxx" in web/run.sh
+# docker-compose restart web
+
 docker exec -it web-star gunicorn star.wsgi:application -c gunicorn.config.py
 docker exec -it web-star daphne -b 0.0.0.0 -p 8001 --proxy-headers star.asgi:application
 
