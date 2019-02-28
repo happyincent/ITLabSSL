@@ -11,7 +11,7 @@ docker-compose version 1.23.2, build 1110ad01
 ```
 
 ## Installation
-[INSTALL.md](/ddl/star/blob/master/INSTALL.md)
+[INSTALL.md](/INSTALL.md)
 
 ## Run without `supervisord`
 ```
