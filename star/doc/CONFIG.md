@@ -30,9 +30,9 @@
   * `/etc/letsencrypt` : path for https key files **(nginx & letsencrypt)**
   * `./letsencrypt/letsencrypt-www` : temporary path for letsencrypt **(nginx & letsencrypt)**
 * letsencrypt
-  * `/var/run/docker.sock` : restart nginx container after renew certificate **(letsencrypt & host)**
-  * `/etc/letsencrypt` : path for https key files **(nginx & letsencrypt)**
   * `./letsencrypt/letsencrypt-www` : temporary path for letsencrypt **(nginx & letsencrypt)**
+  * `/etc/letsencrypt` : path for https key files **(nginx & letsencrypt)**
+  * `/var/run/docker.sock` : restart nginx container after renew certificate **(letsencrypt & host)**
 * sshd
   * `./sshd/host_keys` : path for sshd server's key files
   * `./sshd/authorized_keys` : file with client's public key **(web & sshd)**

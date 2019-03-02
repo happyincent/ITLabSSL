@@ -67,9 +67,9 @@ services:
     build: ./letsencrypt
     image: letsencrypt:star
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /etc/letsencrypt:/etc/letsencrypt
       - './letsencrypt/letsencrypt-www:/tmp/letsencrypt'
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       LE_RENEW_ID: nginx-star  # nginx's container name
       DOMAINS: ssl.itlab.ee.ncku.edu.tw
