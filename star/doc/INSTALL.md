@@ -1,6 +1,15 @@
 # INSTALL
 > Ubuntu 16.04
 
+## Enviornment
+```
+$ cat <(echo "OS:     " `lsb_release -d | cut -f2`) <(echo "Kernel: " `uname -a | cut -d' ' -f1,3,14`) <(docker --version) <(docker-compose --version)
+OS:      Ubuntu 16.04.6 LTS
+Kernel:  Linux 4.15.0-45-generic x86_64
+Docker version 18.09.2, build 6247962
+docker-compose version 1.23.2, build 1110ad01
+```
+
 ## APT Install
 ```
 sudo apt update
@@ -190,3 +199,5 @@ make clean && make
 # remove installer files
 rm -rf ~/Downloads/cudnn_samples_v7/ ~/Downloads/libcudnn7*
 ```
+
+https://medium.com/@zhanwenchen/install-cuda-9-2-and-cudnn-7-1-for-tensorflow-pytorch-gpu-on-ubuntu-16-04-1822ab4b2421

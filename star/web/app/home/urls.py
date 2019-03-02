@@ -19,7 +19,6 @@ urlpatterns = [
 
     # channels' url is defined in app/star/routing/application
     path('device/<slug:pk>', views_now.DeviceInfo.as_view(), name='device'),
-    path('key/<str:path>', views_now.key, name='key'),
 
     path('device_history/<slug:pk>', views_history.DeviceInfoHistory.as_view(), name='device_history'),
     path('get_history_info', views_history.get_history_info, name='get_history_info'),

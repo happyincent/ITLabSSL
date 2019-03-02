@@ -27,13 +27,12 @@ services:
     volumes:      
       - './web/app:/www'
       - './web/supervisord.conf:/supervisord.conf'
+      - './web/logrotate.conf:/logrotate.conf'
       - './web/crontab:/crontab'
       - './web/run.sh:/run.sh'
-      - './web/logrotate.conf:/logrotate.conf'
-      - '/tmp/key:/tmp/key'
-      - '/media/data/record:/media/data/record'
       - './sshd/authorized_keys:/authorized_keys'
       - './log/web/:/var/log/'
+      - '/media/data/record:/media/data/record'
     depends_on:
       - db
       - redis
@@ -50,15 +49,15 @@ services:
     volumes:
       # - './nginx/nginx_init.conf:/opt/nginx/nginx.conf'
       - './nginx/nginx.conf:/opt/nginx/nginx.conf'
+      - './nginx/logrotate.conf:/logrotate.conf'
       - './nginx/crontab:/crontab'
       - './nginx/run.sh:/run.sh'
-      - './nginx/logrotate.conf:/logrotate.conf'
       - './web/app:/www'
+      - './letsencrypt/letsencrypt-www:/tmp/letsencrypt'
+      - './log/nginx/:/opt/nginx/logs/'
       - '/tmp/key:/tmp/key'
       - '/media/data/record:/media/data/record'
       - '/etc/letsencrypt:/etc/letsencrypt'
-      - './letsencrypt/letsencrypt-www:/tmp/letsencrypt'
-      - './log/nginx/:/opt/nginx/logs/'
     depends_on:
       - web
   
