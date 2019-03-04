@@ -64,12 +64,17 @@
     </div>
   </div>
 
-  <div algin="center" class="embed-responsive embed-responsive-16by9">
-    <video id='video1' class="embed-responsive-item" width="100%" playsinline controls muted autoplay preload="none"
-      onclick="this.play();"></video>
+  <div class="row clearfix">
+    <div class='col-sm-2'></div>
+    <div class='col-sm-8'>
+      <div class="embed-responsive embed-responsive-16by9">
+        <video id='video1' class="embed-responsive-item" style="max-width: 800px; max-height: 450px;"
+          playsinline controls muted autoplay preload="none" onclick="this.play();"></video>
+      </div>
+    </div>
+    <div class='col-sm-2'></div>
   </div>
 </div>
-
 {% endblock %}
 
 {% block extra_script %}
