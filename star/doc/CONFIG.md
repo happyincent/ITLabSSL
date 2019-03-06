@@ -123,6 +123,7 @@
     # SMTP
     EMAIL_XXX=YYY
     ...
+    SETUP_MSG => several configs required in star-TX2's .env
     HLS_URL = 'https://ssl.itlab.ee.ncku.edu.tw/hls/'
     SSH_KEY_PATH = '/authorized_keys'
     VOD_URL = 'https://ssl.itlab.ee.ncku.edu.tw/vod/'
