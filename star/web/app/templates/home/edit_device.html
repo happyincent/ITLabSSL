@@ -40,7 +40,7 @@
               </div>
             </div>
             {% endif %}
-            {% bootstrap_button button_type='submit' content='Save' button_class='btn-success' %}
+            <button class="btn btn-success" type="submit" onclick="alert('{{ setup_msg }}');">Save</button>
             <a href="{% url 'device_list' %}" class="btn btn-default">Back</a>
           </form>
         </div>

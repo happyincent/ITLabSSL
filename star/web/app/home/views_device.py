@@ -22,13 +22,18 @@ class DeviceList(TemplateView):
         context = super().get_context_data(**kwargs)
         context['devices'] = Device.objects.all()
         context['devices_json'] = serializers.serialize("json", context['devices'])
-        return context  
+        return context
 
 @method_decorator(legal_staff_user, name='dispatch')
 class DeviceCreate(CreateView):
     model = Device
     template_name = 'home/edit_device.html'
     fields = ['name', 'longitude', 'latitude', 'ssh_pub']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['setup_msg'] = settings.SETUP_MSG
+        return context
 
     def form_valid(self, form):
         if not UpdatePubKey(form.instance.name, form.instance.ssh_pub).add():
@@ -47,6 +52,11 @@ class DeviceUpdate(UpdateView):
     model = Device
     template_name = 'home/edit_device.html'
     fields = ['longitude', 'latitude', 'ssh_pub']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['setup_msg'] = settings.SETUP_MSG
+        return context
 
     def form_valid(self, form):
         

@@ -16,9 +16,10 @@
           Error
         </h1>
       </div>
-      <h4>Fail to create or update Device for</h4>
-      <h4>name=<strong>"{{ device_name }}"</strong></h4>
-      <h5>Make sure your SSH Public Key is correct.</h5>
+      <h4>Fail to add or update Device <strong>"{{ device_name }}"</strong></h4>
+      <div class="alert alert-warning">
+        Make sure your SSH Public Key is correct.
+      </div>
       <a href="{{request.META.HTTP_REFERER|escape}}" class="btn btn-default">Back</a>
     </div>
   </div>
