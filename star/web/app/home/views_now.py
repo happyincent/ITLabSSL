@@ -18,5 +18,5 @@ class DeviceInfo(TemplateView):
         
         context['device_name'] = kwargs['pk']
         context['hls_url'] = settings.HLS_URL
-        context['device_info'] = Device.objects.get(pk=kwargs['pk']).info_history.first()
+        context['device_info'] = Device.objects.get(pk=kwargs['pk']).info_history.order_by('-timestamp').first()
         return context
