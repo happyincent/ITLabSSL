@@ -1,10 +1,12 @@
+import pickle
 import datetime
 
 from django_cron import CronJobBase, Schedule
+from django.utils import timezone
 from django.conf import settings
 
+from django.core.cache import cache
 from home.models import Device, HistoryInfo
-from tx2.models import InstantInfo
 
 from django.forms import model_to_dict
 
@@ -19,21 +21,28 @@ class UpdateHistory(CronJobBase):
         now = datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
 
         try:
-            for info in InstantInfo.objects.all():
+            for key in cache.keys("*{}".format(settings.INFO_POSTFIX)):
                 
-                device = Device.objects.filter(pk=info.device.pk).first()
+                device = Device.objects.filter(pk=key.replace(settings.INFO_POSTFIX, '')).first()
                 if device == None:
                     continue
                 
-                latest = device.info_history.order_by('timestamp').first()
+                info_last = device.info_history.order_by('-timestamp').first()
+                info_now = pickle.loads(cache.get(key))
                 
-                if latest != None and info.timestamp == latest.timestamp:
-                    print('{} same timestamp: {}'.format(device.pk, info.timestamp.strftime('%s')))
-                    continue
-                
-                kwargs = model_to_dict(info, exclude=['id', 'device'])
+                ts = info_now.get('timestamp', None)
 
-                HistoryInfo.objects.create(device=device, timestamp=info.timestamp, **kwargs)
+                if ts == None:
+                    print('UpdateHistory: {} error timestamp'.format(device.pk))
+                    continue
+
+                if info_last != None and timezone.localtime(info_last.timestamp).strftime(settings.INFO_TIMESTR) == ts:
+                    print('UpdateHistory: {}: same timestamp'.format(device.pk))
+                    continue
+
+                info_now['timestamp'] = datetime.datetime.strptime(ts, settings.INFO_TIMESTR)
+
+                HistoryInfo.objects.create(device=device, **info_now)
                 
             print('UpdateHistory SUCCESS ... {}'.format(now))
         except Exception as e:

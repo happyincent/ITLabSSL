@@ -31,4 +31,4 @@ class LimitDiskUsage(CronJobBase):
             
             print('LimitDiskUsage: delete 0 vods ... {}'.format(now))
         except Exception as e:
-            print('LimitDiskUsage FAIL: {} ... {}'.format(e, now))
+            print('LimitDiskUsage: FAIL: {} ... {}'.format(e, now))

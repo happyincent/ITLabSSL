@@ -18,5 +18,5 @@ class DeviceInfo(TemplateView):
         
         context['device_name'] = kwargs['pk']
         context['hls_url'] = settings.HLS_URL
-        context['device_info'] = Device.objects.get(pk=kwargs['pk']).info_now.first()
+        context['device_info'] = Device.objects.get(pk=kwargs['pk']).info_history.first()
         return context

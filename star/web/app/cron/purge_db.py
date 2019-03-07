@@ -26,4 +26,4 @@ class PurgeOldHistory(CronJobBase):
             
             print('PurgeOldHistory: delete 0 data ... {}'.format(now))
         except Exception as e:
-            print('PurgeOldHistory FAIL: {} ... {}'.format(e, now))
+            print('PurgeOldHistory: FAIL: {} ... {}'.format(e, now))

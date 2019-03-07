@@ -1,12 +1,11 @@
-import json
+import pickle
 import datetime
 
 from django.utils import timezone
-from django.core.cache import cache
+from django.conf import settings
 
-from channels.db import database_sync_to_async
+from django.core.cache import cache
 from home.models import Device
-from .models import InstantInfo
 
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 
@@ -14,21 +13,17 @@ class InfoConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         self.device_name = self.scope['url_route']['kwargs']['device_name']
 
-        self.device = Device.objects.filter(pk=self.device_name).first()
-        if self.device != None:
-
-            await self.channel_layer.group_add(
-                self.device_name,
-                self.channel_name
-            )
-            
-            self.is_token_valid = self.scope['token'] != None and self.scope['token'] == cache.get(self.device_name)
-
-            if self.is_token_valid or self.scope['user'].is_authenticated:
-                await self.accept()
-                return
+        await self.channel_layer.group_add(
+            self.device_name,
+            self.channel_name
+        )
         
-        await self.close()
+        self.is_token_valid = self.scope['token'] != None and self.scope['token'] == cache.get(self.device_name)
+
+        if self.is_token_valid or self.scope['user'].is_authenticated:
+            await self.accept()
+        else:
+            await self.close()
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
@@ -41,7 +36,7 @@ class InfoConsumer(AsyncJsonWebsocketConsumer):
             
             ts = datetime.datetime.now(datetime.timezone.utc)
             ts = timezone.localtime(ts)
-            content['timestamp'] = ts.strftime('%Y-%m-%d %H:%M:%S %z')
+            content['timestamp'] = ts.strftime(settings.INFO_TIMESTR)
 
             await self.channel_layer.group_send(
                 self.device_name,
@@ -51,17 +46,9 @@ class InfoConsumer(AsyncJsonWebsocketConsumer):
                 }
             )
 
-            # content.pop('timestamp', None)
-            await self.updateDB(content)
+            cache.set('{}{}'.format(self.device_name, settings.INFO_POSTFIX), pickle.dumps(content), settings.INFO_TIMEOUT)
         else:
             await self.close()
     
     async def send_info(self, event):
         await self.send_json(event['content'])
-
-    @database_sync_to_async
-    def updateDB(self, content):
-        InstantInfo.objects.update_or_create(
-            device = self.device,
-            defaults = content
-        )
