@@ -37,7 +37,7 @@ class DeviceCreate(CreateView):
 
     def form_valid(self, form):
         if not UpdatePubKey(form.instance.name, form.instance.ssh_pub).add():
-            return HttpResponseRedirect(reverse('device_edit_fail', kwargs={'pk': form.instance.name}))
+            form.instance.ssh_pub = None
         
         cache.set(form.instance.name, str(form.instance.token), timeout=None)
         

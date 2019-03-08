@@ -41,7 +41,7 @@
       {% if device_info %}
       <div class="alert alert-info">
         <strong id="timestamp">
-          {{ device_info.timestamp | date:"Y-m-d H:i:s O" | default_if_none:"null" }}
+          {{ device_info.timestamp | default_if_none:"null" }}
         </strong>
       </div>
 

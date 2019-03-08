@@ -9,7 +9,7 @@ class Device(models.Model):
     longitude = models.FloatField(default=120.22283)
     latitude = models.FloatField(default=22.99672)
     token = models.UUIDField(default=uuid.uuid4)
-    ssh_pub = models.CharField(default='', blank=True, max_length=1000, verbose_name="SSH Public Key")
+    ssh_pub = models.CharField(default='ssh-rsa [key] [comment]', blank=True, max_length=1000, verbose_name="SSH Public Key")
 
     def info_url(self):
         return reverse('device', kwargs={'pk': self.pk})
