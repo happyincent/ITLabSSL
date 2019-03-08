@@ -23,6 +23,6 @@ class DeviceInfo(TemplateView):
         context['hls_url'] = settings.HLS_URL
         
         info_now = cache.get('{}{}'.format(kwargs['pk'], settings.INFO_POSTFIX))
-        context['device_info'] = None if info_now==None else pickle.loads()
+        context['device_info'] = None if info_now==None else pickle.loads(info_now)
         
         return context
