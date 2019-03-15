@@ -5,7 +5,7 @@ import uuid
 
 # Create your models here.
 class Device(models.Model):
-    name = models.CharField(max_length=200, primary_key=True)
+    name = models.SlugField(max_length=20, primary_key=True)
     longitude = models.FloatField(default=120.22283)
     latitude = models.FloatField(default=22.99672)
     token = models.UUIDField(default=uuid.uuid4)

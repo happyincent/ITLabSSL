@@ -184,7 +184,7 @@
 
   var ws_scheme = window.location.protocol == "https:" ? "wss://" : "ws://";
 
-  var socket = new WebSocket(ws_scheme + window.location.host + '/ws/device/' + device_name);
+  var socket = new WebSocket(ws_scheme + window.location.host + '/ws/browser/device/' + device_name);
 
   socket.onmessage = function (e) {
     var data = JSON.parse(e.data);

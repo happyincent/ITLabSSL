@@ -12,18 +12,22 @@ from channels.generic.websocket import AsyncJsonWebsocketConsumer
 class InfoConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         self.device_name = self.scope['url_route']['kwargs']['device_name']
-
-        await self.channel_layer.group_add(
-            self.device_name,
-            self.channel_name
-        )
         
-        self.is_token_valid = self.scope['token'] != None and self.scope['token'] == cache.get(self.device_name)
+        token = cache.get(self.device_name)
+        
+        if token != None:
+            await self.channel_layer.group_add(
+                self.device_name,
+                self.channel_name
+            )
+            
+            self.token_is_authenticated = self.scope['token'] == token
 
-        if self.is_token_valid or self.scope['user'].is_authenticated:
-            await self.accept()
-        else:
-            await self.close()
+            if self.token_is_authenticated or self.scope['user'].is_authenticated:
+                await self.accept()
+                return
+        
+        await self.close()
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
@@ -32,7 +36,7 @@ class InfoConsumer(AsyncJsonWebsocketConsumer):
         )
 
     async def receive_json(self, content):
-        if self.is_token_valid:
+        if self.token_is_authenticated:
             
             ts = datetime.datetime.now(datetime.timezone.utc)
             ts = timezone.localtime(ts)
