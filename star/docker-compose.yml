@@ -87,7 +87,7 @@ services:
     restart: always
     command: sh -c "/run.sh"
     ports:
-      - "62422:62422"
+      - "62422:22"
     volumes:
       - './sshd/host_keys:/host_keys'
       - './sshd/authorized_keys:/home/limited-user/.ssh/authorized_keys'
