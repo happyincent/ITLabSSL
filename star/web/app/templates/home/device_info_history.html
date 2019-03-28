@@ -25,7 +25,7 @@
       </ul>
 
       <div class="page-header">
-        <h3>{{ device_name }}</h3>
+        <h3>{{ device_id }}</h3>
       </div>
 
       <div class="alert alert-info">
@@ -132,7 +132,7 @@
       type: "POST",
       data: {
         csrfmiddlewaretoken: '{{ csrf_token }}',
-        pk: '{{ device_name }}',
+        pk: '{{ device_id }}',
         ts: ts,
       },
       success: function (data) {

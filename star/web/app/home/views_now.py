@@ -16,13 +16,13 @@ class DeviceInfo(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        if not Device.objects.filter(pk=kwargs['pk']).exists():
+        if not Device.objects.filter(pk=kwargs.get('pk')).exists():
             raise Http404
         
-        context['device_name'] = kwargs['pk']
+        context['device_id'] = kwargs.get('pk')
         context['hls_url'] = settings.HLS_URL
         
-        info_now = cache.get('{}{}'.format(kwargs['pk'], settings.INFO_POSTFIX))
+        info_now = cache.get('{}{}'.format(kwargs.get('pk'), settings.INFO_POSTFIX))
         context['device_info'] = None if info_now==None else pickle.loads(info_now)
         
         return context

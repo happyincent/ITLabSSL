@@ -23,7 +23,11 @@ class PurgeOldHistory(CronJobBase):
             if data_count > 0:
                 data.delete()
                 print('PurgeOldHistory: delete {} data ... {}'.format(data_count, now))
+                return 'PurgeOldHistory: delete {} data ... {}'.format(data_count, now)
             
-            print('PurgeOldHistory: delete 0 data ... {}'.format(now))
+            else:
+                print('PurgeOldHistory: delete 0 data ... {}'.format(now))
+                return 'PurgeOldHistory: delete 0 data ... {}'.format(now)
         except Exception as e:
             print('PurgeOldHistory: FAIL: {} ... {}'.format(e, now))
+            return 'PurgeOldHistory: FAIL: {} ... {}'.format(e, now)

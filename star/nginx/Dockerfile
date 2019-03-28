@@ -1,10 +1,10 @@
-FROM alpine:3.8
+FROM alpine:3.9
 MAINTAINER ddl <itlab.ee.ncku.edu.tw>
 # Mod: https://github.com/alfg/docker-nginx-rtmp/blob/master/Dockerfile
 
-ENV NGINX_VERSION=1.14.2
+ENV NGINX_VERSION=1.15.9
 ENV NGINX_RTMP_VERSION=1.2.1
-ENV FFMPEG_VERSION=4.1.1
+ENV FFMPEG_VERSION=4.1.2
 ENV TZ=Asia/Taipei
 
 ENV MAKEFLAGS="-j4"
@@ -38,7 +38,8 @@ RUN cd /tmp && \
 # # Get nginx-rtmp module
 RUN cd /tmp && \
   wget https://github.com/arut/nginx-rtmp-module/archive/v${NGINX_RTMP_VERSION}.tar.gz && \
-  tar zxf v${NGINX_RTMP_VERSION}.tar.gz && rm v${NGINX_RTMP_VERSION}.tar.gz
+  tar zxf v${NGINX_RTMP_VERSION}.tar.gz && rm v${NGINX_RTMP_VERSION}.tar.gz && \
+  sed -i 's/            case ESCAPE/            \/\/ fall through\n            case ESCAPE/' nginx-rtmp-module-${NGINX_RTMP_VERSION}/ngx_rtmp_eval.c
 
 # Build dependencies
 RUN apk add --update \
@@ -68,7 +69,7 @@ RUN cd /tmp/nginx-${NGINX_VERSION} && \
   --with-http_auth_request_module \
   --with-threads \
   --with-file-aio \
-  # --with-debug \
+  --with-debug \
   --add-module=/tmp/nginx-rtmp-module-${NGINX_RTMP_VERSION} \
   --conf-path=/opt/nginx/nginx.conf \
   && \

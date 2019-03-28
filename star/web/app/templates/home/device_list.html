@@ -22,26 +22,26 @@
       </ul>
       <div class="row clearfix">
         <div class="col-md-6 column table-responsive">
-          <table class="table table-hover">
+          <table class="table table-hover table-condensed">
             <thead>
               <tr>
-                <th>Name</th>
+                <th>ID<small> (staff)</small></th>
                 <th>Location</th>
                 <th>Info</th>
-                <th>Staff</th>
+                <th>Ctrl</th>
               </tr>
             </thead>
             <tbody>
               {% for device in devices %}
               <tr>
-                <td>{{ device.name }}</td>
-                <td>({{ device.longitude | floatformat:3 }}, {{ device.latitude | floatformat:3 }})</td>
+                <td>{{ device.id }}<small> ({{ device.user.username }})</small></td>
+                <td>{{ device.longitude | floatformat:3 }}, {{ device.latitude | floatformat:3 }}</td>
                 <td>
                   <a href="{{ device.info_url }}" class="btn btn-default btn-block btn-sm">Now</a>
                   <a href="{{ device.history_url }}" class="btn btn-default btn-block btn-sm">History</a>
                 </td>
                 <td>
-                  {% if request.user.is_staff %}
+                  {% if request.user.is_superuser or request.user.username == device.user.username %}
                   <a href="{{ device.update_url }}" class="btn btn-default btn-block btn-sm">Edit</a>
                   <a href="{{ device.delete_url }}" class="btn btn-default btn-block btn-sm">Delete</a>
                   {% else %}

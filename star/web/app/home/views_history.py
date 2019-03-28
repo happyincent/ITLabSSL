@@ -17,10 +17,10 @@ class DeviceInfoHistory(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        if not Device.objects.filter(pk=kwargs['pk']).exists():
+        if not Device.objects.filter(pk=kwargs.get('pk')).exists():
             raise Http404
         
-        context['device_name'] = kwargs['pk']
+        context['device_id'] = kwargs.get('pk')
         context['vod_url'] = settings.VOD_URL
         return context
 
@@ -35,7 +35,7 @@ def get_history_info(request):
     pk = request.POST.get('pk', None)
     ts = request.POST.get('ts', None)
     
-    if pk == None or ts == None:
+    if pk == None or ts == None or not Device.objects.filter(pk=pk).exists():
         raise Http404
     
     ts = datetime.datetime.fromtimestamp(int(ts), datetime.timezone.utc)

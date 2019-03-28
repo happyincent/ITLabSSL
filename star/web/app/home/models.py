@@ -1,11 +1,14 @@
-from django.db import models
-from django.urls import reverse
 import datetime
 import uuid
 
+from django.db import models
+from django.urls import reverse
+from django.contrib.auth.models import User
+
 # Create your models here.
 class Device(models.Model):
-    name = models.SlugField(max_length=20, primary_key=True)
+    user = models.ForeignKey(User, default=None, related_name='devices', on_delete=models.CASCADE)
+    id = models.SlugField(max_length=20, verbose_name="Device ID", primary_key=True)
     longitude = models.FloatField(default=120.22283)
     latitude = models.FloatField(default=22.99672)
     token = models.UUIDField(default=uuid.uuid4)
@@ -24,7 +27,7 @@ class Device(models.Model):
         return reverse('device_delete', kwargs={'pk': self.pk})
     
     def __str__(self):
-        return self.name
+        return self.id
 
 class HistoryInfo(models.Model):
     device = models.ForeignKey(Device, related_name='info_history', on_delete=models.CASCADE)

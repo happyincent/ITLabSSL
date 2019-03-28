@@ -32,7 +32,7 @@
         </li>
       </ul>
       <div class="page-header">
-        <h3>{{ device_name }}</h3>
+        <h3>{{ device_id }}</h3>
       </div>
     </div>
   </div>
@@ -143,14 +143,14 @@
   var video = document.getElementById('video1');
   if (Hls.isSupported()) {
     var hls = new Hls();
-    hls.loadSource('{{ hls_url }}{{ device_name }}.m3u8');
+    hls.loadSource('{{ hls_url }}{{ device_id }}.m3u8');
     hls.attachMedia(video);
     hls.on(Hls.Events.MANIFEST_PARSED, function () {
       video.play();
     });
   }
   else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src = '{{ hls_url }}{{ device_name }}.m3u8';
+    video.src = '{{ hls_url }}{{ device_id }}.m3u8';
     video.addEventListener('loadedmetadata', function () {
       video.play();
     });
@@ -165,7 +165,7 @@
       var video = document.getElementById('video2');
       var flvPlayer = flvjs.createPlayer({
           type: 'flv',
-          url: 'https://itlab7f.ddns.net:7777/live/{{ device_name }}.flv',
+          url: 'https://itlab7f.ddns.net:7777/live/{{ device_id }}.flv',
           hasVideo: true,
           hasAudio: false,
           withCredentials: false,
@@ -180,11 +180,11 @@
 
 <!-- Websocket Get Info -->
 <script>
-  var device_name = '{{ device_name }}';
+  var device_id = '{{ device_id }}';
 
   var ws_scheme = window.location.protocol == "https:" ? "wss://" : "ws://";
 
-  var socket = new WebSocket(ws_scheme + window.location.host + '/ws/browser/device/' + device_name);
+  var socket = new WebSocket(ws_scheme + window.location.host + '/ws/browser/device/' + device_id);
 
   socket.onmessage = function (e) {
     var data = JSON.parse(e.data);

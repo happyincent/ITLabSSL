@@ -8,10 +8,10 @@ from allauth.account.models import EmailAddress
 @csrf_exempt
 def on_publish(request):
     if request.method == 'POST':
+        id = request.POST.get('name', None) # nginx-rtmp use "name"
         token = request.POST.get('token', None)
-        name = request.POST.get('name', None)
 
-        if name != None and token != None and cache.get(name) == token:
+        if id != None and token != None and cache.get(id) == token:
             return HttpResponse(status=200)
 
     return HttpResponse(status=403)

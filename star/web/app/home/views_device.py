@@ -14,6 +14,20 @@ from django.conf import settings
 
 from .models import Device
 
+##
+from django.contrib.auth.mixins import UserPassesTestMixin
+
+class CheckOwnerMixin(UserPassesTestMixin):
+
+    # Class View already deal with device (pk) not exist
+    def test_func(self):
+        return self.request.user.is_superuser or (
+            Device.objects.get(
+                pk = self.request.resolver_match.kwargs.get('pk')
+            ).user.username == self.request.user.username
+        )
+##
+
 @method_decorator(legal_user, name='dispatch')
 class DeviceList(TemplateView):
     template_name = 'home/device_list.html'
@@ -24,11 +38,13 @@ class DeviceList(TemplateView):
         context['devices_json'] = serializers.serialize("json", context['devices'])
         return context
 
+##
+
 @method_decorator(legal_staff_user, name='dispatch')
 class DeviceCreate(CreateView):
     model = Device
     template_name = 'home/edit_device.html'
-    fields = ['name', 'longitude', 'latitude', 'ssh_pub']
+    fields = ['id', 'longitude', 'latitude', 'ssh_pub']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -36,19 +52,23 @@ class DeviceCreate(CreateView):
         return context
 
     def form_valid(self, form):
-        if not UpdatePubKey(form.instance.name, form.instance.ssh_pub).add():
+        form.instance.user = self.request.user
+
+        if not UpdatePubKey(form.instance.id, form.instance.ssh_pub).add():
             form.instance.ssh_pub = None
         
-        cache.set(form.instance.name, str(form.instance.token), timeout=None)
+        cache.set(form.instance.id, str(form.instance.token), timeout=None)
         
         self.object = form.save()
         return HttpResponseRedirect(self.get_success_url())
         
     def get_success_url(self):
-        return reverse('device_update', kwargs={'pk': self.object.name})
+        return reverse('device_update', kwargs={'pk': self.object.id})
+
+##
 
 @method_decorator(legal_staff_user, name='dispatch')
-class DeviceUpdate(UpdateView):
+class DeviceUpdate(CheckOwnerMixin, UpdateView):
     model = Device
     template_name = 'home/edit_device.html'
     fields = ['longitude', 'latitude', 'ssh_pub']
@@ -60,9 +80,9 @@ class DeviceUpdate(UpdateView):
 
     def form_valid(self, form):
         
-        if not UpdatePubKey(form.instance.name, form.instance.ssh_pub).update():
-            Device.objects.filter(name=form.instance.name).update(ssh_pub='')
-            return HttpResponseRedirect(reverse('device_edit_fail', kwargs={'pk': form.instance.name}))
+        if not UpdatePubKey(form.instance.id, form.instance.ssh_pub).update():
+            Device.objects.filter(pk=form.instance.id).update(ssh_pub='')
+            return HttpResponseRedirect(reverse('device_edit_fail', kwargs={'pk': form.instance.id}))
         
         self.object = form.save()
         return HttpResponseRedirect(self.get_success_url())
@@ -71,49 +91,50 @@ class DeviceUpdate(UpdateView):
         return reverse('device_list')
 
 @method_decorator(legal_staff_user, name='dispatch')
-class DeviceDelete(DeleteView):
+class DeviceDelete(CheckOwnerMixin, DeleteView):
     model = Device
     template_name = 'home/delete_device.html'
         
     def get_success_url(self):
-        UpdatePubKey(self.object.name).delete()
-        cache.delete(self.object.name)
+        UpdatePubKey(self.object.id).delete()
+        cache.delete(self.object.id)
         return reverse('device_list')
+
+@method_decorator(legal_staff_user, name='dispatch')
+class ResetToken(CheckOwnerMixin, View):
+
+    @method_decorator(csrf_protect)
+    def post(self, request, **kwargs):        
+        if not Device.objects.filter(pk=kwargs.get('pk')).exists():
+            raise Http404
+        
+        new_token = uuid.uuid4()
+        Device.objects.filter(pk=kwargs.get('pk')).update(token=new_token)
+        cache.set(kwargs.get('pk'), str(new_token), timeout=None)
+
+        return HttpResponseRedirect(reverse('device_update', kwargs={'pk': kwargs.get('pk')}))
+
+##
 
 @method_decorator(legal_staff_user, name='dispatch')
 class DeviceEditFail(TemplateView):
     template_name = 'home/edit_device_err.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['device_name'] = kwargs['pk']
+        context['device_id'] = kwargs.get('pk')
         return context
 
 ##
 
-@method_decorator(legal_staff_user, name='dispatch')
-class ResetToken(View):
-
-    @method_decorator(csrf_protect)
-    def post(self, request, **kwargs):        
-        if not Device.objects.filter(name=kwargs['pk']).exists():
-            raise Http404
-        
-        new_token = uuid.uuid4()
-        Device.objects.filter(name=kwargs['pk']).update(token=new_token)
-        cache.set(kwargs['pk'], str(new_token), timeout=None)
-
-        return HttpResponseRedirect(reverse('device_update', kwargs={'pk': kwargs['pk']}))
-
-##
-
 class UpdatePubKey:
-    def __init__(self, device_name, ssh_pub=None):
+    def __init__(self, device_id, ssh_pub=None):
         self.path = settings.SSH_KEY_PATH
-        self.comment = device_name
+        self.comment = device_id
         self.key = ssh_pub
 
     def add(self):
         if not self._validate_SSH(self.key):
+            print('= =')
             return False
         
         try:
@@ -125,8 +146,8 @@ class UpdatePubKey:
                     return False
 
             """
-            Change the key's comment into device_name and Append to the file:
-            ssh-rsa [key] [device_name]
+            Change the key's comment into device_id and Append to the file:
+            ssh-rsa [key] [device_id]
             """
             new_key = ' '.join(self.key.strip(' ').split(' ')[0:2] + [self.comment]) 
             with open(self.path, "a") as f:
@@ -151,3 +172,4 @@ class UpdatePubKey:
         except:
             return False
         return True
+

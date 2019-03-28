@@ -28,7 +28,11 @@ class LimitDiskUsage(CronJobBase):
                     os.remove(os.path.join(settings.VOD_DIR, file))
             
                 print('LimitDiskUsage: delete {} vods ... {}'.format(len(del_files), now))
+                return 'LimitDiskUsage: delete {} vods ... {}'.format(len(del_files), now)
             
-            print('LimitDiskUsage: delete 0 vods ... {}'.format(now))
+            else:
+                print('LimitDiskUsage: delete 0 vods ... {}'.format(now))
+                return 'LimitDiskUsage: delete 0 vods ... {}'.format(now)
         except Exception as e:
             print('LimitDiskUsage: FAIL: {} ... {}'.format(e, now))
+            return 'LimitDiskUsage: FAIL: {} ... {}'.format(e, now)

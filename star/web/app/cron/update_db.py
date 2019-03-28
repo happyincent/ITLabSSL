@@ -45,5 +45,7 @@ class UpdateHistory(CronJobBase):
                 HistoryInfo.objects.create(device=device, **info_now)
                 
             print('UpdateHistory SUCCESS ... {}'.format(now))
+            return 'UpdateHistory SUCCESS ... {}'.format(now)
         except Exception as e:
             print('UpdateHistory FAIL: {} ... {}'.format(e, now))
+            return 'UpdateHistory FAIL: {} ... {}'.format(e, now)
