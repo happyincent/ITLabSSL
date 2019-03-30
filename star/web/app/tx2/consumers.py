@@ -13,17 +13,13 @@ class InfoConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         self.device_id = self.scope['url_route']['kwargs']['device_id']
         
-        token = cache.get(self.device_id)
-        
-        if token != None:
+        if cache.get(self.device_id) != None:
             await self.channel_layer.group_add(
                 self.device_id,
                 self.channel_name
             )
-            
-            self.token_is_authenticated = self.scope['token'] == token
 
-            if self.token_is_authenticated or self.scope['user'].is_authenticated:
+            if self.scope['user'].is_authenticated or self.scope['token'] == cache.get(self.device_id):
                 await self.accept()
                 return
         
@@ -36,7 +32,8 @@ class InfoConsumer(AsyncJsonWebsocketConsumer):
         )
 
     async def receive_json(self, content):
-        if self.token_is_authenticated:
+        # check token for every request
+        if self.scope['token'] == cache.get(self.device_id):
             
             ts = datetime.datetime.now(datetime.timezone.utc)
             ts = timezone.localtime(ts)

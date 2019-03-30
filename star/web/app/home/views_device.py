@@ -1,5 +1,6 @@
-import uuid
+import os
 import subprocess
+import uuid
 from sshpubkeys import SSHKey, AuthorizedKeysFile
 
 from django.views import View
@@ -98,6 +99,8 @@ class DeviceDelete(CheckOwnerMixin, DeleteView):
     def get_success_url(self):
         UpdatePubKey(self.object.id).delete()
         cache.delete(self.object.id)
+        # dangerous: ensure quoted appropriately to avoid shell injection
+        subprocess.call('rm {}*'.format(os.path.join(settings.VOD_DIR, self.object.id)), shell=True)
         return reverse('device_list')
 
 @method_decorator(legal_staff_user, name='dispatch')
@@ -134,7 +137,6 @@ class UpdatePubKey:
 
     def add(self):
         if not self._validate_SSH(self.key):
-            print('= =')
             return False
         
         try:
@@ -162,6 +164,7 @@ class UpdatePubKey:
         return self.add()
 
     def delete(self):
+        # dangerous: ensure quoted appropriately to avoid shell injection
         cmd = 'echo "$(sed \'/.* {0}$/d\' {1})" > {1}'.format(self.comment, self.path)
         return subprocess.call(cmd, shell=True)
 
@@ -172,4 +175,3 @@ class UpdatePubKey:
         except:
             return False
         return True
-

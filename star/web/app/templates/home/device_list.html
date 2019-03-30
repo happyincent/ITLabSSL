@@ -25,8 +25,8 @@
           <table class="table table-hover table-condensed">
             <thead>
               <tr>
-                <th>ID<small> (staff)</small></th>
-                <th>Location</th>
+                <th>ID</th>
+                <th>Staff</th>
                 <th>Info</th>
                 <th>Ctrl</th>
               </tr>
@@ -34,8 +34,8 @@
             <tbody>
               {% for device in devices %}
               <tr>
-                <td>{{ device.id }}<small> ({{ device.user.username }})</small></td>
-                <td>{{ device.longitude | floatformat:3 }}, {{ device.latitude | floatformat:3 }}</td>
+                <td>{{ device.id }}</td>
+                <td>{{ device.user.username }}</td>
                 <td>
                   <a href="{{ device.info_url }}" class="btn btn-default btn-block btn-sm">Now</a>
                   <a href="{{ device.history_url }}" class="btn btn-default btn-block btn-sm">History</a>

@@ -29,6 +29,9 @@ sudo tar --same-owner -xvf ~/Desktop/backup-star-data.tar
 ### Configuration
 [CONFIG.md](/doc/CONFIG.md)
 
+### Change Site Information
+Navigate to `/admin/sites/site/1/change/` with the superuser account.
+
 ## Usage
 `(sudo) docker-compose up -d`
 
