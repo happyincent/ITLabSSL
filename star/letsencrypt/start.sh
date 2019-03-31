@@ -23,7 +23,7 @@ exp_limit="${EXP_LIMIT:-30}"
 check_freq="${CHECK_FREQ:-30}"
 
 le_hook() {
-    command="docker restart $LE_RENEW_ID"
+    command="docker exec -it $LE_RENEW_ID nginx -s reload"
     eval $command
     # all_links=($(env | grep -oP '^[0-9A-Z_-]+(?=_ENV_LE_RENEW_HOOK)'))
     # compose_links=($(env | grep -oP '^[0-9A-Z]+_[a-zA-Z0-9_.-]+_[0-9]+(?=_ENV_LE_RENEW_HOOK)'))

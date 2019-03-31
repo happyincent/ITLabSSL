@@ -32,7 +32,7 @@ class InfoConsumer(AsyncJsonWebsocketConsumer):
         )
 
     async def receive_json(self, content):
-        # check token for every request
+        # check if reset or delete token
         if self.scope['token'] == cache.get(self.device_id):
             
             ts = datetime.datetime.now(datetime.timezone.utc)
