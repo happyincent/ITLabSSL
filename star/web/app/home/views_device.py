@@ -100,7 +100,7 @@ class DeviceDelete(CheckOwnerMixin, DeleteView):
         UpdatePubKey(self.object.id).delete()
         cache.delete(self.object.id)
         # dangerous: ensure quoted appropriately to avoid shell injection
-        subprocess.call('rm {}*'.format(os.path.join(settings.VOD_DIR, self.object.id)), shell=True)
+        subprocess.call('rm -rf {}*'.format(os.path.join(settings.VOD_DIR, self.object.id)), shell=True)
         return reverse('device_list')
 
 @method_decorator(legal_staff_user, name='dispatch')
