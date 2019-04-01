@@ -17,11 +17,7 @@ class LimitDiskUsage(CronJobBase):
             curr = psutil.disk_usage(settings.VOD_DIR).percent
             
             if curr >= settings.MAX_DISK_USAGE_PERCENT:
-                files = [
-                    file for file in os.listdir(settings.VOD_DIR) 
-                    if os.path.isfile(os.path.join(settings.VOD_DIR, file)) and
-                       os.path.splitext(file)[1] == settings.VOD_EXT
-                ]
+                files = [os.path.join(dp, f) for dp, dn, fn in os.walk(settings.VOD_DIR) for f in fn]
                 files.sort(key=lambda i: os.path.getmtime(os.path.join(settings.VOD_DIR, i)))
                 
                 del_files = files[0 : int(len(files) * settings.DEL_OLDEST_VOD_PERCENT)]

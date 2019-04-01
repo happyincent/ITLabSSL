@@ -45,11 +45,10 @@ def get_history_info(request):
     ## Get possible filenames
     filenames = sorted([
         int(
-            e.name.replace('{}-'.format(pk), '')\
+            i.name.replace('{}-'.format(pk), '')\
                   .replace(settings.VOD_EXT, '')
         ) 
-        for e in os.scandir(settings.VOD_DIR)
-        if e.name.startswith(pk) and e.name.endswith(settings.VOD_EXT)
+        for i in os.scandir(os.path.join(settings.VOD_DIR, pk))
     ])
 
     filenames = [i for i in filenames if i in range(int(ts_last.strftime('%s')), int(ts_next.strftime('%s')))]
