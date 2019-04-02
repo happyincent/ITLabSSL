@@ -1,4 +1,5 @@
 import os
+import urllib.parse
 import datetime
 from django.utils import timezone
 
@@ -21,7 +22,7 @@ class DeviceInfoHistory(TemplateView):
             raise Http404
         
         context['device_id'] = kwargs.get('pk')
-        context['vod_url'] = settings.VOD_URL
+        context['vod_url'] = urllib.parse.urljoin(settings.VOD_URL, '{}/'.format(kwargs.get('pk')))
         return context
 
 @ajax # -> would catch exceptions
