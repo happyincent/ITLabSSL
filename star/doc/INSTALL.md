@@ -89,7 +89,7 @@ sudo ufw default deny
 
 sudo ufw allow from 140.116.164.128/27 to any port 22019    # ssh
 sudo ufw allow from 10.27.164.151/32 to any port 22019      # ssh for RPi
-sudo ufw allow from 10.27.164.153/32 to any port 22019      # ssh for TX2
+sudo ufw allow from 10.27.164.153/32 to any port 22019      # ssh for edge
 sudo ufw allow from 140.116.221.10/32 to any port 22019     # ssh for VPN
 sudo ufw allow from 0.0.0.0/0 to any port 5938              # teamviewer (accept exclusively)
 

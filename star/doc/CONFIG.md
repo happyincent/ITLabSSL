@@ -56,7 +56,7 @@
   * `80` : http port for letsencrypt
   * `443` : https port
 * sshd
-  * `62422` : ssh port for clients (TX2)
+  * `62422` : ssh port for clients (edge)
 
 ### depends_on
 * port depend
@@ -123,7 +123,7 @@
     # SMTP
     EMAIL_XXX=YYY
     ...
-    SETUP_MSG => several configs required in star-TX2's .env
+    SETUP_MSG => several configs required in star-edge's .env
     HLS_URL = 'https://ssl.itlab.ee.ncku.edu.tw/hls/'
     SSH_KEY_PATH = '/authorized_keys'
     VOD_URL = 'https://ssl.itlab.ee.ncku.edu.tw/vod/'
@@ -134,8 +134,8 @@
 
 ## sshd
 * Dockerfile
-  * `USERNAME=limited-user` : server's username for clients (TX2)
-  * `PORT=62422` : ssh port for clients (TX2)
+  * `USERNAME=limited-user` : server's username for clients (edge)
+  * `PORT=62422` : ssh port for clients (edge)
   * `PermitOpen nginx:1935 web:8001` : only forward these local ports
 * [run.sh](../sshd/run.sh)
   * `/home/limited-user/.ssh/authorized_keys` : file with client's public key
