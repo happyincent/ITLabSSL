@@ -9,7 +9,7 @@ from home.models import Device
 
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 
-class InfoConsumer(AsyncJsonWebsocketConsumer):
+class StarConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         self.device_id = self.scope['url_route']['kwargs']['device_id']
         
@@ -34,22 +34,24 @@ class InfoConsumer(AsyncJsonWebsocketConsumer):
     async def receive_json(self, content):
         # check if reset or delete token
         if self.scope['token'] == cache.get(self.device_id):
-            
-            ts = datetime.datetime.now(datetime.timezone.utc)
-            ts = timezone.localtime(ts)
-            content['timestamp'] = ts.strftime(settings.INFO_TIMESTR)
 
-            await self.channel_layer.group_send(
-                self.device_id,
-                {
-                    'type': 'send_info',
-                    'content': content
-                }
-            )
+            if content['cmd'] == 'update_info':            
+                ts = datetime.datetime.now(datetime.timezone.utc)
+                ts = timezone.localtime(ts)
+                content['data']['timestamp'] = ts.strftime(settings.INFO_TIMESTR)
+                cache.set('{}{}'.format(self.device_id, settings.INFO_POSTFIX), pickle.dumps(content['data']), settings.INFO_TIMEOUT)
 
-            cache.set('{}{}'.format(self.device_id, settings.INFO_POSTFIX), pickle.dumps(content), settings.INFO_TIMEOUT)
+            if content['cmd'] in ['update_info']:
+                await self.channel_layer.group_send(
+                    self.device_id,
+                    {
+                        'type': 'broatcast_json',
+                        'content': content
+                    }
+                )
+        
         else:
             await self.close()
     
-    async def send_info(self, event):
+    async def broatcast_json(self, event):
         await self.send_json(event['content'])

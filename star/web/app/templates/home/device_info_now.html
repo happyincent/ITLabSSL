@@ -83,7 +83,7 @@
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title" id="timestamp">
-            No Latest Data
+            No Latest raw
           </h3>
         </div>
         <div class="panel-body table-responsive">
@@ -187,15 +187,17 @@
   var socket = new WebSocket(ws_scheme + window.location.host + '/ws/browser/device/' + device_id);
 
   socket.onmessage = function (e) {
-    var data = JSON.parse(e.data);
-    document.querySelector('#timestamp').innerHTML = data['timestamp'];
-    document.querySelector('#temperature').innerHTML = data['temperature'] + ' °C';
-    document.querySelector('#humidity').innerHTML = data['humidity'] + ' %';
-    document.querySelector('#pm2_5').innerHTML = data['pm2_5'] + ' μg/m<sup>3</sup>';
-    document.querySelector('#loudness').innerHTML = data['loudness'] + ' dB';
-    document.querySelector('#light_intensity').innerHTML = data['light_intensity'] + ' lux';
-    document.querySelector('#uv_intensity').innerHTML = data['uv_intensity'] + ' mW/cm<sup>2</sup>';
-    document.querySelector('#ir_sensed').innerHTML = data['ir_sensed'];
+    var raw = JSON.parse(e.data);
+    if (raw['cmd'] == 'update_info') {
+      document.querySelector('#timestamp').innerHTML =  raw['data']['timestamp'];
+      document.querySelector('#temperature').innerHTML =  raw['data']['temperature'] + ' °C';
+      document.querySelector('#humidity').innerHTML =  raw['data']['humidity'] + ' %';
+      document.querySelector('#pm2_5').innerHTML =  raw['data']['pm2_5'] + ' μg/m<sup>3</sup>';
+      document.querySelector('#loudness').innerHTML =  raw['data']['loudness'] + ' dB';
+      document.querySelector('#light_intensity').innerHTML =  raw['data']['light_intensity'] + ' lux';
+      document.querySelector('#uv_intensity').innerHTML =  raw['data']['uv_intensity'] + ' mW/cm<sup>2</sup>';
+      document.querySelector('#ir_sensed').innerHTML =  raw['data']['ir_sensed'];
+    }
   };
 
   socket.onclose = function (e) {
