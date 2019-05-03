@@ -103,11 +103,10 @@ class DeviceDelete(CheckOwnerMixin, DeleteView):
         subprocess.call('rm -rf {}*'.format(os.path.join(settings.VOD_DIR, self.object.id)), shell=True)
         return reverse('device_list')
 
-@method_decorator(legal_staff_user, name='dispatch')
+@method_decorator(legal_staff_user + [csrf_protect], name='dispatch')
 class ResetToken(CheckOwnerMixin, View):
 
-    @method_decorator(csrf_protect)
-    def post(self, request, **kwargs):        
+    def post(self, request, **kwargs):
         if not Device.objects.filter(pk=kwargs.get('pk')).exists():
             raise Http404
         

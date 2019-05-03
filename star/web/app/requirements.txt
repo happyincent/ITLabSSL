@@ -33,7 +33,6 @@ django-allauth==0.39.1
 django-bootstrap3
 #django-revproxy
 django-cron
-djangoajax
 
 sshpubkeys
 psutil

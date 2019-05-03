@@ -1,5 +1,5 @@
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
+from django.http import HttpResponseForbidden, HttpResponse
 from django.core.cache import cache
 
 from .models import Device
@@ -19,4 +19,4 @@ def on_publish(request):
 def check_user(request):
     if request.user.is_authenticated and EmailAddress.objects.filter(user=request.user, verified=True).exists():
         return HttpResponse(status=200)
-    return HttpResponse(status=403)
+    return HttpResponseForbidden()

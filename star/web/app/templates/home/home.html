@@ -35,8 +35,9 @@
           This is a demo website.
         </p>
         <p>
-          <a class="btn btn-primary btn-large" href="{% url 'device_list' %}">Show Device List</a>
-          <a class="btn btn-info btn-large" href="{% url 'aboutus' %}">About us</a>
+          <a class="btn btn-primary btn-large" href="{% url 'device_list' %}">Device List</a>
+          <a class="btn btn-success btn-large" href="{% url 'opendata' %}">Open Data</a>
+          <a class="btn btn-info btn-large" href="{% url 'aboutus' %}">About US</a>
         </p>
         {% if user.is_superuser %}
         <p>

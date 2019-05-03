@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block bootstrap3_title %}Open Data API | ITLab SSL{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row clearfix">
+    <div class="col-md-12 column">
+      <ul class="breadcrumb">
+        <li>
+          <a href="{% url 'home' %}">Home</a>
+        </li>
+        <li class="active">
+          Open Data API
+        </li>
+      </ul>
+      <form method="post" id="ResetForm" action="{% url 'reset_api_token' %}"
+        onsubmit="return confirm('Are you sure you want to reset?');">{% csrf_token %}</form>
+      <div class="form-group">
+        <label class="control-label" for="id_apikey">API KEY (Time To Live: {{ api_token_ttl }})</label>
+        <div class="input-group">
+          <input type="text" name="apikey" value="{{ api_token }}" class="form-control" placeholder="Expired"
+            id="id_apikey" disabled="disabled">
+          <span class="input-group-btn">
+            <input type="submit" value="Reset" form="ResetForm" class="btn btn-danger">
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 column">
+    <img src="/static/home/image/api_device.png" class="myimg img-responsive center-block">
+  </div>
+  <div class="col-md-6 column">
+    <img src="/static/home/image/api_history.png" class="myimg img-responsive center-block">
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}

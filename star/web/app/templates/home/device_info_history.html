@@ -127,25 +127,24 @@
     console.log(ts);
     if (ts == null) return;
 
+    var pk = '{{ device_id }}';
+
     $.ajax({
-      url: "{% url 'get_history_info' %}",
+      url: "{% url 'api_history' pk=pk%}",
       type: "POST",
       data: {
-        csrfmiddlewaretoken: '{{ csrf_token }}',
-        pk: '{{ device_id }}',
-        ts: ts,
+        user: '{{ user.get_username }}',
+        token: '{{ api_token }}',
+        ts_begin: ts,
+        ts_end: ts + 3600,
       },
       success: function (data) {
-        if (data.status != 200) {
-          console.log(data.statusText);
-          return;
-        }
-
-        if ($.isEmptyObject(data.content)) {
+        if ($.isEmptyObject(data)) {
           alert('No Data.');
         }
+        console.log(data);
 
-        $.each(data.content, function (k, v) {
+        $.each(data, function (k, v) {
           if (v.vod == '')
             js = "javascript: alert('Video not found.');";
           else {

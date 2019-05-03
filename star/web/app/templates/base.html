@@ -31,11 +31,13 @@
       <a class="navbar-brand" href="{% url 'home' %}">ITLab Smart Street Light</a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
-      <!-- <ul class="nav navbar-nav navbar-left">
+      <ul class="nav navbar-nav navbar-left">
         {% if user.is_authenticated %}
-        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'device_list' %}">Device List</a></li>
+        <li><a href="{% url 'opendata' %}">Open Data API</a></li>
+        <li><a href="{% url 'aboutus' %}">About US</a></li>
         {% endif %}
-      </ul> -->
+      </ul>
       <ul class="nav navbar-nav navbar-right">
         {% if user.is_authenticated %}
         <li><a href="{% url 'account_email' %}">{{ user.username }} ({{ user.email }})</a></li>
