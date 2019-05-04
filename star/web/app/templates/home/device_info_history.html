@@ -68,8 +68,8 @@
     <div class='col-sm-2'></div>
     <div class='col-sm-8'>
       <div class="embed-responsive embed-responsive-16by9">
-        <video id='video1' class="embed-responsive-item" style="max-width: 800px; max-height: 450px;"
-          playsinline controls muted autoplay preload="none" onclick="this.play();"></video>
+        <video id='video1' class="embed-responsive-item" style="max-width: 800px; max-height: 450px;" playsinline
+          controls muted autoplay preload="none" onclick="this.play();"></video>
       </div>
     </div>
     <div class='col-sm-2'></div>
@@ -132,12 +132,12 @@
     $.ajax({
       url: "{% url 'api_history' pk=pk%}",
       type: "POST",
-      data: {
-        user: '{{ user.get_username }}',
-        token: '{{ api_token }}',
+      dataType: "json",
+      contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify({
         ts_begin: ts,
         ts_end: ts + 3600,
-      },
+      }),
       success: function (data) {
         if ($.isEmptyObject(data)) {
           alert('No Data.');
@@ -165,6 +165,27 @@
             '</tr>'
           );
         });
+      },
+      error: function (jqXHR, exception) {
+        var msg = '';
+        if (jqXHR.status === 0) {
+          msg = 'Not connect.\nVerify Network.';
+        } else if (jqXHR.status == 403) {
+          msg = 'Forbidden. [403]\nPlease Refresh this Page.'
+        } else if (jqXHR.status == 404) {
+          msg = 'Requested page not found. [404]';
+        } else if (jqXHR.status == 500) {
+          msg = 'Internal Server Error [500].';
+        } else if (exception === 'parsererror') {
+          msg = 'Requested JSON parse failed.';
+        } else if (exception === 'timeout') {
+          msg = 'Time out error.';
+        } else if (exception === 'abort') {
+          msg = 'Ajax request aborted.';
+        } else {
+          msg = 'Uncaught Error.\n' + jqXHR.responseText;
+        }
+        alert(msg);
       },
     });
   }

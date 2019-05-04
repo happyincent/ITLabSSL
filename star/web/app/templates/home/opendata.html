@@ -22,7 +22,8 @@
       <form method="post" id="ResetForm" action="{% url 'reset_api_token' %}"
         onsubmit="return confirm('Are you sure you want to reset?');">{% csrf_token %}</form>
       <div class="form-group">
-        <label class="control-label" for="id_apikey">API KEY (Time To Live: {{ api_token_ttl }})</label>
+        <label class="control-label" for="id_apikey">API KEY (Time To Live: <strong
+            id="id_ttl">{{ api_token_ttl }}</strong>)</label>
         <div class="input-group">
           <input type="text" name="apikey" value="{{ api_token }}" class="form-control" placeholder="Expired"
             id="id_apikey" disabled="disabled">
@@ -33,14 +34,42 @@
       </div>
     </div>
   </div>
-  <div class="col-md-6 column">
-    <img src="/static/home/image/api_device.png" class="myimg img-responsive center-block">
-  </div>
-  <div class="col-md-6 column">
-    <img src="/static/home/image/api_history.png" class="myimg img-responsive center-block">
+  <div class="row clearfix">
+    <div class="col-md-6 column">
+      <p>1. POST /api/device</p>
+      <img src="/static/home/image/api_device.png" class="myimg img-responsive center-block">
+      <br>
+    </div>
+    <div class="col-md-6 column">
+      <p>2. POST /api/history/{Device ID}</p>
+      <img src="/static/home/image/api_history.png" class="myimg img-responsive center-block">
+    </div>
   </div>
 </div>
 {% endblock %}
 
 {% block extra_script %}
+<script>
+  Number.prototype.toHHMMSS = function () {
+    var sec_num = parseInt(this, 10);
+    var hours = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    var seconds = sec_num - (hours * 3600) - (minutes * 60);
+    if (hours < 10) { hours = "0" + hours; }
+    if (minutes < 10) { minutes = "0" + minutes; }
+    if (seconds < 10) { seconds = "0" + seconds; }
+    return hours + ':' + minutes + ':' + seconds;
+  }
+
+  var ttl = Number("{{ api_token_ttl }}");
+
+  var x = setInterval(function () {
+    ttl -= 1;
+    document.getElementById("id_ttl").innerHTML = ttl.toHHMMSS();
+    if (ttl < 0) {
+      clearInterval(x);
+      document.getElementById("id_ttl").innerHTML = "EXPIRED";
+    }
+  }, 1000);
+</script>
 {% endblock %}

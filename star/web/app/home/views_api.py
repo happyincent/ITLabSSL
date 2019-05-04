@@ -1,5 +1,6 @@
 import os
 import uuid
+import json
 import datetime
 from django.utils import timezone
 
@@ -9,7 +10,7 @@ from .views_decorator import *
 from django.contrib.auth.mixins import UserPassesTestMixin
 
 from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse, HttpResponseForbidden, HttpResponseRedirect
+from django.http import Http404, JsonResponse, HttpResponseBadRequest, HttpResponseForbidden, HttpResponseRedirect
 from django.urls import reverse
 
 from django.core.cache import cache
@@ -23,11 +24,15 @@ from functools import wraps
 def check_api_token(function):
     @wraps(function)
     def wrap(request, *args, **kwargs):
-
-        user = request.POST.get('user', None)
-        token = request.POST.get('token', None)
+        try:
+            data = json.loads(request.body.decode("utf-8"))
+        except:
+            return HttpResponseBadRequest()
         
-        if token != None and cache.get(user) == token:
+        if request.user.is_authenticated or (
+            data.get('token') != None and 
+            data.get('token') == cache.get(data.get('user'))
+        ):
             return function(request, *args, **kwargs)
         else:
             return HttpResponseForbidden()
@@ -45,33 +50,35 @@ class OpenDataAPI(TemplateView):
         token = cache.get(self.request.user)
         if token == None:
             token = uuid.uuid4()
-            cache.set(self.request.user, str(token), settings.APIToken_TIMEOUT)
+            cache.set(self.request.user, str(token), settings.API_TOKEN_TIMEOUT)
         
         ttl = cache.ttl(self.request.user)
 
         context['api_token'] = token
-        context['api_token_ttl'] = str(datetime.timedelta(seconds=ttl))
+        context['api_token_ttl'] = ttl
         return context
 
 @method_decorator(legal_user + [csrf_protect], name='dispatch')
 class ResetAPIToken(View):
     
     def post(self, request, **kwargs):
-        cache.set(request.user, str(uuid.uuid4()), settings.APIToken_TIMEOUT)
+        cache.set(request.user, str(uuid.uuid4()), settings.API_TOKEN_TIMEOUT)
         return HttpResponseRedirect(reverse('opendata'))
 
 @method_decorator([csrf_exempt, check_api_token], name='dispatch')
 class APIDevice(View):
     def post(self, request, **kwargs):
-        return JsonResponse(list(Device.objects.all().values('id')), safe=False)
+        return JsonResponse(list(Device.objects.all().values('id', 'longitude', 'latitude')), safe=False)
 
 @method_decorator([csrf_exempt, check_api_token], name='dispatch')
 class APIHistory(View):
     
     def post(self, request, **kwargs):
         pk = kwargs.get('pk')
-        ts = request.POST.get('ts_begin', None)
-        ts_next = request.POST.get('ts_end', None)
+
+        data = json.loads(request.body.decode("utf-8"))
+        ts = data.get('ts_begin', None)
+        ts_next = data.get('ts_end', None)
         
         if pk == None or ts == None or ts_next == None or not Device.objects.filter(pk=pk).exists():
             raise Http404
