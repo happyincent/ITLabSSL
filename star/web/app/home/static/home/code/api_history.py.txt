@@ -1,0 +1,17 @@
+import requests
+
+url = "https://ssl.itlab.ee.ncku.edu.tw/api/history/ncku_1"
+
+headers = {'content-type': "application/json; charset=utf-8"}
+
+payload = {
+   "user":"itlab",
+   "token":"89771c95-88c7-46c7-a77d-300d8a7f8b35",
+   "ts_begin":"1556661000",
+   "ts_end":"1556663000"
+}
+
+response = requests.post(url, headers=headers, json=payload)
+
+print('Response CODE: {}'.format(response.status_code))
+print('Response TEXT: {}'.format(response.text))

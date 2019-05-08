@@ -1,0 +1,15 @@
+import requests
+
+url = "https://ssl.itlab.ee.ncku.edu.tw/api/device"
+
+headers = {'content-type': "application/json; charset=utf-8"}
+
+payload = {
+   "user":"itlab",
+   "token":"89771c95-88c7-46c7-a77d-300d8a7f8b35"
+}
+
+response = requests.post(url, headers=headers, json=payload)
+
+print('Response CODE: {}'.format(response.status_code))
+print('Response TEXT: {}'.format(response.text))
