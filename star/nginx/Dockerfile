@@ -21,7 +21,7 @@ RUN chmod 775 /run.sh
 RUN find /etc/periodic/ -type f -exec rm {} \;
 
 # Setup timezone
-RUN apk add --no-cache tzdata && \
+RUN apk add --update --no-cache tzdata && \
     cp /usr/share/zoneinfo/$TZ /etc/localtime && \
     echo $TZ > /etc/timezone && \
     date && \
@@ -42,7 +42,7 @@ RUN cd /tmp && \
   sed -i 's/            case ESCAPE/            \/\/ fall through\n            case ESCAPE/' nginx-rtmp-module-${NGINX_RTMP_VERSION}/ngx_rtmp_eval.c
 
 # Build dependencies
-RUN apk add --update \
+RUN apk add --update --no-cache \
   build-base \
   ca-certificates \
   curl \
@@ -79,7 +79,7 @@ RUN cd /tmp/nginx-${NGINX_VERSION} && \
 ENV FF_PREFIX=/usr/local
 
 # FFmpeg build dependencies.
-RUN	apk add --update \
+RUN	apk add --update --no-cache \
   build-base \
   freetype-dev \
   lame-dev \
@@ -100,7 +100,7 @@ RUN	apk add --update \
   yasm
 
 RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories
-RUN apk add --update fdk-aac-dev
+RUN apk add --update --no-cache fdk-aac-dev
 
 # Get FFmpeg source
 RUN cd /tmp/ && \

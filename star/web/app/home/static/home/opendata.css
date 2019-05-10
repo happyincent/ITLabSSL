@@ -1,4 +1,5 @@
 /* https://iot.cht.com.tw/iot/developer/resources/iot/css/style.css */
+
 .api_a {
     color: #f27d09;
     text-decoration: none;
@@ -13,37 +14,51 @@
 .content-row {
     margin: 20px 0px;
 }
+
 .bg-info {
     background-color: #d9edf7;
 }
 
 .label-info, .label-success, .label-warning, .label-danger {
-	color:#fff;
-	text-align:center;
+    color: #fff;
+    text-align: center;
 }
+
 .ellipsis {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
 }
-.label-padding{padding:5px 10px;}
-.label-notes{color:#333333;}
+
+.label-padding {
+    padding: 5px 10px;
+}
+
+.label-notes {
+    color: #333333;
+}
 
 .panel-heading-change {
     color: #333;
-    background-color: #fff; 
-    border-color: #fff; 
-    padding: 0px; 
-    border-bottom: 0px solid transparent; 
-    border-top-left-radius: 0px; 
-    border-top-right-radius: 0px; 
+    background-color: #fff;
+    border-color: #fff;
+    padding: 0px;
+    border-bottom: 0px solid transparent;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
 }
-.panel-change{border: 1px solid transparent; padding:0px;}
+
+.panel-change {
+    border: 1px solid transparent;
+    padding: 0px;
+}
+
 .panel-group .panel-heading+.panel-collapse>.panel-body-change {
     border-top: 0px solid #ddd;
 }
-.panel-group .panel+.panel{
-    margin-top: -10px; 
+
+.panel-group .panel+.panel {
+    margin-top: -10px;
 }
 
 .api-doc-item-data {
@@ -52,22 +67,30 @@
     font-weight: normal;
     padding: 10px;
 }
+
 .api-doc-item {
     font-size: 1em;
     font-weight: bold;
     padding: 10px;
 }
-.api-border-title{
-	background-color:#ddd; 
-    border:1px solid #eee;
-}
-.border-title-bg{background-color:#ddd; border:1px solid #eee;}
 
-.nav>li>a{color:#3c8dbc; }
+.api-border-title {
+    background-color: #ddd;
+    border: 1px solid #eee;
+}
+
+.border-title-bg {
+    background-color: #ddd;
+    border: 1px solid #eee;
+}
+
+.nav>li>a {
+    color: #3c8dbc;
+}
 
 .content-row-api {
     margin: 10px 0px 0px 0px;
-    font-size:1em;
+    font-size: 1em;
 }
 
 .panel-body-api {
