@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+
+  ${NODE_NAME}_${DEVICE}-edge:
+    image: itlabstar/edge:ddl
+    command:
+      - "/bin/sh"
+      - -c
+      - |
+          python -u /app/edge.py \
+                    --netloc ${WS_NETLOC} \
+                    --path $$WS_PATH \
+                    --device $$DEVICE \
+                    --token $$TOKEN \
+                    --timeout $$WS_POSTINFO_TIMEOUT
+    networks:
+      - 'docker_host'
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+      placement:
+        constraints:
+          - node.hostname == ${NODE_NAME}
+    environment:
+      WS_PATH: ${WS_PATH}
+      WS_POSTINFO_TIMEOUT: ${WS_POSTINFO_TIMEOUT}
+      DEVICE: ${DEVICE}
+      TOKEN: ${TOKEN}

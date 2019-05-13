@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+
+  ${NODE_NAME}_${DEVICE}-ffmpeg:
+    image: itlabstar/ffmpeg:ddl
+    command:
+      - '/bin/sh'
+      - -c
+      - |
+          ffmpeg -err_detect ignore_err \
+          -use_wallclock_as_timestamps 1 -flags global_header \
+          -r 15 -rtsp_transport tcp \
+          -i $$RTSP_URI \
+          -fflags +genpts -vcodec copy -an -bsf:v h264_mp4toannexb \
+          -f flv -y rtmp://${RTMP_NETLOC}$$RTMP_PATH$$DEVICE?token=$$TOKEN \
+          -nostdin -loglevel warning
+    networks:
+      - 'docker_host'
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+      placement:
+        constraints:
+          - node.hostname == ${NODE_NAME}
+    environment:
+      RTMP_PATH: ${RTMP_PATH}
+      RTSP_URI: ${RTSP_URI}
+      DEVICE: ${DEVICE}
+      TOKEN: ${TOKEN}

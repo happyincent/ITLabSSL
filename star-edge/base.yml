@@ -1,0 +1,18 @@
+version: '3'
+
+networks:
+  docker_host:
+    external:
+      name: 'host'
+
+services:
+  
+  visualizer:
+    image: dockersamples/visualizer:stable
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - 'docker_host' # http://localhost:8080/
+    deploy:
+      placement:
+        constraints: [node.role == manager]

@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  
+  autossh:
+    image: itlabstar/autossh:ddl
+    command:
+      - '/bin/sh'
+      - -c
+      - |
+          cat /keys/id_rsa.pub || \
+          yes n | ssh-keygen -t rsa -b 2048 -N '' -C 'autossh' -f /keys/id_rsa &&
+          cat /keys/id_rsa.pub; \
+          autossh -4 -M 0 -N \
+                  -o StrictHostKeyChecking=no \
+                  -o ServerAliveInterval=60 \
+                  -o ServerAliveCountMax=3 \
+                  -o ExitOnForwardFailure=yes \
+                  -L ${RTMP_NETLOC}:${RTMP_REMOTE_NETLOC} \
+                  -L ${WS_NETLOC}:${WS_REMOTE_NETLOC} \
+                  -i /keys/id_rsa \
+                  -p ${SSH_PORT} ${SSH_USER}@${SSH_NETLOC}
+    volumes:
+      - 'keys:/keys/'
+    networks:
+      - 'docker_host'
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+      placement:
+        constraints: [node.role != manager]
+
+volumes:
+  keys:
