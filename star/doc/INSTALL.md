@@ -5,9 +5,9 @@
 ```
 $ cat <(echo "OS:     " `lsb_release -d | cut -f2`) <(echo "Kernel: " `uname -a | cut -d' ' -f1,3,14`) <(docker --version) <(docker-compose --version)
 OS:      Ubuntu 16.04.6 LTS
-Kernel:  Linux 4.15.0-45-generic x86_64
-Docker version 18.09.2, build 6247962
-docker-compose version 1.23.2, build 1110ad01
+Kernel:  Linux 4.15.0-48-generic x86_64
+Docker version 18.09.5, build e8ff056
+docker-compose version 1.24.0, build 0aa59064
 ```
 
 ## APT Install
@@ -20,7 +20,7 @@ sudo apt install hime
 
 # vlc
 sudo apt purge parole
-sudo apt install vcl
+sudo apt install vlc
 
 # vscode
 curl -o code.deb -L http://go.microsoft.com/fwlink/?LinkID=760868
@@ -84,7 +84,6 @@ sudo mount -a
 
 ## UFW
 ```
-sudo ufw enable
 sudo ufw default deny
 
 sudo ufw allow from 140.116.164.128/27 to any port 22019    # ssh
@@ -101,6 +100,7 @@ $ sudo nano /etc/ufw/before.rules
 -A ufw-before-input -s 140.116.164.128/27 -p icmp --icmp-type echo-request -j ACCEPT
 -A ufw-before-input -s 140.116.221.10/32  -p icmp --icmp-type echo-request -j ACCEPT
 
+sudo ufw enable
 sudo service ufw restart
 ```
 

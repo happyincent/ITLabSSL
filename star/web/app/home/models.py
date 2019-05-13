@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 class Device(models.Model):
     user = models.ForeignKey(User, default=None, null=True, related_name='devices', on_delete=models.SET_DEFAULT)
-    id = models.SlugField(max_length=20, verbose_name="Device ID", primary_key=True)
+    id = models.SlugField(max_length=20, verbose_name="Device ID (unmodifiable)", primary_key=True)
     longitude = models.FloatField(default=120.22283)
     latitude = models.FloatField(default=22.99672)
     token = models.UUIDField(default=uuid.uuid4)
