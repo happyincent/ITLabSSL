@@ -1,6 +1,7 @@
 import os
 import subprocess
 import uuid
+import urllib.request
 from sshpubkeys import SSHKey, AuthorizedKeysFile
 
 from django.views import View
@@ -84,7 +85,7 @@ class DeviceUpdate(CheckOwnerMixin, UpdateView):
         if not UpdatePubKey(form.instance.id, form.instance.ssh_pub).update():
             Device.objects.filter(pk=form.instance.id).update(ssh_pub='')
             return HttpResponseRedirect(reverse('device_edit_fail', kwargs={'pk': form.instance.id}))
-        
+
         self.object = form.save()
         return HttpResponseRedirect(self.get_success_url())
     
@@ -97,10 +98,15 @@ class DeviceDelete(CheckOwnerMixin, DeleteView):
     template_name = 'home/delete_device.html'
         
     def get_success_url(self):
-        UpdatePubKey(self.object.id).delete()
+        UpdatePubKey(self.object.id).delete()        
         cache.delete(self.object.id)
+
         # dangerous: ensure quoted appropriately to avoid shell injection
         subprocess.call('rm -rf {}*'.format(os.path.join(settings.VOD_DIR, self.object.id)), shell=True)
+
+        # Drop RTMP connection
+        urllib.request.urlopen(settings.RTMP_DROP_URL.format(self.object.id))
+
         return reverse('device_list')
 
 @method_decorator(legal_staff_user + [csrf_protect], name='dispatch')
@@ -113,6 +119,9 @@ class ResetToken(CheckOwnerMixin, View):
         new_token = uuid.uuid4()
         Device.objects.filter(pk=kwargs.get('pk')).update(token=new_token)
         cache.set(kwargs.get('pk'), str(new_token), timeout=None)
+
+        # Drop RTMP connection
+        urllib.request.urlopen(settings.RTMP_DROP_URL.format(kwargs.get('pk')))
 
         return HttpResponseRedirect(reverse('device_update', kwargs={'pk': kwargs.get('pk')}))
 
