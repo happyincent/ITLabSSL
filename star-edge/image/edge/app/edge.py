@@ -97,7 +97,7 @@ if __name__ == "__main__":
     parser.add_argument('--path', help='uri path')
     parser.add_argument('--device', help='device id')
     parser.add_argument('--token', help='token')
-    parser.add_argument('--timeout', type=int, default=10, help='token')
+    parser.add_argument('--timeout', type=int, default=10, help='timeout')
     args = parser.parse_args()
 
     while True:
@@ -109,6 +109,7 @@ if __name__ == "__main__":
                 args.token,
                 args.timeout
             ).start()
+            time.sleep(args.timeout)
         except:
             print("{} ... disconnected".format(os.getenv('DEVICE')))
             time.sleep(args.timeout)
