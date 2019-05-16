@@ -65,7 +65,7 @@
   * nginx
     * web:8000, web:8001
   * sshd
-    * nginx:1935, web:8001
+    * nginx-rtmp:1935, web:8001
 * startup order
   * db & redis -> web -> nginx -> sshd, letsencrypt
 
@@ -136,7 +136,7 @@
 * Dockerfile
   * `USERNAME=limited-user` : server's username for clients (edge)
   * `PORT=62422` : ssh port for clients (edge)
-  * `PermitOpen nginx:1935 web:8001` : only forward these local ports
+  * `PermitOpen nginx-rtmp:1935 web:8001` : only forward these local ports
 * [run.sh](../sshd/run.sh)
   * `/home/limited-user/.ssh/authorized_keys` : file with client's public key
     * ssh server's username=limited-user

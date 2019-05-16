@@ -12,6 +12,9 @@
 #psutil==5.6.2
 #sshpubkeys==3.1.0
 
+sqlparse==0.2.4
+#https://github.com/nesdis/djongo/issues/153
+
 Django>2
 djongo
 django-redis
@@ -29,3 +32,5 @@ django-cron
 
 sshpubkeys
 psutil
+
+pipdeptree

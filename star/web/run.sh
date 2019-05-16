@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Record pipdeptree
+pipdeptree > /www/pipdeptree.txt
+
 # migrage DB
 python /www/manage.py makemigrations
 python /www/manage.py migrate

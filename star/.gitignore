@@ -6,5 +6,5 @@ web/app/account/
 db/data/
 redis/data/
 sshd/host_keys/
-letsencrypt-www/
+letsencrypt/letsencrypt/
 log/

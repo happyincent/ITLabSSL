@@ -32,7 +32,7 @@ services:
       - './web/run.sh:/run.sh'
       - './sshd/authorized_keys:/authorized_keys'
       - './log/web/:/var/log/'
-      - '/media/data/record:/media/data/record'
+      - '/media/data/record/:/media/data/record/'
     depends_on:
       - db
       - redis
@@ -52,12 +52,31 @@ services:
       - './nginx/logrotate.conf:/logrotate.conf'
       - './nginx/crontab:/crontab'
       - './nginx/run.sh:/run.sh'
-      - './web/app:/www'
-      - './letsencrypt/letsencrypt-www:/tmp/letsencrypt'
+      - './web/app/:/www/'
       - './log/nginx/:/opt/nginx/logs/'
-      - '/tmp/key:/tmp/key'
-      - '/media/data/record:/media/data/record'
-      - '/etc/letsencrypt:/etc/letsencrypt'
+      - '/tmp/hls/:/tmp/hls/'
+      - '/tmp/key/:/tmp/key/'
+      - '/media/data/record/:/media/data/record/'
+      - '/tmp/letsencrypt-www/:/tmp/letsencrypt/'
+      - './letsencrypt/letsencrypt/:/etc/letsencrypt/'
+    depends_on:
+      - web
+  
+  nginx-rtmp:
+    container_name: nginx-rtmp-star
+    image: nginx-rtmp:star
+    build: ./nginx-rtmp
+    restart: always
+    command: sh -c "/run.sh"
+    volumes:
+      - './nginx-rtmp/nginx-rtmp.conf:/opt/nginx/nginx.conf'
+      - './nginx-rtmp/logrotate.conf:/logrotate.conf'
+      - './nginx-rtmp/crontab:/crontab'
+      - './nginx-rtmp/run.sh:/run.sh'
+      - './log/nginx-rtmp/:/opt/nginx/logs/'
+      - '/tmp/hls/:/tmp/hls/'
+      - '/tmp/key/:/tmp/key/'
+      - '/media/data/record/:/media/data/record/'
     depends_on:
       - web
   
@@ -67,16 +86,16 @@ services:
     build: ./letsencrypt
     image: letsencrypt:star
     volumes:
-      - './letsencrypt/letsencrypt-www:/tmp/letsencrypt'
-      - /etc/letsencrypt:/etc/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock
+      - '/tmp/letsencrypt-www/:/tmp/letsencrypt/'
+      - './letsencrypt/letsencrypt/:/etc/letsencrypt/'
     environment:
       LE_RENEW_ID: nginx-star  # nginx's container name
       DOMAINS: ssl.itlab.ee.ncku.edu.tw
       EMAIL: ddl.itlab@gmail.com
       WEBROOT_PATH: /tmp/letsencrypt
       EXP_LIMIT: 30
-      CHECK_FREQ: 30
+      CHECK_FREQ: 15
     depends_on:
       - nginx
 
@@ -89,7 +108,7 @@ services:
     ports:
       - "62422:22"
     volumes:
-      - './sshd/host_keys:/host_keys'
+      - './sshd/host_keys/:/host_keys/'
       - './sshd/authorized_keys:/home/limited-user/.ssh/authorized_keys'
     depends_on:
       - web

@@ -57,7 +57,7 @@ class DeviceCreate(CreateView):
         form.instance.user = self.request.user
 
         if not UpdatePubKey(form.instance.id, form.instance.ssh_pub).add():
-            form.instance.ssh_pub = None
+            form.instance.ssh_pub = ''
         
         cache.set(form.instance.id, str(form.instance.token), timeout=None)
         
