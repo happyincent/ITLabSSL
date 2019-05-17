@@ -27,7 +27,7 @@ services:
     deploy:
       mode: global
       restart_policy:
-        condition: on-failure
+        condition: any
         delay: 30s
       placement:
         constraints: [node.role != manager]

@@ -15,6 +15,9 @@ services:
       - "50000:8080"
     deploy:
       replicas: 1
+      restart_policy:
+        condition: any
+        delay: 30s
       placement:
         constraints: [node.role == manager]
   
@@ -32,5 +35,8 @@ services:
       # - "50002:80"
     deploy:
       replicas: 1
+      restart_policy:
+        condition: any
+        delay: 30s
       placement:
         constraints: [node.role == manager]

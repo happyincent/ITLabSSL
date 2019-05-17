@@ -1,0 +1,13 @@
+{
+    "NODE_NAME": "RPi",
+    "DEVICES": [
+        {
+            "DEVICE": "ncku_2",
+            "TOKEN": "f64a2406-2eff-4301-b594-d07621e988e9"
+        },
+        {
+            "DEVICE": "RPi_0",
+            "TOKEN": "31243347-3a25-499b-a584-61623dff1168"
+        }
+    ]
+}
