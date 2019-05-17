@@ -12,6 +12,7 @@ Kernel:  Linux 4.18.0-18-generic x86_64
 ```
 sudo apt update
 sudo apt install curl git
+sudo apt install iptables-persistent
 
 # hime (http://goodjack.blogspot.com/2013/08/linux-phonetic-setting.html)
 sudo apt install hime
