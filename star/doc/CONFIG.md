@@ -25,14 +25,17 @@
   * `./nginx/run.sh` : startup script for the container 
   * `./web/app` : root path of django **(web & nginx)**
   * `./log/nginx/` : log file for access, rtmp_access, error
-  * `/tmp/key` : [nginx.conf](../nginx/nginx.conf) - hls_key_path
+  * `/tmp/hls` : [nginx-rtmp.conf](../nginx-rtmp/nginx-rtmp.conf) - hls_path
+  * `/tmp/key` : [nginx-rtmp.conf](../nginx-rtmp/nginx-rtmp.conf) - hls_key_path
   * `/media/data/record` : [nginx.conf](../nginx/nginx.conf) - record_path  **(web & nginx)** **(mount disk)**
-  * `/etc/letsencrypt` : path for https key files **(nginx & letsencrypt)**
-  * `./letsencrypt/letsencrypt-www` : temporary path for letsencrypt **(nginx & letsencrypt)**
+  * `/tmp/letsencrypt-www` : temporary path for letsencrypt **(nginx & letsencrypt)**
+  * `./letsencrypt/letsencrypt/:/etc/letsencrypt/` : path for https key files **(nginx & letsencrypt)**
+  
 * letsencrypt
-  * `./letsencrypt/letsencrypt-www` : temporary path for letsencrypt **(nginx & letsencrypt)**
-  * `/etc/letsencrypt` : path for https key files **(nginx & letsencrypt)**
   * `/var/run/docker.sock` : restart nginx container after renew certificate **(letsencrypt & host)**
+  * `/tmp/letsencrypt-www` : temporary path for letsencrypt **(nginx & letsencrypt)**
+  * `./letsencrypt/letsencrypt/:/etc/letsencrypt/` : path for https key files **(nginx & letsencrypt)**
+
 * sshd
   * `./sshd/host_keys` : path for sshd server's key files
   * `./sshd/authorized_keys` : file with client's public key **(web & sshd)**
@@ -46,6 +49,8 @@
   * `sh -c "/run.sh"` : run [run.sh](../web/run.sh)
 * nginx
   * `sh -c "/run.sh"` : run [run.sh](../nginx/run.sh)
+* nginx-rtmp
+  * `sh -c "/run.sh"` : run [run.sh](../nginx-rtmp/run.sh)
 * sshd
   * `sh -c "/run.sh"` : run [run.sh](../sshd/run.sh)
 
@@ -67,7 +72,7 @@
   * sshd
     * nginx-rtmp:1935, web:8001
 * startup order
-  * db & redis -> web -> nginx -> sshd, letsencrypt
+  * db & redis -> web -> nginx / nginx-rtmp -> sshd, letsencrypt
 
 ---
 
@@ -81,22 +86,36 @@
   * rotate log every one hour (xx:59)
 
 * nginx.conf
-  * rtmp (port 1935)
-    * `http://web:8000/hooks/on_publish` : rtmp hook to web (django)
-    * `/media/data/record` : vod path
-    * `/tmp/key` : hls key path
-    * `https://ssl.itlab.ee.ncku.edu.tw/key/` : hls key url
   
   * http (port 80, 443)
     * `ssl.itlab.ee.ncku.edu.tw` : server domain name
     * `/tmp/letsencrypt` : temporary path for letsencrypt
     * `/static/` : path to static files (`/www/static/`)
     * `/media/data/record` : vod path
+    * `/tmp/hls` : hls m3u8, ts path
+    * `/tmp/key` : hls key path
     * `auth_request /check_user` : auth user by [django](../web/app/home/urls.py)
     * `/etc/letsencrypt/live/ssl.itlab.ee.ncku.edu.tw/` : path for https key files
 
 * [run.sh](../nginx/run.sh)
   * `/etc/letsencrypt/live/ssl.itlab.ee.ncku.edu.tw/dhparam.pem` : path to the DH key
+
+---
+
+## nginx-rtmp
+
+* Dockerfile, crontab same as ngin
+
+* nginx-rtmp.conf
+  * rtmp (port 1935)
+    * `http://web:8000/hooks/on_publish` : rtmp hook to web (django)
+    * `/media/data/record` : vod path
+    * `/tmp/hls` : hls m3u8, ts path
+    * `/tmp/key` : hls key path
+    * `https://ssl.itlab.ee.ncku.edu.tw/key/` : hls key url
+  
+  * http (port 80)
+    * `/control` : rtmp control (only between containers)
 
 ---
 
