@@ -76,7 +76,7 @@ ls -l /dev/disk/by-uuid/
 lsblk # sudo fdisk -l
 
 sudo nano /etc/fstab
-> /dev/disk/by-uuid/2C3CBAA60F5CE503 /media/data auto nosuid,nodev,nofail,x-gvfs-show 0 0
+> /dev/disk/by-uuid/e7908ed5-67fd-4079-a23a-6ef417133e23 /media/data auto nosuid,nodev,nofail,x-gvfs-show 0 0
 
 sudo mkdir /media/data
 sudo mount -a
