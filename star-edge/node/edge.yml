@@ -2,7 +2,7 @@ version: '3'
 
 services:
 
-  ${NODE_NAME}_${DEVICE}-edge:
+  ${NODE_NAME}_${id}-edge:
     image: itlabstar/edge:ddl
     command:
       - "/bin/sh"
@@ -27,5 +27,5 @@ services:
     environment:
       WS_PATH: ${WS_PATH}
       WS_POSTINFO_TIMEOUT: ${WS_POSTINFO_TIMEOUT}
-      DEVICE: ${DEVICE}
-      TOKEN: ${TOKEN}
+      DEVICE: ${id}
+      TOKEN: ${token}

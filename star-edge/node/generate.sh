@@ -7,24 +7,26 @@ mkdir -p $OUTDIR
 BASE=(edge.yml ffmpeg.yml)
 
 for FILE in "$@"; do
+    echo "Gernerating ymls from config: $FILE ..."
+
     NODE_NAME=$(cat $FILE | jq '.NODE_NAME' | xargs)
     rm -f $OUTDIR/[$NODE_NAME]*.yml
 
     cat $FILE | jq -r '.DEVICES' | jq -c '.[]' | while read i; do
 
-        DEVICE=$(echo $i | jq '.DEVICE' | xargs)
-        TOKEN=$(echo $i | jq '.TOKEN' | xargs)
+        id=$(echo $i | jq '.id' | xargs)
+        token=$(echo $i | jq '.token' | xargs)
         
         for f in "${BASE[@]}"; do
             sed "\
                 s|\${NODE_NAME}|${NODE_NAME}|g; \
-                s|\${DEVICE}|${DEVICE}|g; \
-                s|\${TOKEN}|${TOKEN}|g" \
-                $DIR/$f > $OUTDIR/${NODE_NAME}_${DEVICE}-$f
+                s|\${id}|${id}|g; \
+                s|\${token}|${token}|g" \
+                $DIR/$f > $OUTDIR/${NODE_NAME}_${id}-$f
         
             # For VM* use live555 rtsp proxy server
-            if [[ ${DEVICE} = VM* ]] && [[ $f = ffmpeg.yml ]] ; then
-                sed -i "s|\${RTSP_URI}|\${RTSP_PROXY_URI}|;" $OUTDIR/${NODE_NAME}_${DEVICE}-$f
+            if [[ ${id} = VM* ]] && [[ $f = ffmpeg.yml ]] ; then
+                sed -i "s|\${RTSP_URI}|\${RTSP_PROXY_URI}|;" $OUTDIR/${NODE_NAME}_${id}-$f
             fi
         done
 

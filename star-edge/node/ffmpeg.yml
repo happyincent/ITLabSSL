@@ -2,7 +2,7 @@ version: '3'
 
 services:
 
-  ${NODE_NAME}_${DEVICE}-ffmpeg:
+  ${NODE_NAME}_${id}-ffmpeg:
     image: itlabstar/ffmpeg:ddl
     command:
       - '/bin/sh'
@@ -28,5 +28,5 @@ services:
     environment:
       RTMP_PATH: ${RTMP_PATH}
       RTSP_URI: ${RTSP_URI}
-      DEVICE: ${DEVICE}
-      TOKEN: ${TOKEN}
+      DEVICE: ${id}
+      TOKEN: ${token}

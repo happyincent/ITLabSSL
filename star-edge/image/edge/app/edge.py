@@ -100,16 +100,24 @@ if __name__ == "__main__":
     parser.add_argument('--timeout', type=int, default=10, help='timeout')
     args = parser.parse_args()
 
-    while True:
-        try:
-            CloudConnector(
-                args.netloc,
-                args.path,
-                args.device,
-                args.token,
-                args.timeout
-            ).start()
-            time.sleep(args.timeout)
-        except:
-            print("{} ... disconnected".format(os.getenv('DEVICE')))
-            time.sleep(args.timeout)
+    CloudConnector(
+        args.netloc,
+        args.path,
+        args.device,
+        args.token,
+        args.timeout
+    ).start()
+
+    # while True:
+    #     try:
+    #         CloudConnector(
+    #             args.netloc,
+    #             args.path,
+    #             args.device,
+    #             args.token,
+    #             args.timeout
+    #         ).start()
+    #         time.sleep(args.timeout)
+    #     except:
+    #         print("{} ... disconnected".format(os.getenv('DEVICE')))
+    #         time.sleep(args.timeout)
