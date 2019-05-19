@@ -8,7 +8,7 @@ services:
       - '/bin/sh'
       - -c
       - |
-          ffmpeg -err_detect ignore_err \
+          ffmpeg \
           -use_wallclock_as_timestamps 1 -flags global_header \
           -r 15 -rtsp_transport tcp \
           -i $$RTSP_URI \
