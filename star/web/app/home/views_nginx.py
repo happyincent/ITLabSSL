@@ -14,7 +14,7 @@ def on_publish(request):
         if id != None and token != None and cache.get(id) == token:
             return HttpResponse(status=200)
 
-    return HttpResponse(status=403)
+    return HttpResponseForbidden()
 
 def check_user(request):
     if request.user.is_authenticated and EmailAddress.objects.filter(user=request.user, verified=True).exists():

@@ -130,7 +130,7 @@
     var pk = '{{ device_id }}';
 
     $.ajax({
-      url: "{% url 'api_history' pk=pk%}",
+      url: "{% url 'api_history' pk=pk %}",
       type: "POST",
       dataType: "json",
       contentType: 'application/json; charset=utf-8',

@@ -1,5 +1,6 @@
 import os
 import subprocess
+import threading
 import uuid
 import urllib.request
 from sshpubkeys import SSHKey, AuthorizedKeysFile
@@ -8,7 +9,7 @@ from django.views import View
 from django.views.generic import CreateView, UpdateView, DeleteView, TemplateView
 from .views_decorator import *
 
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseForbidden, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.core import serializers
 from django.core.cache import cache
@@ -39,6 +40,22 @@ class DeviceList(TemplateView):
         context['devices'] = Device.objects.all()
         context['devices_json'] = serializers.serialize("json", context['devices'])
         return context
+
+@method_decorator(legal_staff_user, name='dispatch')
+class MyDevices(View):
+    def get(self, request, **kwargs):
+        if request.user.username != kwargs.get('username'):
+            return HttpResponseForbidden()
+
+        raw = Device.objects.filter(user=request.user).values()
+        data = [{
+            'id': i.get('id'),
+            'token': str(i.get('token')),
+            'longitude': str(i.get('longitude')),
+            'latitude': str(i.get('latitude')),
+            'ssh_pub': i.get('ssh_pub'),
+        } for i in raw]
+        return JsonResponse(data, safe=False, json_dumps_params={'indent': 4})
 
 ##
 
@@ -96,16 +113,20 @@ class DeviceUpdate(CheckOwnerMixin, UpdateView):
 class DeviceDelete(CheckOwnerMixin, DeleteView):
     model = Device
     template_name = 'home/delete_device.html'
-        
+
+    def _rm_vods(self, id):
+        # dangerous: ensure quoted appropriately to avoid shell injection
+        subprocess.call('rm -rf {}*'.format(os.path.join(settings.VOD_DIR, id)), shell=True)
+
     def get_success_url(self):
         UpdatePubKey(self.object.id).delete()        
         cache.delete(self.object.id)
 
-        # dangerous: ensure quoted appropriately to avoid shell injection
-        subprocess.call('rm -rf {}*'.format(os.path.join(settings.VOD_DIR, self.object.id)), shell=True)
-
         # Drop RTMP connection
         urllib.request.urlopen(settings.RTMP_DROP_URL.format(self.object.id))
+
+        # Remove flvs and VOD folder after 5 seconds (wait for nginx-rtmp recording)
+        threading.Timer(5, self._rm_vods, [self.object.id]).start()
 
         return reverse('device_list')
 

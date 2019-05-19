@@ -60,10 +60,13 @@
               {% endfor %}
             </tbody>
           </table>
-          {% if request.user.is_staff %}
-          <a href="{% url 'device_create' %}" class="btn btn-primary">Add New Device</a>
-          {% endif %}
           <p></p>
+          {% if request.user.is_staff %}
+          <p>
+            <a href="{% url 'device_create' %}" class="btn btn-primary">Add New Device</a>
+            <a href="{% url 'my_devices' user.username %}" class="btn btn-success">List My Devices</a>
+          </p>
+          {% endif %}
         </div>
         <div class="col-md-6 column">
           <div id="map" style="width: 100%; height: 400px;"></div>
