@@ -110,7 +110,7 @@ class APIHistory(View):
                 ts_i = data[i]['timestamp']
                 ts_i_int = int(ts_i.strftime('%s'))
                 
-                names = [name for name in filenames if name <= ts_i_int]
+                names = [name for name in filenames if ts_i_int in range(name, name + datetime.timedelta(minutes=settings.VOD_LEN).seconds)]
                 
                 data[i]['vod'] = '{}-{}{}'.format(pk, names[-1], settings.VOD_EXT) if names else ''
                 data[i]['timestamp'] = timezone.localtime(ts_i).strftime('%Y-%m-%d %H:%M:%S %z')

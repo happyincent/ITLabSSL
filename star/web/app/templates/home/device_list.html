@@ -64,7 +64,7 @@
           {% if request.user.is_staff %}
           <p>
             <a href="{% url 'device_create' %}" class="btn btn-primary">Add New Device</a>
-            <a href="{% url 'my_devices' user.username %}" class="btn btn-success">List My Devices</a>
+            <a href="{% url 'my_devices' user.username %}" class="btn btn-success">My Devices (JSON)</a>
           </p>
           {% endif %}
         </div>
