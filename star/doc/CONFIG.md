@@ -155,6 +155,7 @@
 * Dockerfile
   * `USERNAME=limited-user` : server's username for clients (edge)
   * `PORT=62422` : ssh port for clients (edge)
+  * `MAX_SESSIONS=200` : maximum number of open sessions permitted per one IP
   * `PermitOpen nginx-rtmp:1935 web:8001` : only forward these local ports
 * [run.sh](../sshd/run.sh)
   * `/home/limited-user/.ssh/authorized_keys` : file with client's public key
