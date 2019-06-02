@@ -9,7 +9,7 @@
 #define ledDHT 13
 #define SoundSensorPin A10 //this pin read the analog voltage from the sound level meter
 #define VREF 5.0 //voltage on AREF pin,default:operating voltage
-#define roadlight 4
+
 
 SoftwareSerial PMS(10, 11); // arduino 的RX, TX    (PM2.5)
 BH1750 lightMeter;  //BH1750感光→MEGA SCL -> SCL (A21 on Mega)
