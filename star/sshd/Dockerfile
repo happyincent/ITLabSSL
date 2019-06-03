@@ -3,9 +3,11 @@ MAINTAINER  ddl <itlab.ee.ncku.edu.tw>
 # Mod: https://github.com/Hermsi1337/docker-sshd
 
 ENV         USERNAME=limited-user
-# ENV         OPENSSH_VERSION=7.9_p1-r5
 ENV         PORT=22
 ENV         MAX_SESSIONS=200
+
+## https://pkgs.alpinelinux.org/packages?name=openssh&branch=v3.9
+# ENV         OPENSSH_VERSION=7.9_p1-r5
 
 ##############################
 

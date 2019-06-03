@@ -16,7 +16,7 @@ services:
     restart: always
     command: redis-server --appendonly yes
     volumes:
-      - ./redis/data:/data
+      - './redis/data/:/data/'
 
   web:
     container_name: web-star
@@ -25,7 +25,7 @@ services:
     restart: always
     command: sh -c "/run.sh"
     volumes:      
-      - './web/app:/www'
+      - './web/app:/www/'
       - './web/supervisord.conf:/supervisord.conf'
       - './web/logrotate.conf:/logrotate.conf'
       - './web/crontab:/crontab'
@@ -86,7 +86,7 @@ services:
     build: ./letsencrypt
     image: letsencrypt:star
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'
       - '/tmp/letsencrypt-www/:/tmp/letsencrypt/'
       - './letsencrypt/letsencrypt/:/etc/letsencrypt/'
     environment:

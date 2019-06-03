@@ -15,6 +15,9 @@
 sqlparse==0.2.4
 #https://github.com/nesdis/djongo/issues/153
 
+cryptography==2.5
+# 20190602 for django-allauth sending email
+
 Django>2
 djongo
 django-redis
