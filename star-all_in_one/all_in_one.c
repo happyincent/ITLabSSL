@@ -37,6 +37,7 @@ float humidity = 0;
 float uv_intensity = 0;
 float light_intensity = 0;
 float loudness = 0;
+bool light_status = false;
 
 // Declare functions
 void update_pm25();
@@ -46,6 +47,7 @@ void update_loud();
 void update_PIR();
 void load_cmd();
 void send_data();
+void light_ctl();
 
 void setup() {
     pinMode(ledDHT, OUTPUT);
@@ -164,20 +166,36 @@ void load_cmd() {
     if (stringComplete) {
         if (inputString == "data") {
             send_data();
+        } else if (inputString == "light") {
+            Serial.println("light: status=" + String(light_status));
+        } else if (inputString == "light_on") {
+            light_ctl(true);
+        } else if (inputString == "light_off") {
+            light_ctl(false);
         }
+        
         inputString = "";
         stringComplete = false;
     }
 }
 
 void send_data() {
-    String out ="pmat25=" + String(pmat25) + " " \
+    String out ="data: " \
+                "pmat25=" + String(pmat25) + " " \
                 "temperature=" + String(temperature) + " " \
                 "humidity=" + String(humidity) + " " \
                 "uv_intensity=" + String(uv_intensity) + " " \
                 "light_intensity=" + String(light_intensity) + " " \
-                "loudness=" + String(loudness);
+                "loudness=" + String(loudness) + " " \
+                "light_status=" + String(light_status);
     Serial.println(out);
+}
+
+// ---------- light function ----------
+void light_ctl(bool opt) {
+    light_status = opt;
+    Serial.println("light_ctl: opt=" + String(opt));
+    // digitalWrite(led, opt);
 }
 
 // ---------- uv function ----------
