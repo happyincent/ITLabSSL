@@ -9,7 +9,6 @@
 #define ledDHT 13
 #define SoundSensorPin A10 // this pin read the analog voltage from the sound level meter
 #define VREF 5.0           // voltage on AREF pin, default: operating voltage
-#define roadlight 4
 
 SoftwareSerial PMS(10, 11); // arduino 的 RX, TX (PM2.5)
 BH1750 lightMeter;          // BH1750 感光 → MEGA SCL -> SCL (A21 on Mega)
@@ -18,13 +17,26 @@ BH1750 lightMeter;          // BH1750 感光 → MEGA SCL -> SCL (A21 on Mega)
 // DHT22
 DHT dht(DHTPIN, DHTTYPE);
 
+// 紫外光
+const int UVOUT = A8; //Output from the sensor
+const int REF_3V3 = A9; //3.3V power on the Arduino board
+
 // PIR 人體紅外感應
-const int led = 3; // 路燈
 const int PIRout = 2;
 
-// 紫外光
-int UVOUT = A8; //Output from the sensor
-int REF_3V3 = A9; //3.3V power on the Arduino board
+/* ---------------------------------------- */
+
+// loop 延遲
+const int loop_delay = 1000;
+
+// 路燈
+const int led = 3;
+int LowPIRCount = 0;
+
+// PIR==LOW 幾次後關燈 (delay 1000)
+const int LowPIRCount_Max_default = 8;  // 紅外線感測到亮約 10 秒
+const int LowPIRCount_Max_manual = 300; // 手動控制亮約 300 秒
+int LowPIRCount_Max = LowPIRCount_Max_default;
 
 // Serial String
 String inputString = "";
@@ -47,11 +59,12 @@ void update_loud();
 void update_PIR();
 void load_cmd();
 void send_data();
-void light_ctl();
+void light_ctrl();
+
+/* ---------------------------------------- */
 
 void setup() {
     pinMode(ledDHT, OUTPUT);
-    pinMode(roadlight, OUTPUT);
     pinMode(led, OUTPUT);
     pinMode(PIRout, INPUT);
     Serial.begin(9600);
@@ -71,7 +84,7 @@ void loop() {
     update_loud();
     update_PIR();
     load_cmd();
-    delay(1000);
+    delay(loop_delay);
 }
 
 void update_pm25() {
@@ -100,7 +113,7 @@ void update_pm25() {
             humidity = (256 * high + c) / 10.0;
         }
 
-        count++;
+        ++count;
     }
     
     while (PMS.available()) {
@@ -130,18 +143,16 @@ void update_loud() {
 }
 
 void update_PIR() {
-    int val = digitalRead(PIRout); //讀取 PIR 輸出
-    if (val == HIGH) {
-        //PIR 有偵測到時 : LED 閃一下
-        for (int i = 0; i < 3; i++) {
-            digitalWrite(led, HIGH);
-            delay(50);
-            digitalWrite(led, LOW);
-            delay(50);
-        }
-    } else {
-        //PIR 沒有偵測到 : LED 暗
+    int val = digitalRead(PIRout);
+    LowPIRCount = (val) ? 0 : LowPIRCount + 1;
+    
+    if (LowPIRCount == 0) {
+        digitalWrite(led, HIGH);
+        light_status = HIGH;
+    } else if (LowPIRCount > LowPIRCount_Max) {
         digitalWrite(led, LOW);
+        light_status = LOW;
+        LowPIRCount = 0;
     }
 }
 
@@ -169,9 +180,9 @@ void load_cmd() {
         } else if (inputString == "light") {
             Serial.println("light: status=" + String(light_status));
         } else if (inputString == "light_on") {
-            light_ctl(true);
+            light_ctrl(true);
         } else if (inputString == "light_off") {
-            light_ctl(false);
+            light_ctrl(false);
         }
         
         inputString = "";
@@ -192,10 +203,14 @@ void send_data() {
 }
 
 // ---------- light function ----------
-void light_ctl(bool opt) {
+void light_ctrl(bool opt) {
+    Serial.println("light_ctrl: opt=" + String(opt));
+
+    // set LowPIRCount_Max if maunally turn on the light
+    LowPIRCount_Max = (opt) ? LowPIRCount_Max_manual : LowPIRCount_Max_default;
+    
     light_status = opt;
-    Serial.println("light_ctl: opt=" + String(opt));
-    // digitalWrite(led, opt);
+    digitalWrite(led, opt);
 }
 
 // ---------- uv function ----------
