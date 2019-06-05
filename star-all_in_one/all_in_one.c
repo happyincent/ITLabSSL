@@ -51,7 +51,7 @@ float loudness = 0;
 bool led_status = false;
 
 // Declare functions
-void update_pm25();
+void update_PMS();
 void update_lux();
 void update_uv();
 void update_loud();
@@ -78,7 +78,7 @@ void setup() {
 }
 
 void loop() {
-    update_pm25();
+    update_PMS();
     update_lux();
     update_uv();
     update_loud();
@@ -87,7 +87,7 @@ void loop() {
     delay(loop_delay);
 }
 
-void update_pm25() {
+void update_PMS() {
     int count = 0;
     unsigned char c;
     unsigned char high;
