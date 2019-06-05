@@ -33,22 +33,21 @@ class StarConsumer(AsyncJsonWebsocketConsumer):
 
     async def receive_json(self, content):
         # check if reset or delete token
-        if self.scope['token'] == cache.get(self.device_id):
+        if self.scope['user'].is_authenticated or self.scope['token'] == cache.get(self.device_id):
 
-            if content['cmd'] == 'update_info':            
+            if content['cmd'] == 'update_info' and 'token' in self.scope:
                 ts = datetime.datetime.now(datetime.timezone.utc)
                 ts = timezone.localtime(ts)
                 content['data']['timestamp'] = ts.strftime(settings.INFO_TIMESTR)
                 cache.set('{}{}'.format(self.device_id, settings.INFO_POSTFIX), pickle.dumps(content['data']), settings.INFO_TIMEOUT)
 
-            if content['cmd'] in ['update_info']:
-                await self.channel_layer.group_send(
-                    self.device_id,
-                    {
-                        'type': 'broatcast_json',
-                        'content': content
-                    }
-                )
+                await self.channel_layer.group_send( self.device_id, {'type': 'broatcast_json', 'content': content} )
+
+            if content['cmd'] == 'led_ctrl':
+                if self.scope['user'].is_staff:
+                    await self.channel_layer.group_send( self.device_id, {'type': 'broatcast_json', 'content': content} )
+                else:
+                    await self.close()
         
         else:
             await self.close()

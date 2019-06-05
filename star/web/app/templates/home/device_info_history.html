@@ -54,6 +54,7 @@
               <th>Loudness</th>
               <th>Light Intensity</th>
               <th>UV Intensity</th>
+              <th>LED Status</th>
               <th>Load Video</th>
             </tr>
           </thead>
@@ -157,10 +158,11 @@
             '<td>' + v.timestamp + '</td>' +
             '<td>' + v.temperature + ' °C' + '</td>' +
             '<td>' + v.humidity + ' %' + '</td>' +
-            '<td>' + v.pm2_5 + ' μg/m<sup>3</sup>' + '</td>' +
+            '<td>' + v.pmat25 + ' μg/m<sup>3</sup>' + '</td>' +
             '<td>' + v.loudness + ' dB' + '</td>' +
             '<td>' + v.light_intensity + ' lux' + '</td>' +
             '<td>' + v.uv_intensity + ' mW/cm<sup>2</sup>' + '</td>' +
+            '<td>' + (Number(v.led_status) ? 'on' : 'off') + '</td>' +
             '<td><button onclick="' + js + '" type="button" class="btn btn-default btn-block btn-sm">Load</button></td>' +
             '</tr>'
           );

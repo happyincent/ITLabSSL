@@ -2,7 +2,7 @@
 {% load bootstrap3 %}
 {% load static %}
 
-{% block bootstrap3_title %}Device Info | ITLab SSL{% endblock %}
+{% block bootstrap3_title %}{{ device_id }} | ITLab SSL{% endblock %}
 
 {% block head %}
 <style>
@@ -40,11 +40,8 @@
     <div class="col-md-6 column">
       {% if device_info %}
       <div class="alert alert-info">
-        <strong id="timestamp">
-          {{ device_info.timestamp | default_if_none:"null" }}
-        </strong>
+        <strong id="timestamp">{{ device_info.timestamp | default_if_none:"Disconnected" }}</strong>
       </div>
-
       <div class="table-responsive">
         <table class="table table-striped">
           <tbody>
@@ -58,7 +55,7 @@
             </tr>
             <tr>
               <th>PM2.5</th>
-              <td id="pm2_5">{{ device_info.pm2_5 | default_if_none:"null" }} μg/m<sup>3</sup></td>
+              <td id="pmat25">{{ device_info.pmat25 | default_if_none:"null" }} μg/m<sup>3</sup></td>
             </tr>
             <tr>
               <th>Loudness</th>
@@ -73,64 +70,68 @@
               <td id="uv_intensity">{{ device_info.uv_intensity | default_if_none:"null" }} mW/cm<sup>2</sup></td>
             </tr>
             <tr>
-              <th>IR Sensor</th>
-              <td id="ir_sensed">{{ device_info.ir_sensed | default_if_none:"null" }}</td>
+              <th>LED Status</th>
+              <td id="led_status">{{ device_info.led_status | default_if_none:"null" }}</td>
             </tr>
           </tbody>
         </table>
       </div>
       {% else %}
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title" id="timestamp">
-            No Latest raw
-          </h3>
-        </div>
-        <div class="panel-body table-responsive">
-          <table class="table table-striped">
-            <tbody>
-              <tr>
-                <th class="col-xs-8">Temperature</th>
-                <td id="temperature">null °C</td>
-              </tr>
-              <tr>
-                <th>Humidity</th>
-                <td id="humidity">null %</td>
-              </tr>
-              <tr>
-                <th>PM2.5</th>
-                <td id="pm2_5">null μg/m<sup>3</sup></td>
-              </tr>
-              <tr>
-                <th>Loudness</th>
-                <td id="loudness">null dB</td>
-              </tr>
-              <tr>
-                <th>Light Intensity</th>
-                <td id="light_intensity">null lux</td>
-              </tr>
-              <tr>
-                <th>UV Intensity</th>
-                <td id="uv_intensity">null mW/cm<sup>2</sup></td>
-              </tr>
-              <tr>
-                <th>IR Sensor</th>
-                <td id="ir_sensed">null</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div class="alert alert-info">
+        <strong id="timestamp">Disconnected</strong>
       </div>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <tbody>
+            <tr>
+              <th class="col-xs-8">Temperature</th>
+              <td id="temperature">null °C</td>
+            </tr>
+            <tr>
+              <th>Humidity</th>
+              <td id="humidity">null %</td>
+            </tr>
+            <tr>
+              <th>PM2.5</th>
+              <td id="pmat25">null μg/m<sup>3</sup></td>
+            </tr>
+            <tr>
+              <th>Loudness</th>
+              <td id="loudness">null dB</td>
+            </tr>
+            <tr>
+              <th>Light Intensity</th>
+              <td id="light_intensity">null lux</td>
+            </tr>
+            <tr>
+              <th>UV Intensity</th>
+              <td id="uv_intensity">null mW/cm<sup>2</sup></td>
+            </tr>
+            <tr>
+              <th>LED Status</th>
+              <td id="led_status">null</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+      {% if request.user.is_staff %}
+      <p>
+        <button disabled id="led_ctrl_on" class="btn btn-success .btn-lg" type="button" onclick="led_ctrl(1);">Turn ON
+          LED</button>
+        <button disabled id="led_ctrl_off" class="btn btn-danger .btn-lg" type="button" onclick="led_ctrl(0);">Turn OFF
+          LED</button>
+      </p>
       {% endif %}
     </div>
     <div class="col-md-6 column">
       <div class="embed-responsive embed-responsive-16by9">
         <video id="video1" class="embed-responsive-item" playsinline controls muted autoplay></video>
       </div>
-      <p></p>
+      <!-- <p></p>
       <div class="embed-responsive embed-responsive-16by9">
-        <!-- <video id="video2" class="embed-responsive-item" playsinline controls muted autoplay></video> -->
-      </div>
+        <video id="video2" class="embed-responsive-item" playsinline controls muted autoplay></video>
+      </div> -->
     </div>
   </div>
 </div>
@@ -157,7 +158,6 @@
   }
 </script>
 
-
 <!-- Play FLV Video -->
 <!-- <script src="https://cdn.jsdelivr.net/npm/flv.js@latest"></script>
 <script>
@@ -177,6 +177,67 @@
   }
 </script> -->
 
+{% if request.user.is_staff %}
+<script>
+  function ui_disabled(disable) {
+    document.querySelector('#led_ctrl_on').disabled = disable;
+    document.querySelector('#led_ctrl_off').disabled = disable;
+
+    if (disable == true) {
+      document.querySelector('#timestamp').innerHTML = 'Disconnected';
+    }
+  }
+
+  function led_ctrl(led_status) {
+    if (socket.readyState == 1) {
+      if (document.querySelector('#timestamp').innerHTML != 'Disconnected') {
+
+        var msg = {
+          'cmd': 'led_ctrl',
+          'data': { 'led_status': led_status }
+        };
+        socket.send(JSON.stringify(msg));
+        console.log(JSON.stringify(msg));
+
+      } else {
+        alert('Edge Device is disconnected.');
+      }
+    } else {
+      alert('WebSocket connection closed unexpectedly.\nPlease refresh the page.');
+    }
+  }
+</script>
+{% else %}
+<script>
+  function ui_disabled(disable) {
+    if (disable == true) {
+      document.querySelector('#timestamp').innerHTML = 'Disconnected';
+    }
+  }
+</script>
+{% endif %}
+
+<script>
+  document.querySelector('#led_status').innerHTML = Number(document.querySelector('#led_status').innerHTML) ? 'on' : 'off';
+
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async function check_edge() {
+    while (true) {
+      var time = document.querySelector('#timestamp').innerHTML;
+
+      var if_disconnected = (time == "Disconnected") || ((new Date() - new Date(time)) > 15 * 1000);
+
+      ui_disabled(if_disconnected);
+
+      await sleep(10 * 1000);
+    }
+  }
+
+  check_edge();
+</script>
 
 <!-- Websocket Get Info -->
 <script>
@@ -189,20 +250,21 @@
   socket.onmessage = function (e) {
     var raw = JSON.parse(e.data);
     if (raw['cmd'] == 'update_info') {
-      document.querySelector('#timestamp').innerHTML =  raw['data']['timestamp'];
-      document.querySelector('#temperature').innerHTML =  raw['data']['temperature'] + ' °C';
-      document.querySelector('#humidity').innerHTML =  raw['data']['humidity'] + ' %';
-      document.querySelector('#pm2_5').innerHTML =  raw['data']['pm2_5'] + ' μg/m<sup>3</sup>';
-      document.querySelector('#loudness').innerHTML =  raw['data']['loudness'] + ' dB';
-      document.querySelector('#light_intensity').innerHTML =  raw['data']['light_intensity'] + ' lux';
-      document.querySelector('#uv_intensity').innerHTML =  raw['data']['uv_intensity'] + ' mW/cm<sup>2</sup>';
-      document.querySelector('#ir_sensed').innerHTML =  raw['data']['ir_sensed'];
+      document.querySelector('#timestamp').innerHTML = raw['data']['timestamp'];
+      document.querySelector('#temperature').innerHTML = raw['data']['temperature'] + ' °C';
+      document.querySelector('#humidity').innerHTML = raw['data']['humidity'] + ' %';
+      document.querySelector('#pmat25').innerHTML = raw['data']['pmat25'] + ' μg/m<sup>3</sup>';
+      document.querySelector('#loudness').innerHTML = raw['data']['loudness'] + ' dB';
+      document.querySelector('#light_intensity').innerHTML = raw['data']['light_intensity'] + ' lux';
+      document.querySelector('#uv_intensity').innerHTML = raw['data']['uv_intensity'] + ' mW/cm<sup>2</sup>';
+      document.querySelector('#led_status').innerHTML = Number(raw['data']['led_status']) ? 'on' : 'off';
+      ui_disabled(false);
     }
   };
 
   socket.onclose = function (e) {
-    alert('Connection closed unexpectedly.\nPlease refresh the page.');
-    document.querySelector('#timestamp').innerHTML = 'Disconnected.'
+    alert('WebSocket connection closed unexpectedly.\nPlease refresh the page.');
+    ui_disabled(true);
   };
 </script>
 {% endblock %}

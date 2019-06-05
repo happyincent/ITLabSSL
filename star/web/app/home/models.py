@@ -33,11 +33,11 @@ class HistoryInfo(models.Model):
     device = models.ForeignKey(Device, related_name='info_history', on_delete=models.CASCADE)
     temperature = models.FloatField(default=0.0)
     humidity = models.FloatField(default=0.0)
-    pm2_5 = models.FloatField(default=0.0)
+    pmat25 = models.FloatField(default=0.0)
     loudness = models.FloatField(default=0.0)
     light_intensity = models.FloatField(default=0.0)
     uv_intensity = models.FloatField(default=0.0)
-    ir_sensed = models.BooleanField(default=False)
+    led_status = models.BooleanField(default=False)
     timestamp = models.DateTimeField(default=datetime.datetime(1970,1,1))
 
     def __str__(self):
