@@ -33,9 +33,12 @@ const int led = 3;
 int LowPIRCount = 0;
 
 // PIR==LOW 幾次後關燈 (delay 1000)
-const int LowPIRCount_Max_default = 8;  // 紅外線感測到亮約 10 秒
-const int LowPIRCount_Max_manual = 300; // 手動控制亮約 300 秒
-int LowPIRCount_Max = LowPIRCount_Max_default;
+const int LedON_PIR_timeout_default = 8;      // 紅外線感測到亮約 10 秒
+const int LedON_Manual_timeout_default = 300; // 手動控制亮約 300 秒
+
+int LedON_PIR_timeout = LedON_PIR_timeout_default;
+int LedON_Manual_timeout = LedON_Manual_timeout_default;
+int LowPIRCount_Max = LedON_PIR_timeout;
 
 // Serial String
 String inputString = "";
@@ -175,14 +178,24 @@ void load_cmd() {
     if (stringComplete) {
         if (inputString == "data") {
             send_data();
-        }  else if (inputString == "led_on") {
+        } else if (inputString == "led_on") {
             // change LowPIRCount_Max
-            LowPIRCount_Max = LowPIRCount_Max_manual;
+            LowPIRCount_Max = LedON_Manual_timeout;
             led_ctrl(HIGH);
         } else if (inputString == "led_off") {
             // reset LowPIRCount_Max
-            LowPIRCount_Max = LowPIRCount_Max_default;
+            LowPIRCount_Max = LedON_PIR_timeout;
             led_ctrl(LOW);
+        } else if (inputString.startsWith("LedON_Manual_timeout=")) {
+            inputString.replace("LedON_Manual_timeout=", "");
+            int timeout = inputString.toInt();
+            LedON_Manual_timeout = (timeout == 0) ? LedON_Manual_timeout_default : timeout;
+            Serial.println("LedON_Manual_timeout=" + String(LedON_Manual_timeout));
+        } else if (inputString.startsWith("LedON_PIR_timeout=")) {
+            inputString.replace("LedON_PIR_timeout=", "");
+            int timeout = inputString.toInt();
+            LedON_PIR_timeout = (timeout == 0) ? LedON_PIR_timeout_default : timeout;
+            Serial.println("LedON_PIR_timeout=" + String(LedON_PIR_timeout));
         }
         
         inputString = "";
@@ -209,6 +222,7 @@ void led_ctrl(bool opt) {
         led_status = opt;
         Serial.println("{\"type\":\"led_ctrl\", \"content\": {\"led_status\": \"" + String(led_status) + "\"}}");
     }
+    LowPIRCount = 0;
 }
 
 // ---------- uv function ----------
