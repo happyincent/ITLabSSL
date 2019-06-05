@@ -6,7 +6,6 @@
 
 #define DHTPIN 12          // what pin we're connected to DATA
 #define DHTTYPE DHT22      // DHT 22 (AM2302)
-#define ledDHT 13
 #define SoundSensorPin A10 // this pin read the analog voltage from the sound level meter
 #define VREF 5.0           // voltage on AREF pin, default: operating voltage
 
@@ -49,7 +48,7 @@ float humidity = 0;
 float uv_intensity = 0;
 float light_intensity = 0;
 float loudness = 0;
-bool light_status = false;
+bool led_status = false;
 
 // Declare functions
 void update_pm25();
@@ -59,22 +58,23 @@ void update_loud();
 void update_PIR();
 void load_cmd();
 void send_data();
-void light_ctrl();
+void led_ctrl();
 
 /* ---------------------------------------- */
 
 void setup() {
-    pinMode(ledDHT, OUTPUT);
     pinMode(led, OUTPUT);
     pinMode(PIRout, INPUT);
+    pinMode(UVOUT, INPUT);
+    pinMode(REF_3V3, INPUT);
+    
     Serial.begin(9600);
+    inputString.reserve(200);
+    
     PMS.begin(9600);
     dht.begin();
     Wire.begin();
     lightMeter.begin();
-    pinMode(UVOUT, INPUT);
-    pinMode(REF_3V3, INPUT);
-    inputString.reserve(200);
 }
 
 void loop() {
@@ -143,21 +143,19 @@ void update_loud() {
 }
 
 void update_PIR() {
-    int val = digitalRead(PIRout);
-    LowPIRCount = (val) ? 0 : LowPIRCount + 1;
+    int if_sensed = digitalRead(PIRout);
+    LowPIRCount = (if_sensed) ? 0 : LowPIRCount + 1;
     
     if (LowPIRCount == 0) {
-        digitalWrite(led, HIGH);
-        light_status = HIGH;
+        led_ctrl(HIGH);
     } else if (LowPIRCount > LowPIRCount_Max) {
-        digitalWrite(led, LOW);
-        light_status = LOW;
+        led_ctrl(LOW);
         LowPIRCount = 0;
     }
 }
 
 // ---------- serial function ----------
-void serialEvent() {  
+void serialEvent() {
   while (Serial.available()) {
     char inChar = (char)Serial.read();
 
@@ -177,12 +175,14 @@ void load_cmd() {
     if (stringComplete) {
         if (inputString == "data") {
             send_data();
-        } else if (inputString == "light") {
-            Serial.println("light: status=" + String(light_status));
-        } else if (inputString == "light_on") {
-            light_ctrl(true);
-        } else if (inputString == "light_off") {
-            light_ctrl(false);
+        }  else if (inputString == "led_on") {
+            // change LowPIRCount_Max
+            LowPIRCount_Max = LowPIRCount_Max_manual;
+            led_ctrl(HIGH);
+        } else if (inputString == "led_off") {
+            // reset LowPIRCount_Max
+            LowPIRCount_Max = LowPIRCount_Max_default;
+            led_ctrl(LOW);
         }
         
         inputString = "";
@@ -191,26 +191,24 @@ void load_cmd() {
 }
 
 void send_data() {
-    String out ="data: " \
-                "pmat25=" + String(pmat25) + " " \
-                "temperature=" + String(temperature) + " " \
-                "humidity=" + String(humidity) + " " \
-                "uv_intensity=" + String(uv_intensity) + " " \
-                "light_intensity=" + String(light_intensity) + " " \
-                "loudness=" + String(loudness) + " " \
-                "light_status=" + String(light_status);
+    String out ="{\"type\":\"data\", \"content\": {"
+                "\"pmat25\": \"" + String(pmat25) + "\"," \
+                "\"temperature\": \"" + String(temperature) + "\"," \
+                "\"humidity\": \"" + String(humidity) + "\"," \
+                "\"uv_intensity\": \"" + String(uv_intensity) + "\"," \
+                "\"light_intensity\": \"" + String(light_intensity) + "\"," \
+                "\"loudness\": \"" + String(loudness) + "\"," \
+                "\"led_status\": \"" + String(led_status) + "\"}}";
     Serial.println(out);
 }
 
-// ---------- light function ----------
-void light_ctrl(bool opt) {
-    Serial.println("light_ctrl: opt=" + String(opt));
-
-    // set LowPIRCount_Max if maunally turn on the light
-    LowPIRCount_Max = (opt) ? LowPIRCount_Max_manual : LowPIRCount_Max_default;
-    
-    light_status = opt;
-    digitalWrite(led, opt);
+// ---------- led function ----------
+void led_ctrl(bool opt) {
+    if (led_status != opt) {
+        digitalWrite(led, opt);
+        led_status = opt;
+        Serial.println("{\"type\":\"led_ctrl\", \"content\": {\"led_status\": \"" + String(led_status) + "\"}}");
+    }
 }
 
 // ---------- uv function ----------
