@@ -162,11 +162,11 @@
 <!-- UI enable / disable function -->
 {% if request.user.is_staff %}
 <script>
-  function ui_disabled(disable) {
+  function ui_disabled(disable, msg) {
     document.querySelector('#led_ctrl_btn').disabled = disable;
 
     if (disable == true) {
-      document.querySelector('#timestamp').innerHTML = 'Disconnected';
+      document.querySelector('#timestamp').innerHTML = 'Disconnected ' + msg;
     }
   }
 </script>
@@ -196,10 +196,11 @@
   async function check_edge() {
     while (true) {
       var time = document.querySelector('#timestamp').innerHTML;
+      if (time.includes('(Browser)')) break;
 
-      var if_disconnected = (time == "Disconnected") || ((new Date() - new Date(time)) > 15 * 1000);
+      var if_disconnected = (time.includes('Disconnected')) || ((new Date() - new Date(time)) > 15 * 1000);
 
-      ui_disabled(if_disconnected);
+      ui_disabled(if_disconnected, '(Edge)');
 
       await new Promise(resolve => setTimeout(resolve, 10 * 1000));
     }
@@ -228,13 +229,13 @@
       document.querySelector('#uv_intensity').innerHTML = raw['data']['uv_intensity'] + ' mW/cm<sup>2</sup>';
       switch_diabled_toggle('#led_status', raw['data']['led_status']);
       switch_diabled_toggle('#pir_status', raw['data']['pir_status']);
-      ui_disabled(false);
+      ui_disabled(false, '');
     }
   };
 
   socket.onclose = function (e) {
     alert('WebSocket connection closed unexpectedly.\nPlease refresh the page.');
-    ui_disabled(true);
+    ui_disabled(true, '(Browser)');
   };
 </script>
 
@@ -242,7 +243,7 @@
 <script>
   function ws_send(cmd) {
     if (socket.readyState == 1) {
-      if (document.querySelector('#timestamp').innerHTML != 'Disconnected') {
+      if (!document.querySelector('#timestamp').innerHTML.includes('Disconnected')) {
 
         if (cmd == 'led_ctrl') {
           var led_status = document.querySelector('#led_status').checked ? true : false;
