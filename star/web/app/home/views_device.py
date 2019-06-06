@@ -47,7 +47,8 @@ class MyDevices(View):
         if request.user.username != kwargs.get('username'):
             return HttpResponseForbidden()
 
-        raw = Device.objects.filter(user=request.user).values()
+        raw = Device.objects.all().values() if request.user.is_superuser else \
+              Device.objects.filter(user=request.user).values()
         data = [{
             'id': i.get('id'),
             'token': str(i.get('token')),

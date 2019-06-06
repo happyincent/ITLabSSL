@@ -9,6 +9,7 @@ python /www/manage.py migrate
 python /www/manage.py migrate django_cron
 
 # collect static files
+find /www/home/static/home/plugin/ -type f -exec sed -i '/sourceMappingURL/d' {} \;
 python /www/manage.py collectstatic --noinput
 
 # load and start supervisord jobs

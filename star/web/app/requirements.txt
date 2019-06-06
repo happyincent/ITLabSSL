@@ -6,20 +6,20 @@
 #django-bootstrap3==11.0.0
 #django-cron==0.5.1
 #django-redis==4.10.0
-#djongo==1.2.32
+#djongo[json]==1.2.32
 #gevent==1.4.0
 #gunicorn==19.9.0
 #psutil==5.6.2
 #sshpubkeys==3.1.0
 
 sqlparse==0.2.4
-#https://github.com/nesdis/djongo/issues/153
-
-cryptography==2.5
-# 20190602 for django-allauth sending email
+# https://github.com/nesdis/djongo/issues/153
 
 Django>2
-djongo
+
+djongo[json]
+# https://github.com/nesdis/djongo/issues/222
+
 django-redis
 
 gunicorn

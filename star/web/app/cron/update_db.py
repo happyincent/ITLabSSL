@@ -19,6 +19,7 @@ class UpdateHistory(CronJobBase):
 
     def do(self):
         now = datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
+        history_fields = [field.name for field in HistoryInfo._meta.get_fields()]
 
         try:
             for key in cache.keys("*{}".format(settings.INFO_POSTFIX)):
@@ -41,6 +42,10 @@ class UpdateHistory(CronJobBase):
                     continue
 
                 info_now['timestamp'] = datetime.datetime.strptime(ts, settings.INFO_TIMESTR)
+
+                info_fields = [f for f in info_now.keys() if f in history_fields]
+                
+                info_now = dict([(k, v) for k,v in info_now.items() if k in info_fields])
 
                 HistoryInfo.objects.create(device=device, **info_now)
                 

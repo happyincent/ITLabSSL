@@ -5,15 +5,7 @@
 {% block bootstrap3_title %}{{ device_id }} | ITLab SSL{% endblock %}
 
 {% block head %}
-<style>
-  .panel-body {
-    padding: 0;
-  }
-
-  .panel-body>.table {
-    margin-bottom: 0px;
-  }
-</style>
+<link rel="stylesheet" href="/static/home/plugin/bootstrap-toggle.min-2.2.2.css" />
 {% endblock %}
 
 {% block content %}
@@ -71,7 +63,14 @@
             </tr>
             <tr>
               <th>LED Status</th>
-              <td id="led_status">{{ device_info.led_status | default_if_none:"null" }}</td>
+              <td>
+                <p>
+                    <input disabled id="led_status" type="checkbox" data-toggle="toggle" data-onstyle="success"
+                    data-size="small">
+                  <input disabled id="pir_status" checked type="checkbox" data-toggle="toggle" data-on="PIR On"
+                    data-off="PIR Off" data-onstyle="warning" data-size="small">
+                </p>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -109,7 +108,12 @@
             </tr>
             <tr>
               <th>LED Status</th>
-              <td id="led_status">null</td>
+              <td>
+                <input disabled id="led_status" type="checkbox" data-toggle="toggle" data-onstyle="success"
+                  data-size="small">
+                <input disabled id="pir_status" checked type="checkbox" data-toggle="toggle" data-on="PIR On"
+                  data-off="PIR Off" data-onstyle="warning" data-size="small">
+              </td>
             </tr>
           </tbody>
         </table>
@@ -117,10 +121,8 @@
       {% endif %}
       {% if request.user.is_staff %}
       <p>
-        <button disabled id="led_ctrl_on" class="btn btn-success .btn-lg" type="button" onclick="led_ctrl(1);">Turn ON
-          LED</button>
-        <button disabled id="led_ctrl_off" class="btn btn-danger .btn-lg" type="button" onclick="led_ctrl(0);">Turn OFF
-          LED</button>
+        <button disabled id="led_ctrl_btn" class="btn btn-primary" onclick="ws_send('led_ctrl');">LED On /
+          Off</button>
       </p>
       {% endif %}
     </div>
@@ -128,18 +130,16 @@
       <div class="embed-responsive embed-responsive-16by9">
         <video id="video1" class="embed-responsive-item" playsinline controls muted autoplay></video>
       </div>
-      <!-- <p></p>
-      <div class="embed-responsive embed-responsive-16by9">
-        <video id="video2" class="embed-responsive-item" playsinline controls muted autoplay></video>
-      </div> -->
     </div>
   </div>
 </div>
 {% endblock %}
 
 {% block extra_script %}
+<script src="/static/home/plugin/bootstrap-toggle.min-2.2.2.js"></script>
+
 <!-- Play HLS Video -->
-<script src="/static/home/plugin/hls.min-0.12.2.js"></script>
+<script src="/static/home/plugin/hls.min-0.12.4.js"></script>
 <script>
   var video = document.getElementById('video1');
   if (Hls.isSupported()) {
@@ -158,52 +158,14 @@
   }
 </script>
 
-<!-- Play FLV Video -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/flv.js@latest"></script>
-<script>
-  if (flvjs.isSupported()) {
-      var video = document.getElementById('video2');
-      var flvPlayer = flvjs.createPlayer({
-          type: 'flv',
-          url: 'https://itlab7f.ddns.net:7777/live/{{ device_id }}.flv',
-          hasVideo: true,
-          hasAudio: false,
-          withCredentials: false,
-          isLive: true
-      });
-      flvPlayer.attachMediaElement(video);
-      flvPlayer.load();
-      flvPlayer.play();
-  }
-</script> -->
-
+<!-- UI enable / disable function -->
 {% if request.user.is_staff %}
 <script>
   function ui_disabled(disable) {
-    document.querySelector('#led_ctrl_on').disabled = disable;
-    document.querySelector('#led_ctrl_off').disabled = disable;
+    document.querySelector('#led_ctrl_btn').disabled = disable;
 
     if (disable == true) {
       document.querySelector('#timestamp').innerHTML = 'Disconnected';
-    }
-  }
-
-  function led_ctrl(led_status) {
-    if (socket.readyState == 1) {
-      if (document.querySelector('#timestamp').innerHTML != 'Disconnected') {
-
-        var msg = {
-          'cmd': 'led_ctrl',
-          'data': { 'led_status': led_status }
-        };
-        socket.send(JSON.stringify(msg));
-        console.log(JSON.stringify(msg));
-
-      } else {
-        alert('Edge Device is disconnected.');
-      }
-    } else {
-      alert('WebSocket connection closed unexpectedly.\nPlease refresh the page.');
     }
   }
 </script>
@@ -217,13 +179,20 @@
 </script>
 {% endif %}
 
+<!-- Other functions -->
 <script>
-  document.querySelector('#led_status').innerHTML = Number(document.querySelector('#led_status').innerHTML) ? 'on' : 'off';
-
-  function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+  function switch_diabled_toggle(id, opt) {
+    if (opt) {
+      $(id).bootstrapToggle('enable');
+      $(id).bootstrapToggle(Number(opt) ? 'on' : 'off');
+      $(id).bootstrapToggle('disable');
+    }
   }
 
+  switch_diabled_toggle('#led_status', '{{ device_info.led_status | default_if_none:"0" }}');
+  // document.querySelector('#pir_timeout').value = '{{ device_info.pir_timeout | default_if_none:"" }}';
+
+  // check if now - timestamp > 15s every 10s
   async function check_edge() {
     while (true) {
       var time = document.querySelector('#timestamp').innerHTML;
@@ -232,14 +201,14 @@
 
       ui_disabled(if_disconnected);
 
-      await sleep(10 * 1000);
+      await new Promise(resolve => setTimeout(resolve, 10 * 1000));
     }
   }
 
   check_edge();
 </script>
 
-<!-- Websocket Get Info -->
+<!-- Websocket -->
 <script>
   var device_id = '{{ device_id }}';
 
@@ -257,7 +226,9 @@
       document.querySelector('#loudness').innerHTML = raw['data']['loudness'] + ' dB';
       document.querySelector('#light_intensity').innerHTML = raw['data']['light_intensity'] + ' lux';
       document.querySelector('#uv_intensity').innerHTML = raw['data']['uv_intensity'] + ' mW/cm<sup>2</sup>';
-      document.querySelector('#led_status').innerHTML = Number(raw['data']['led_status']) ? 'on' : 'off';
+      // document.querySelector('#pir_timeout').value = raw['data']['pir_timeout'];
+      switch_diabled_toggle('#led_status', raw['data']['led_status']);
+      switch_diabled_toggle('#pir_status', raw['data']['pir_status']);
       ui_disabled(false);
     }
   };
@@ -267,4 +238,30 @@
     ui_disabled(true);
   };
 </script>
+
+{% if request.user.is_staff %}
+<script>
+  function ws_send(cmd) {
+    if (socket.readyState == 1) {
+      if (document.querySelector('#timestamp').innerHTML != 'Disconnected') {
+
+        if (cmd == 'led_ctrl') {
+          led_status = document.querySelector('#led_status').checked ? true : false;
+
+          var msg = { 'cmd': cmd, 'data': { 'led_status': !led_status } };
+
+        }
+
+        socket.send(JSON.stringify(msg));
+        console.log(JSON.stringify(msg));
+
+      } else {
+        alert('Edge Device is disconnected.');
+      }
+    } else {
+      alert('WebSocket connection closed unexpectedly.\nPlease refresh the page.');
+    }
+  }
+</script>
+{% endif %}
 {% endblock %}

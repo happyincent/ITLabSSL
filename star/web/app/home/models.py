@@ -5,6 +5,8 @@ from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
 
+from djongo.models import json as djongo_json
+
 # Create your models here.
 class Device(models.Model):
     user = models.ForeignKey(User, default=None, null=True, related_name='devices', on_delete=models.SET_DEFAULT)
@@ -13,6 +15,7 @@ class Device(models.Model):
     latitude = models.FloatField(default=22.99672)
     token = models.UUIDField(default=uuid.uuid4)
     ssh_pub = models.CharField(default='ssh-rsa [key] [comment]', blank=True, max_length=1000, verbose_name="SSH Public Key")
+    led_schedule = djongo_json.JSONField(default=None, null=True)
 
     def info_url(self):
         return reverse('device', kwargs={'pk': self.pk})

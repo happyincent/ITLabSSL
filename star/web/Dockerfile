@@ -14,10 +14,10 @@ RUN apk add --update --no-cache nano logrotate
 
 # pip install
 COPY ./app/requirements.txt /www/requirements.txt
+RUN apk add --update --no-cache openssl-dev
 RUN set -e; \
   apk update \
-  && apk add --virtual .build-deps gcc python3-dev linux-headers musl-dev libffi-dev \
-  && apk add openssl-dev \
+  && apk add --virtual .build-deps gcc build-base python3-dev linux-headers musl-dev libffi-dev \
   && pip install --no-cache-dir -U pip \
   && pip install --no-cache-dir -r /www/requirements.txt \
   && apk del .build-deps
