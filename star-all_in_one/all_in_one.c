@@ -23,22 +23,20 @@ const int REF_3V3 = A9; //3.3V power on the Arduino board
 // PIR 人體紅外感應
 const int PIRout = 2;
 
-/* ---------------------------------------- */
-
-// loop 延遲
-const int loop_delay = 1000;
-
 // 路燈
 const int led = 3;
-int LowPIRCount = 0;
 
-// PIR==LOW 幾次後關燈 (delay 1000)
-const int LedON_PIR_timeout_default = 8;      // 紅外線感測到亮約 10 秒
-const int LedON_Manual_timeout_default = 300; // 手動控制亮約 300 秒
+/* ---------------------------------------- */
 
-int LedON_PIR_timeout = LedON_PIR_timeout_default;
-int LedON_Manual_timeout = LedON_Manual_timeout_default;
-int LowPIRCount_Max = LedON_PIR_timeout;
+// update 延遲
+const unsigned long update_delay = 1000;
+
+// 紅外線控制
+bool PIREanbled = true;
+unsigned long PIR_sensed_millis = 0;
+
+const int pir_timeout_default = 8000;    // 紅外線感測到預設亮約 8 (+2) 秒
+int pir_timeout = pir_timeout_default;
 
 // Serial String
 String inputString = "";
@@ -61,6 +59,7 @@ void update_loud();
 void update_PIR();
 void load_cmd();
 void send_data();
+void change_pir();
 void led_ctrl();
 
 /* ---------------------------------------- */
@@ -81,13 +80,19 @@ void setup() {
 }
 
 void loop() {
-    update_PMS();
-    update_lux();
-    update_uv();
-    update_loud();
-    update_PIR();
     load_cmd();
-    delay(loop_delay);
+    
+    if (PIREanbled) {
+        update_PIR();
+    }
+
+    // 每 1 秒 update 一次 sensor data
+    if ( millis() % update_delay == 0) {
+        update_PMS();
+        update_lux();
+        update_uv();
+        update_loud();
+    }
 }
 
 void update_PMS() {
@@ -147,13 +152,13 @@ void update_loud() {
 
 void update_PIR() {
     int if_sensed = digitalRead(PIRout);
-    LowPIRCount = (if_sensed) ? 0 : LowPIRCount + 1;
-    
-    if (LowPIRCount == 0) {
+
+    if (if_sensed) {
+        PIR_sensed_millis = millis();
         led_ctrl(HIGH);
-    } else if (LowPIRCount > LowPIRCount_Max) {
+    } else if (PIR_sensed_millis > 0 && millis() - PIR_sensed_millis > pir_timeout) {
         led_ctrl(LOW);
-        LowPIRCount = 0;
+        PIR_sensed_millis = 0;
     }
 }
 
@@ -179,23 +184,13 @@ void load_cmd() {
         if (inputString == "data") {
             send_data();
         } else if (inputString == "led_on") {
-            // change LowPIRCount_Max
-            LowPIRCount_Max = LedON_Manual_timeout;
             led_ctrl(HIGH);
+            PIREanbled = false;
         } else if (inputString == "led_off") {
-            // reset LowPIRCount_Max
-            LowPIRCount_Max = LedON_PIR_timeout;
             led_ctrl(LOW);
-        } else if (inputString.startsWith("LedON_Manual_timeout=")) {
-            inputString.replace("LedON_Manual_timeout=", "");
-            int timeout = inputString.toInt();
-            LedON_Manual_timeout = (timeout == 0) ? LedON_Manual_timeout_default : timeout;
-            Serial.println("LedON_Manual_timeout=" + String(LedON_Manual_timeout));
-        } else if (inputString.startsWith("LedON_PIR_timeout=")) {
-            inputString.replace("LedON_PIR_timeout=", "");
-            int timeout = inputString.toInt();
-            LedON_PIR_timeout = (timeout == 0) ? LedON_PIR_timeout_default : timeout;
-            Serial.println("LedON_PIR_timeout=" + String(LedON_PIR_timeout));
+            PIREanbled = true;
+        } else if (inputString.startsWith("update_pir_millis=")) {
+            change_pir();
         }
         
         inputString = "";
@@ -211,8 +206,16 @@ void send_data() {
                 "\"uv_intensity\": \"" + String(uv_intensity) + "\"," \
                 "\"light_intensity\": \"" + String(light_intensity) + "\"," \
                 "\"loudness\": \"" + String(loudness) + "\"," \
-                "\"led_status\": \"" + String(led_status) + "\"}}";
+                "\"led_status\": \"" + String(led_status) + "\"," \
+                "\"pir_timeout\": \"" + String(pir_timeout) + "\"}}";
     Serial.println(out);
+}
+
+void change_pir() {
+    inputString.replace("update_pir_millis=", "");
+    int timeout = inputString.toInt();
+    pir_timeout = (timeout == 0) ? pir_timeout_default : timeout;
+    Serial.println("{\"type\":\"update_pir_millis\", \"content\": {\"pir_timeout\": \"" + String(pir_timeout) + "\"}}");
 }
 
 // ---------- led function ----------
@@ -222,7 +225,6 @@ void led_ctrl(bool opt) {
         led_status = opt;
         Serial.println("{\"type\":\"led_ctrl\", \"content\": {\"led_status\": \"" + String(led_status) + "\"}}");
     }
-    LowPIRCount = 0;
 }
 
 // ---------- uv function ----------
