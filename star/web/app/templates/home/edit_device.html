@@ -40,6 +40,17 @@
                 </span>
               </div>
             </div>
+            <div class="form-group">
+              <label class="control-label" for="pir_timeout">PIR Timeout (ms)</label>
+              <div class="input-group">
+                <input disabled type="number" name="pir_timeout" value="" class="form-control"
+                  placeholder="WebSocket Updating ..." id="pir_timeout">
+                <span class="input-group-btn">
+                  <button disabled id="pir_timeout_btn" type="button" class="btn btn-primary"
+                    onclick="ws_send('update_pir_millis');">Update</button>
+                </span>
+              </div>
+            </div>
             {% endif %}
             <button class="btn btn-success" type="submit" onclick="alert('{{ setup_msg }}');">Save</button>
             <a href="{% url 'device_list' %}" class="btn btn-default">Back</a>
@@ -52,4 +63,50 @@
 {% endblock %}
 
 {% block extra_script %}
+<script>
+  function ui_disabled(disable) {
+    document.querySelector('#pir_timeout_btn').disabled = disable;
+    document.querySelector('#pir_timeout').disabled = disable;
+  }
+</script>
+
+<!-- Websocket -->
+<script>
+  var device_id = '{{ object }}';
+
+  var ws_scheme = window.location.protocol == "https:" ? "wss://" : "ws://";
+
+  var socket = new WebSocket(ws_scheme + window.location.host + '/ws/browser/device/' + device_id);
+
+  socket.onmessage = function (e) {
+    var raw = JSON.parse(e.data);
+    if (raw['cmd'] == 'update_info') {
+      document.querySelector('#pir_timeout').value = raw['data']['pir_timeout'];
+      ui_disabled(false);
+    }
+    console.log(raw);
+  };
+
+  socket.onclose = function (e) {
+    alert('WebSocket connection closed unexpectedly.\nPlease refresh the page.');
+    ui_disabled(true);
+  };
+</script>
+
+<script>
+  function ws_send(cmd) {
+    if (socket.readyState == 1) {
+      if (cmd == 'update_pir_millis') {
+        var msg = { 'cmd': cmd, 'data': { 'pir_timeout': document.querySelector('#pir_timeout').value } };
+      }
+
+      socket.send(JSON.stringify(msg));
+      console.log(JSON.stringify(msg));
+
+      document.querySelector('#pir_timeout').value = '';
+    } else {
+      alert('WebSocket connection closed unexpectedly.\nPlease refresh the page.');
+    }
+  }
+</script>
 {% endblock %}

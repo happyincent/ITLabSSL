@@ -53,7 +53,7 @@ class MyDevices(View):
             'id': i.get('id'),
             'token': str(i.get('token')),
             'longitude': str(i.get('longitude')),
-            'latitude': str(i.get('latitude')),
+            'latitude': str(i.get('latitude')),        
             'ssh_pub': i.get('ssh_pub'),
         } for i in raw]
         return JsonResponse(data, safe=False, json_dumps_params={'indent': 4})

@@ -65,7 +65,7 @@
               <th>LED Status</th>
               <td>
                 <p>
-                    <input disabled id="led_status" type="checkbox" data-toggle="toggle" data-onstyle="success"
+                  <input disabled id="led_status" type="checkbox" data-toggle="toggle" data-onstyle="success"
                     data-size="small">
                   <input disabled id="pir_status" checked type="checkbox" data-toggle="toggle" data-on="PIR On"
                     data-off="PIR Off" data-onstyle="warning" data-size="small">
@@ -123,6 +123,7 @@
       <p>
         <button disabled id="led_ctrl_btn" class="btn btn-primary" onclick="ws_send('led_ctrl');">LED On /
           Off</button>
+        <a href="{% url 'device_update' pk=device_id %}" class="btn btn-success">Schedule Table</a>
       </p>
       {% endif %}
     </div>
@@ -190,7 +191,6 @@
   }
 
   switch_diabled_toggle('#led_status', '{{ device_info.led_status | default_if_none:"0" }}');
-  // document.querySelector('#pir_timeout').value = '{{ device_info.pir_timeout | default_if_none:"" }}';
 
   // check if now - timestamp > 15s every 10s
   async function check_edge() {
@@ -226,7 +226,6 @@
       document.querySelector('#loudness').innerHTML = raw['data']['loudness'] + ' dB';
       document.querySelector('#light_intensity').innerHTML = raw['data']['light_intensity'] + ' lux';
       document.querySelector('#uv_intensity').innerHTML = raw['data']['uv_intensity'] + ' mW/cm<sup>2</sup>';
-      // document.querySelector('#pir_timeout').value = raw['data']['pir_timeout'];
       switch_diabled_toggle('#led_status', raw['data']['led_status']);
       switch_diabled_toggle('#pir_status', raw['data']['pir_status']);
       ui_disabled(false);
@@ -246,10 +245,8 @@
       if (document.querySelector('#timestamp').innerHTML != 'Disconnected') {
 
         if (cmd == 'led_ctrl') {
-          led_status = document.querySelector('#led_status').checked ? true : false;
-
+          var led_status = document.querySelector('#led_status').checked ? true : false;
           var msg = { 'cmd': cmd, 'data': { 'led_status': !led_status } };
-
         }
 
         socket.send(JSON.stringify(msg));
