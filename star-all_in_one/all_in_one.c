@@ -184,11 +184,11 @@ void load_cmd() {
         if (inputString == "data") {
             send_data();
         } else if (inputString == "led_on") {
-            led_ctrl(HIGH);
             PIREanbled = false;
+            led_ctrl(HIGH);
         } else if (inputString == "led_off") {
-            led_ctrl(LOW);
             PIREanbled = true;
+            led_ctrl(LOW);
         } else if (inputString.startsWith("update_pir_millis=")) {
             change_pir();
         }
@@ -207,6 +207,7 @@ void send_data() {
                 "\"light_intensity\": \"" + String(light_intensity) + "\"," \
                 "\"loudness\": \"" + String(loudness) + "\"," \
                 "\"led_status\": \"" + String(led_status) + "\"," \
+                "\"pir_status\": \"" + String(PIREanbled) + "\"," \
                 "\"pir_timeout\": \"" + String(pir_timeout) + "\"}}";
     Serial.println(out);
 }
@@ -223,7 +224,11 @@ void led_ctrl(bool opt) {
     if (led_status != opt) {
         digitalWrite(led, opt);
         led_status = opt;
-        Serial.println("{\"type\":\"led_ctrl\", \"content\": {\"led_status\": \"" + String(led_status) + "\"}}");
+
+        String out ="{\"type\":\"led_ctrl\", \"content\": {"
+                    "\"led_status\": \"" + String(led_status) + "\"," \
+                    "\"pir_status\": \"" + String(PIREanbled) + "\"}}";
+        Serial.println(out);
     }
 }
 
@@ -232,7 +237,7 @@ int averageAnalogRead(int pinToRead) {
     byte numberOfReadings = 8;
     unsigned int runningValue = 0;
 
-    for (int x = 0; x < numberOfReadings; x++)
+    for (int x = 0; x < numberOfReadings; ++x)
         runningValue += analogRead(pinToRead);
     
     runningValue /= numberOfReadings;
