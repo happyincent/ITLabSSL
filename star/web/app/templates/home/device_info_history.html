@@ -25,7 +25,7 @@
       </ul>
 
       <div class="page-header">
-        <h3>{{ device_id }}</h3>
+        <h3>{{ view.kwargs.pk }}</h3>
       </div>
 
       <div class="alert alert-info">
@@ -128,7 +128,7 @@
     console.log(ts);
     if (ts == null) return;
 
-    var pk = '{{ device_id }}';
+    var pk = '{{ view.kwargs.pk }}';
 
     $.ajax({
       url: "{% url 'api_history' pk=pk %}",

@@ -18,6 +18,5 @@ class DeviceInfoHistory(TemplateView):
         if not Device.objects.filter(pk=kwargs.get('pk')).exists():
             raise Http404
         
-        context['device_id'] = kwargs.get('pk')
         context['vod_url'] = urllib.parse.urljoin(settings.VOD_URL, '{}/'.format(kwargs.get('pk')))
         return context

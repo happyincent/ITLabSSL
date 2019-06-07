@@ -152,10 +152,6 @@ class ResetToken(CheckOwnerMixin, View):
 @method_decorator(legal_staff_user, name='dispatch')
 class DeviceEditFail(TemplateView):
     template_name = 'home/edit_device_err.html'
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['device_id'] = kwargs.get('pk')
-        return context
 
 ##
 

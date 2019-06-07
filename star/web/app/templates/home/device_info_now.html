@@ -2,7 +2,7 @@
 {% load bootstrap3 %}
 {% load static %}
 
-{% block bootstrap3_title %}{{ device_id }} | ITLab SSL{% endblock %}
+{% block bootstrap3_title %}{{ view.kwargs.pk }} | ITLab SSL{% endblock %}
 
 {% block head %}
 <link rel="stylesheet" href="/static/home/plugin/bootstrap-toggle.min-2.2.2.css" />
@@ -24,7 +24,7 @@
         </li>
       </ul>
       <div class="page-header">
-        <h3>{{ device_id }}</h3>
+        <h3>{{ view.kwargs.pk }}</h3>
       </div>
     </div>
   </div>
@@ -121,16 +121,19 @@
       {% endif %}
       {% if request.user.is_staff %}
       <div class="row clearfix">
-        <div class="col-md-6 column">
-          <p>
-            <button disabled id="led_ctrl_btn" class="btn btn-primary btn-block" onclick="ws_send('led_ctrl');">LED On /
+        <div class="col-md-12 column">
+          <div class="btn-group">
+            <button disabled id="led_ctrl_btn" class="btn btn-primary" onclick="ws_send('led_ctrl');">LED On /
               Off</button>
-          </p>
-        </div>
-        <div class="col-md-6 column">
-          <p>
-            <a href="{% url 'led_schedule' pk=device_id %}" class="btn btn-success btn-block">Schedule Table</a>
-          </p>
+            <button disabled id="pir_ctrl_btn" class="btn btn-success" onclick="ws_send('pir_ctrl');">PIR On /
+              Off</button>
+          </div>
+          <p></p>
+          <div class="btn-group">
+            <a href="{% url 'schedule' pk=view.kwargs.pk table='led' %}" class="btn btn-default">LED Schedule Table</a>
+            <a href="{% url 'schedule' pk=view.kwargs.pk table='pir' %}" class="btn btn-default">PIR Schedule Table</a>
+          </div>
+          <p></p>
         </div>
       </div>
       {% endif %}
@@ -153,14 +156,14 @@
   var video = document.getElementById('video1');
   if (Hls.isSupported()) {
     var hls = new Hls();
-    hls.loadSource('{{ hls_url }}{{ device_id }}.m3u8');
+    hls.loadSource('{{ hls_url }}{{ view.kwargs.pk }}.m3u8');
     hls.attachMedia(video);
     hls.on(Hls.Events.MANIFEST_PARSED, function () {
       video.play();
     });
   }
   else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src = '{{ hls_url }}{{ device_id }}.m3u8';
+    video.src = '{{ hls_url }}{{ view.kwargs.pk }}.m3u8';
     video.addEventListener('loadedmetadata', function () {
       video.play();
     });
@@ -172,6 +175,7 @@
 <script>
   function ui_disabled(disable, msg) {
     document.querySelector('#led_ctrl_btn').disabled = disable;
+    document.querySelector('#pir_ctrl_btn').disabled = disable || document.querySelector('#led_status').checked;
 
     if (disable == true) {
       document.querySelector('#timestamp').innerHTML = 'Disconnected ' + msg;
@@ -219,11 +223,9 @@
 
 <!-- Websocket -->
 <script>
-  var device_id = '{{ device_id }}';
-
   var ws_scheme = window.location.protocol == "https:" ? "wss://" : "ws://";
 
-  var socket = new WebSocket(ws_scheme + window.location.host + '/ws/browser/device/' + device_id);
+  var socket = new WebSocket(ws_scheme + window.location.host + '/ws/browser/device/' + '{{ view.kwargs.pk }}');
 
   socket.onmessage = function (e) {
     var raw = JSON.parse(e.data);
@@ -256,6 +258,10 @@
         if (cmd == 'led_ctrl') {
           var led_status = document.querySelector('#led_status').checked ? true : false;
           var msg = { 'cmd': cmd, 'data': { 'led_status': !led_status } };
+        }
+        else if (cmd == 'pir_ctrl') {
+          var pir_status = document.querySelector('#pir_status').checked ? true : false;
+          var msg = { 'cmd': cmd, 'data': { 'pir_status': !pir_status } };
         }
 
         socket.send(JSON.stringify(msg));

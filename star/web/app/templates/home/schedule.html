@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block bootstrap3_title %}{{ view.kwargs.table | upper }} Schedule | ITLab SSL{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/home/plugin/jquery-ui-1.12.1.css" />
+<link rel="stylesheet" href="/static/home/plugin/jquery.schedule.min-2.2.0.ddl.css" />
+<style>
+  .jqs {
+    min-width: 600px;
+    width: 100%;
+    background: #fff;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+  }
+
+  .testimonial-group>.row {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row clearfix">
+    <div class="col-md-12 column">
+      <ul class="breadcrumb">
+        <li>
+          <a href="{% url 'home' %}">Home</a>
+        </li>
+        <li>
+          <a href="{% url 'device_list' %}">Device List</a>
+        </li>
+        <li>
+          <a href="{% url 'device' pk=view.kwargs.pk %}">Device Info <small>({{ view.kwargs.pk }})</small></a>
+        </li>
+        <li class="active">
+          {{ view.kwargs.table | upper }} Schedule
+        </li>
+      </ul>
+      <div class="page-header">
+        <h3>{{ view.kwargs.pk }} - {{ view.kwargs.table | upper }} Schedule</h3>
+      </div>
+      <div class="alert alert-info">
+        {% ifequal view.kwargs.table 'led' %}
+        Server would set up {{ view.kwargs.table | upper }} every 15 mins.
+        {% endifequal %}
+        {% ifequal view.kwargs.table 'pir' %}
+        Server would set up {{ view.kwargs.table | upper }} every 15 mins. (note: <strong>LED ON force PIR OFF</strong>)
+        {% endifequal %}
+      </div>
+      <div class="btn-group">
+        <button type="button" class="btn btn-primary" id="import">Restore</button>
+        <button type="button" class="btn btn-warning" id="reset">Clear</button>
+        <button type="button" class="btn btn-success" id="export">Save</button>
+      </div>
+      <a href="{{request.META.HTTP_REFERER|escape}}" class="btn btn-default">Back</a>
+      <p></p>
+      <div class="testimonial-group">
+        <div class="row">
+          <div id="schedule" class="jqs"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script src="/static/home/plugin/jquery-ui.min-1.12.1.js"></script>
+<script src="/static/home/plugin/jquery.schedule.min-2.2.0.ddl.js"></script>
+<script>
+  var device = JSON.parse('{{ device|escapejs }}')[0];
+  var last_schedule = device.fields['{{ view.kwargs.table }}_schedule'];
+
+  $('#schedule').jqs({
+    mode: 'edit',
+    hour: 24,
+    days: 7,
+    periodDuration: 30,
+    periodOptions: false,
+    data: last_schedule,
+  });
+
+  $('#import').click(function () {
+    var ret = $('#schedule').jqs('import', last_schedule);
+
+    console.log('import', ret);
+
+    if ($.isEmptyObject(JSON.parse(ret))) {
+      $('#schedule').jqs('reset');
+    }
+  });
+
+  $('#reset').click(function () {
+    $('#schedule').jqs('reset');
+  });
+
+  $('#export').click(function () {
+    $.ajax({
+      beforeSend: function (request) {
+        request.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+      },
+      url: "{% url 'schedule_update' pk=view.kwargs.pk table=view.kwargs.table %}",
+      type: "POST",
+      dataType: "json",
+      contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify($('#schedule').jqs('export')),
+      success: function (data) {
+        if ($.isEmptyObject(data)) {
+          alert('Error');
+        } else {
+          last_schedule = data;
+          alert('Successfully Save');
+        }
+      },
+      error: function (jqXHR, exception) {
+        var msg = '';
+        if (jqXHR.status === 0) {
+          msg = 'Not connect.\nVerify Network.';
+        } else if (jqXHR.status == 403) {
+          msg = 'Forbidden. [403]\nPlease Refresh this Page.'
+        } else if (jqXHR.status == 404) {
+          msg = 'Requested page not found. [404]';
+        } else if (jqXHR.status == 500) {
+          msg = 'Internal Server Error [500].';
+        } else if (exception === 'parsererror') {
+          msg = 'Requested JSON parse failed.';
+        } else if (exception === 'timeout') {
+          msg = 'Time out error.';
+        } else if (exception === 'abort') {
+          msg = 'Ajax request aborted.';
+        } else {
+          msg = 'Uncaught Error.\n' + jqXHR.responseText;
+        }
+        alert(msg);
+      },
+    });
+  });
+</script>
+{% endblock %}

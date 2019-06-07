@@ -43,7 +43,7 @@ class StarConsumer(AsyncJsonWebsocketConsumer):
 
                 await self.channel_layer.group_send( self.device_id, {'type': 'broatcast_json', 'content': content} )
 
-            if content['cmd'] in ['led_ctrl', 'update_pir_millis']:
+            if content['cmd'] in ['led_ctrl', 'pir_ctrl', 'update_pir_millis']:
                 if self.scope['user'].is_staff:
                     await self.channel_layer.group_send( self.device_id, {'type': 'broatcast_json', 'content': content} )
                 else:

@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 
 from djongo.models import json as djongo_json
 
+schedule_default = [{"day":0,"periods":[]},{"day":1,"periods":[]},{"day":2,"periods":[]},{"day":3,"periods":[]},{"day":4,"periods":[]},{"day":5,"periods":[]},{"day":6,"periods":[]}]
+
 # Create your models here.
 class Device(models.Model):
     user = models.ForeignKey(User, default=None, null=True, related_name='devices', on_delete=models.SET_DEFAULT)
@@ -15,7 +17,8 @@ class Device(models.Model):
     latitude = models.FloatField(default=22.99672)
     token = models.UUIDField(default=uuid.uuid4)
     ssh_pub = models.CharField(default='ssh-rsa [key] [comment]', blank=True, max_length=1000, verbose_name="SSH Public Key")
-    led_schedule = djongo_json.JSONField(default=[{"day":0,"periods":[]},{"day":1,"periods":[]},{"day":2,"periods":[]},{"day":3,"periods":[]},{"day":4,"periods":[]},{"day":5,"periods":[]},{"day":6,"periods":[]}])
+    led_schedule = djongo_json.JSONField(default=schedule_default)
+    pir_schedule = djongo_json.JSONField(default=schedule_default)
 
     def info_url(self):
         return reverse('device', kwargs={'pk': self.pk})

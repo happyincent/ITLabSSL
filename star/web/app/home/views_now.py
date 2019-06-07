@@ -19,7 +19,6 @@ class DeviceInfo(TemplateView):
         if not Device.objects.filter(pk=kwargs.get('pk')).exists():
             raise Http404
         
-        context['device_id'] = kwargs.get('pk')
         context['hls_url'] = settings.HLS_URL
         
         info_now = cache.get('{}{}'.format(kwargs.get('pk'), settings.INFO_POSTFIX))

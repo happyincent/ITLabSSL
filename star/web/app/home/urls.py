@@ -27,7 +27,8 @@ urlpatterns = [
     path('device_edit_fail/<slug:pk>', views_device.DeviceEditFail.as_view(), name='device_edit_fail'),
     path('reset_token/<slug:pk>', views_device.ResetToken.as_view(), name='reset_token'),
 
-    path('led_schedule/<slug:pk>', views_schedule.DeviceSchedule.as_view(), name='led_schedule'),
+    path('schedule/<slug:table>/<slug:pk>', views_schedule.DeviceSchedule.as_view(), name='schedule'),
+    path('schedule_update/<slug:table>/<slug:pk>', views_schedule.DeviceScheduleUpdate.as_view(), name='schedule_update'),
 
     # channels' url is defined in app/star/routing/application
     path('device/<slug:pk>', views_now.DeviceInfo.as_view(), name='device'),

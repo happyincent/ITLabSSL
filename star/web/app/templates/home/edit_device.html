@@ -63,50 +63,51 @@
 {% endblock %}
 
 {% block extra_script %}
+
+{% if object %}
 <script>
-  function ui_disabled(disable) {
-    document.querySelector('#pir_timeout_btn').disabled = disable;
-    document.querySelector('#pir_timeout').disabled = disable;
-  }
-</script>
-
-<!-- Websocket -->
-<script>
-  var device_id = '{{ object }}';
-
-  var ws_scheme = window.location.protocol == "https:" ? "wss://" : "ws://";
-
-  var socket = new WebSocket(ws_scheme + window.location.host + '/ws/browser/device/' + device_id);
-
-  socket.onmessage = function (e) {
-    var raw = JSON.parse(e.data);
-    if (raw['cmd'] == 'update_info') {
-      document.querySelector('#pir_timeout').value = raw['data']['pir_timeout'];
-      ui_disabled(false);
+    function ui_disabled(disable) {
+      document.querySelector('#pir_timeout_btn').disabled = disable;
+      document.querySelector('#pir_timeout').disabled = disable;
     }
-    console.log(raw);
-  };
-
-  socket.onclose = function (e) {
-    alert('WebSocket connection closed unexpectedly.\nPlease refresh the page.');
-    ui_disabled(true);
-  };
-</script>
-
-<script>
-  function ws_send(cmd) {
-    if (socket.readyState == 1) {
-      if (cmd == 'update_pir_millis') {
-        var msg = { 'cmd': cmd, 'data': { 'pir_timeout': document.querySelector('#pir_timeout').value } };
+  </script>
+  
+  <!-- Websocket -->
+  <script>  
+    var ws_scheme = window.location.protocol == "https:" ? "wss://" : "ws://";
+  
+    var socket = new WebSocket(ws_scheme + window.location.host + '/ws/browser/device/' + '{{ object }}');
+  
+    socket.onmessage = function (e) {
+      var raw = JSON.parse(e.data);
+      if (raw['cmd'] == 'update_info') {
+        document.querySelector('#pir_timeout').value = raw['data']['pir_timeout'];
+        ui_disabled(false);
       }
-
-      socket.send(JSON.stringify(msg));
-      console.log(JSON.stringify(msg));
-
-      document.querySelector('#pir_timeout').value = '';
-    } else {
+      console.log(raw);
+    };
+  
+    socket.onclose = function (e) {
       alert('WebSocket connection closed unexpectedly.\nPlease refresh the page.');
+      ui_disabled(true);
+    };
+  </script>
+  
+  <script>
+    function ws_send(cmd) {
+      if (socket.readyState == 1) {
+        if (cmd == 'update_pir_millis') {
+          var msg = { 'cmd': cmd, 'data': { 'pir_timeout': document.querySelector('#pir_timeout').value } };
+        }
+  
+        socket.send(JSON.stringify(msg));
+        console.log(JSON.stringify(msg));
+  
+        document.querySelector('#pir_timeout').value = '';
+      } else {
+        alert('WebSocket connection closed unexpectedly.\nPlease refresh the page.');
+      }
     }
-  }
-</script>
+  </script>
+{% endif %}
 {% endblock %}
