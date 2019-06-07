@@ -120,11 +120,19 @@
       </div>
       {% endif %}
       {% if request.user.is_staff %}
-      <p>
-        <button disabled id="led_ctrl_btn" class="btn btn-primary" onclick="ws_send('led_ctrl');">LED On /
-          Off</button>
-        <a href="{% url 'device_update' pk=device_id %}" class="btn btn-success">Schedule Table</a>
-      </p>
+      <div class="row clearfix">
+        <div class="col-md-6 column">
+          <p>
+            <button disabled id="led_ctrl_btn" class="btn btn-primary btn-block" onclick="ws_send('led_ctrl');">LED On /
+              Off</button>
+          </p>
+        </div>
+        <div class="col-md-6 column">
+          <p>
+            <a href="{% url 'led_schedule' pk=device_id %}" class="btn btn-success btn-block">Schedule Table</a>
+          </p>
+        </div>
+      </div>
       {% endif %}
     </div>
     <div class="col-md-6 column">

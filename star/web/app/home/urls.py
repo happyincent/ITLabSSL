@@ -1,9 +1,10 @@
 from django.urls import path
 
 from . import views
-from . import views_api
 from . import views_device
+from . import views_schedule
 from . import views_now
+from . import views_api
 from . import views_history
 from . import views_nginx
 
@@ -25,6 +26,8 @@ urlpatterns = [
     path('device_delete/<slug:pk>', views_device.DeviceDelete.as_view(), name='device_delete'),
     path('device_edit_fail/<slug:pk>', views_device.DeviceEditFail.as_view(), name='device_edit_fail'),
     path('reset_token/<slug:pk>', views_device.ResetToken.as_view(), name='reset_token'),
+
+    path('led_schedule/<slug:pk>', views_schedule.DeviceSchedule.as_view(), name='led_schedule'),
 
     # channels' url is defined in app/star/routing/application
     path('device/<slug:pk>', views_now.DeviceInfo.as_view(), name='device'),

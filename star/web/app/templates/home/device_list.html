@@ -28,7 +28,7 @@
                 <th>ID</th>
                 <th>Staff</th>
                 <th>Info</th>
-                <th>Ctrl</th>
+                <th>Edit</th>
               </tr>
             </thead>
             <tbody>
@@ -42,10 +42,10 @@
                 </td>
                 <td>
                   {% if request.user.is_superuser or request.user.username == device.user.username %}
-                  <a href="{{ device.update_url }}" class="btn btn-default btn-block btn-sm">Edit</a>
+                  <a href="{{ device.update_url }}" class="btn btn-default btn-block btn-sm">Config</a>
                   <a href="{{ device.delete_url }}" class="btn btn-default btn-block btn-sm">Delete</a>
                   {% else %}
-                  <a href="{{ device.update_url }}" class="btn btn-default btn-block btn-sm disabled">Edit</a>
+                  <a href="{{ device.update_url }}" class="btn btn-default btn-block btn-sm disabled">Config</a>
                   <a href="{{ device.delete_url }}" class="btn btn-default btn-block btn-sm disabled">Delete</a>
                   {% endif %}
                 </td>
@@ -91,7 +91,7 @@
   }).addTo(mymap);
 
   // Add Markers
-  var devices = jQuery.parseJSON('{{ devices_json|escapejs }}');
+  var devices = $.parseJSON('{{ devices_json|escapejs }}');
   var myIcon = L.icon({
     iconUrl: '/static/home/image/street-lamp.png',
     iconSize: [40, 40],

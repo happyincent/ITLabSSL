@@ -15,7 +15,7 @@ class Device(models.Model):
     latitude = models.FloatField(default=22.99672)
     token = models.UUIDField(default=uuid.uuid4)
     ssh_pub = models.CharField(default='ssh-rsa [key] [comment]', blank=True, max_length=1000, verbose_name="SSH Public Key")
-    led_schedule = djongo_json.JSONField(default=None, null=True)
+    led_schedule = djongo_json.JSONField(default=[{"day":0,"periods":[]},{"day":1,"periods":[]},{"day":2,"periods":[]},{"day":3,"periods":[]},{"day":4,"periods":[]},{"day":5,"periods":[]},{"day":6,"periods":[]}])
 
     def info_url(self):
         return reverse('device', kwargs={'pk': self.pk})
