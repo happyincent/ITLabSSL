@@ -27,6 +27,7 @@ const unsigned long update_delay = 1000;
 
 // 紅外線控制
 bool pir_status = true;
+bool last_pir_status = true;
 unsigned long PIR_sensed_millis = 0;
 
 const int pir_timeout_default = 8000;    // 紅外線感測到預設亮約 8 (+2) 秒
@@ -218,8 +219,9 @@ void change_pir_timeout() {
 // ---------- led function ----------
 void led_ctrl(bool opt) {
     if (led_status != opt) {
-        // if led_on force pir_off else not change
-        pir_status = (opt) ? false : pir_status;
+        // if led_on force pir_off
+        // if led_off restore pir to last_pir_status
+        pir_status = (opt) ? false : last_pir_status;
       
         digitalWrite(led, opt);
         led_status = opt;
@@ -233,8 +235,9 @@ void led_ctrl(bool opt) {
 
 void pir_ctrl (bool opt) {
     // only enable/disable pir if led_off
-    if (led_status == LOW) {
+    if (led_status == LOW && pir_status != opt) {
         pir_status = opt;
+        last_pir_status = opt;
 
         String out ="{\"type\":\"pir_ctrl\", \"content\": {"
                     "\"pir_status\": \"" + String(pir_status) + "\"}}";
