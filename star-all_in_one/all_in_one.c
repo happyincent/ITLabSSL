@@ -148,7 +148,7 @@ void update_loud() {
 void update_PIR() {
     int if_sensed = digitalRead(PIRout);
 
-    if (if_sensed) {
+    if (if_sensed && PIR_sensed_millis==0) {
         PIR_sensed_millis = millis();
         led_ctrl(HIGH);
     } else if (PIR_sensed_millis > 0 && millis() - PIR_sensed_millis > pir_timeout) {
