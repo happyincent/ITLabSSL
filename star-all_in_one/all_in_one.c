@@ -1,20 +1,14 @@
-#include "DHT.h"
 #include <SPI.h>
 #include <Wire.h>
 #include <BH1750.h>
 #include <SoftwareSerial.h>
 
-#define DHTPIN 12          // what pin we're connected to DATA
-#define DHTTYPE DHT22      // DHT 22 (AM2302)
 #define SoundSensorPin A10 // this pin read the analog voltage from the sound level meter
 #define VREF 5.0           // voltage on AREF pin, default: operating voltage
 
 SoftwareSerial PMS(10, 11); // arduino 的 RX, TX (PM2.5)
 BH1750 lightMeter;          // BH1750 感光 → MEGA SCL -> SCL (A21 on Mega)
                             //                    SDA -> SDA (A20 on Mega)
-
-// DHT22
-DHT dht(DHTPIN, DHTTYPE);
 
 // 紫外光
 const int UVOUT = A8; //Output from the sensor
@@ -32,7 +26,7 @@ const int led = 3;
 const unsigned long update_delay = 1000;
 
 // 紅外線控制
-bool PIREanbled = true;
+bool pir_status = true;
 unsigned long PIR_sensed_millis = 0;
 
 const int pir_timeout_default = 8000;    // 紅外線感測到預設亮約 8 (+2) 秒
@@ -59,8 +53,9 @@ void update_loud();
 void update_PIR();
 void load_cmd();
 void send_data();
-void change_pir();
-void led_ctrl();
+void change_pir_timeout();
+void led_ctrl(bool opt);
+void pir_ctrl(bool opt);
 
 /* ---------------------------------------- */
 
@@ -74,7 +69,6 @@ void setup() {
     inputString.reserve(200);
     
     PMS.begin(9600);
-    dht.begin();
     Wire.begin();
     lightMeter.begin();
 }
@@ -82,7 +76,7 @@ void setup() {
 void loop() {
     load_cmd();
     
-    if (PIREanbled) {
+    if (pir_status) {
         update_PIR();
     }
 
@@ -184,13 +178,15 @@ void load_cmd() {
         if (inputString == "data") {
             send_data();
         } else if (inputString == "led_on") {
-            PIREanbled = false;
             led_ctrl(HIGH);
         } else if (inputString == "led_off") {
-            PIREanbled = true;
             led_ctrl(LOW);
+        } else if (inputString == "pir_on") {
+            pir_ctrl(true);
+        } else if (inputString == "pir_off") {
+            pir_ctrl(false);
         } else if (inputString.startsWith("update_pir_millis=")) {
-            change_pir();
+            change_pir_timeout();
         }
         
         inputString = "";
@@ -207,12 +203,12 @@ void send_data() {
                 "\"light_intensity\": \"" + String(light_intensity) + "\"," \
                 "\"loudness\": \"" + String(loudness) + "\"," \
                 "\"led_status\": \"" + String(led_status) + "\"," \
-                "\"pir_status\": \"" + String(PIREanbled) + "\"," \
+                "\"pir_status\": \"" + String(pir_status) + "\"," \
                 "\"pir_timeout\": \"" + String(pir_timeout) + "\"}}";
     Serial.println(out);
 }
 
-void change_pir() {
+void change_pir_timeout() {
     inputString.replace("update_pir_millis=", "");
     int timeout = inputString.toInt();
     pir_timeout = (timeout == 0) ? pir_timeout_default : timeout;
@@ -222,12 +218,26 @@ void change_pir() {
 // ---------- led function ----------
 void led_ctrl(bool opt) {
     if (led_status != opt) {
+        // if led_on force pir_off else not change
+        pir_status = (opt) ? false : pir_status;
+      
         digitalWrite(led, opt);
         led_status = opt;
 
         String out ="{\"type\":\"led_ctrl\", \"content\": {"
                     "\"led_status\": \"" + String(led_status) + "\"," \
-                    "\"pir_status\": \"" + String(PIREanbled) + "\"}}";
+                    "\"pir_status\": \"" + String(pir_status) + "\"}}";
+        Serial.println(out);
+    }
+}
+
+void pir_ctrl (bool opt) {
+    // only enable/disable pir if led_off
+    if (led_status == LOW) {
+        pir_status = opt;
+
+        String out ="{\"type\":\"pir_ctrl\", \"content\": {"
+                    "\"pir_status\": \"" + String(pir_status) + "\"}}";
         Serial.println(out);
     }
 }
