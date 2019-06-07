@@ -77,7 +77,7 @@ void setup() {
 void loop() {
     load_cmd();
     
-    if (pir_status) {
+    if (last_pir_status) {
         update_PIR();
     }
 
