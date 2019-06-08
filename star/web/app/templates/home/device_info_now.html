@@ -202,7 +202,9 @@
     }
   }
 
+  // Init with the last status of led, pir
   switch_diabled_toggle('#led_status', '{{ device_info.led_status | default_if_none:"0" }}');
+  switch_diabled_toggle('#pir_status', '{{ device_info.pir_status | default_if_none:"0" }}');
 
   // check if now - timestamp > 15s every 10s
   async function check_edge() {

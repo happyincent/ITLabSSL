@@ -8,8 +8,6 @@ from django.conf import settings
 from django.core.cache import cache
 from home.models import Device, HistoryInfo
 
-from django.forms import model_to_dict
-
 class UpdateHistory(CronJobBase):
     RUN_EVERY_MINS = settings.UPDATE_HISTORY_EVERY_MINS
     RUN_AT_TIMES = ['00:00']

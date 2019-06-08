@@ -42,14 +42,15 @@
         </li>
       </ul>
       <div class="page-header">
-        <h3>{{ view.kwargs.pk }} - {{ view.kwargs.table | upper }} Schedule</h3>
+        <h3>{{ view.kwargs.pk }} - {{ view.kwargs.table | upper }} <strong>ON</strong> Schedule</h3>
       </div>
       <div class="alert alert-info">
         {% ifequal view.kwargs.table 'led' %}
         Server would set up {{ view.kwargs.table | upper }} every 15 mins.
         {% endifequal %}
         {% ifequal view.kwargs.table 'pir' %}
-        Server would set up {{ view.kwargs.table | upper }} every 15 mins. (note: <strong>LED ON force PIR OFF</strong>)
+        Server would set up {{ view.kwargs.table | upper }} every 15 mins. (note: <strong>Doing LED control force
+          disable PIR</strong>)
         {% endifequal %}
       </div>
       <div class="btn-group">
