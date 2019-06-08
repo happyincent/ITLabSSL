@@ -26,24 +26,7 @@ class UpdateLight(CronJobBase):
             channel_layer = get_channel_layer()
 
             for device in Device.objects.all():
-                #  PIR
-                pir_schedule_time = [
-                    (
-                        datetime.datetime.strptime(i['start'], '%H:%M').time(),
-                        datetime.datetime.strptime(i['end'], '%H:%M').time()
-                    )
-                    for i in device.pir_schedule[now_week-1]['periods']
-                ]
-
-                pir_check_lst = [(period[0] <= now_time < period[1]) for period in pir_schedule_time]
-
-                async_to_sync(channel_layer.group_send)(device.id, {
-                    'type': 'broatcast_json', 'content': {
-                        'cmd': 'pir_ctrl', 'data': {'pir_status': 1 if True in pir_check_lst else 0}
-                    }
-                })
-
-                # LED
+                
                 led_schedule_time = [
                     (
                         datetime.datetime.strptime(i['start'], '%H:%M').time(),
@@ -52,11 +35,27 @@ class UpdateLight(CronJobBase):
                     for i in device.led_schedule[now_week-1]['periods']
                 ]
 
+                pir_schedule_time = [
+                    (
+                        datetime.datetime.strptime(i['start'], '%H:%M').time(),
+                        datetime.datetime.strptime(i['end'], '%H:%M').time()
+                    )
+                    for i in device.pir_schedule[now_week-1]['periods']
+                ]
+
                 led_check_lst = [(period[0] <= now_time < period[1]) for period in led_schedule_time]
-                
+                pir_check_lst = [(period[0] <= now_time < period[1]) for period in pir_schedule_time]
+
+                # LED first
                 async_to_sync(channel_layer.group_send)(device.id, {
                     'type': 'broatcast_json', 'content': {
                         'cmd': 'led_ctrl', 'data': {'led_status': 1 if True in led_check_lst else 0}
+                    }
+                })
+
+                async_to_sync(channel_layer.group_send)(device.id, {
+                    'type': 'broatcast_json', 'content': {
+                        'cmd': 'pir_ctrl', 'data': {'pir_status': 1 if True in pir_check_lst else 0}
                     }
                 })
 
