@@ -27,7 +27,6 @@ const unsigned long update_delay = 1000;
 
 // 紅外線控制
 bool pir_status = true;
-bool last_pir_status = true;
 unsigned long PIR_sensed_millis = 0;
 
 const int pir_timeout_default = 8000;    // 紅外線感測到預設亮約 8 (+2) 秒
@@ -55,8 +54,8 @@ void update_PIR();
 void load_cmd();
 void send_data();
 void change_pir_timeout();
-void led_ctrl(bool opt);
-void pir_ctrl(bool opt);
+void led_ctrl(bool led_opt, bool pir_opt);
+void pir_ctrl(bool pir_opt);
 
 /* ---------------------------------------- */
 
@@ -77,7 +76,7 @@ void setup() {
 void loop() {
     load_cmd();
     
-    if (last_pir_status) {
+    if (pir_status || PIR_sensed_millis > 0) {
         update_PIR();
     }
 
@@ -148,12 +147,11 @@ void update_loud() {
 void update_PIR() {
     int if_sensed = digitalRead(PIRout);
 
-    if (if_sensed && PIR_sensed_millis==0) {
+    if (if_sensed) {
         PIR_sensed_millis = millis();
-        led_ctrl(HIGH);
+        led_ctrl(HIGH, pir_status);
     } else if (PIR_sensed_millis > 0 && millis() - PIR_sensed_millis > pir_timeout) {
-        led_ctrl(LOW);
-        PIR_sensed_millis = 0;
+        led_ctrl(LOW, pir_status);
     }
 }
 
@@ -179,9 +177,9 @@ void load_cmd() {
         if (inputString == "data") {
             send_data();
         } else if (inputString == "led_on") {
-            led_ctrl(HIGH);
+            led_ctrl(HIGH, false);
         } else if (inputString == "led_off") {
-            led_ctrl(LOW);
+            led_ctrl(LOW, false);
         } else if (inputString == "pir_on") {
             pir_ctrl(true);
         } else if (inputString == "pir_off") {
@@ -217,19 +215,24 @@ void change_pir_timeout() {
 }
 
 // ---------- led function ----------
-void led_ctrl(bool opt) {
-    if (led_status != opt) {
-        // if led_on force pir_off
-        // if led_off restore pir to last_pir_status
-        pir_status = (opt) ? false : last_pir_status;
-      
-        digitalWrite(led, opt);
-        led_status = opt;
+void led_ctrl(bool led_opt, bool pir_opt) {
+    bool print_msg = led_status != led_opt || pir_status != pir_opt;
+  
+    if (led_status != led_opt) {      
+        digitalWrite(led, led_opt);
+        led_status = led_opt;
+    }
+    
+    if (pir_status != pir_opt) {
+        PIR_sensed_millis = 0;
+        pir_status = pir_opt;
+    }
 
+    if (print_msg) {
         String out ="{\"type\":\"led_ctrl\", \"content\": {"
                     "\"led_status\": \"" + String(led_status) + "\"," \
                     "\"pir_status\": \"" + String(pir_status) + "\"}}";
-        Serial.println(out);
+        Serial.println(out); 
     }
 }
 
@@ -237,7 +240,6 @@ void pir_ctrl (bool opt) {
     // only enable/disable pir if led_off
     if (led_status == LOW && pir_status != opt) {
         pir_status = opt;
-        last_pir_status = opt;
 
         String out ="{\"type\":\"pir_ctrl\", \"content\": {"
                     "\"pir_status\": \"" + String(pir_status) + "\"}}";
