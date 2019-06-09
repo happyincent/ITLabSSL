@@ -64,7 +64,8 @@
           {% if request.user.is_staff %}
           <p>
             <a href="{% url 'device_create' %}" class="btn btn-primary">Add New Device</a>
-            <a href="{% url 'my_devices' user.username %}" class="btn btn-success">My Devices (JSON)</a>
+            <a href="{% url 'device_profile' user.username %}" class="btn btn-success"
+              onclick="alert('{{ setup_msg }}');">Deployment Profiles</a>
           </p>
           {% endif %}
         </div>

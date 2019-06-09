@@ -30,7 +30,7 @@ class UpdateLight(CronJobBase):
                 led_schedule_time = [
                     (
                         datetime.datetime.strptime(i['start'], '%H:%M').time(),
-                        datetime.datetime.strptime(i['end'], '%H:%M').time()
+                        datetime.datetime.strptime(i['end'], '%H:%M').time() if i['end'] != '00:00' else datetime.time(23, 59)
                     )
                     for i in device.led_schedule[now_week-1]['periods']
                 ]
@@ -38,7 +38,7 @@ class UpdateLight(CronJobBase):
                 pir_schedule_time = [
                     (
                         datetime.datetime.strptime(i['start'], '%H:%M').time(),
-                        datetime.datetime.strptime(i['end'], '%H:%M').time()
+                        datetime.datetime.strptime(i['end'], '%H:%M').time() if i['end'] != '00:00' else datetime.time(23, 59)
                     )
                     for i in device.pir_schedule[now_week-1]['periods']
                 ]

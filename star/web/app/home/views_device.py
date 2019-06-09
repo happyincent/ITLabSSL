@@ -39,23 +39,27 @@ class DeviceList(TemplateView):
         context = super().get_context_data(**kwargs)
         context['devices'] = Device.objects.all()
         context['devices_json'] = serializers.serialize("json", context['devices'])
+        context['setup_msg'] = settings.SETUP_MSG
         return context
 
 @method_decorator(legal_staff_user, name='dispatch')
-class MyDevices(View):
+class DeviceProfile(View):
     def get(self, request, **kwargs):
         if request.user.username != kwargs.get('username'):
             return HttpResponseForbidden()
 
         raw = Device.objects.all().values() if request.user.is_superuser else \
               Device.objects.filter(user=request.user).values()
+        
         data = [{
             'id': i.get('id'),
             'token': str(i.get('token')),
-            'longitude': str(i.get('longitude')),
-            'latitude': str(i.get('latitude')),        
-            'ssh_pub': i.get('ssh_pub'),
+            'postinfo_timetout': str(10),
+            'serial_baud': '9600',
+            'serial_port': '',
+            'rtsp_uri': '',
         } for i in raw]
+        
         return JsonResponse(data, safe=False, json_dumps_params={'indent': 4})
 
 ##
@@ -65,11 +69,6 @@ class DeviceCreate(CreateView):
     model = Device
     template_name = 'home/edit_device.html'
     fields = ['id', 'longitude', 'latitude', 'ssh_pub']
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['setup_msg'] = settings.SETUP_MSG
-        return context
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -92,11 +91,6 @@ class DeviceUpdate(CheckOwnerMixin, UpdateView):
     model = Device
     template_name = 'home/edit_device.html'
     fields = ['longitude', 'latitude', 'ssh_pub']
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['setup_msg'] = settings.SETUP_MSG
-        return context
 
     def form_valid(self, form):
         

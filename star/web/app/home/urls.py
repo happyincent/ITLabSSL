@@ -19,7 +19,7 @@ urlpatterns = [
     path('api/history/<slug:pk>', views_api.APIHistory.as_view(), name='api_history'),
     
     path('device_list', views_device.DeviceList.as_view(), name='device_list'),
-    path('my_devices/<username>', views_device.MyDevices.as_view(), name='my_devices'),
+    path('device_profile/<username>', views_device.DeviceProfile.as_view(), name='device_profile'),
 
     path('device_create', views_device.DeviceCreate.as_view(), name='device_create'),
     path('device_update/<slug:pk>', views_device.DeviceUpdate.as_view(), name='device_update'),

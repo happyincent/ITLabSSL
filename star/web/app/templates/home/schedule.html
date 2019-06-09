@@ -35,10 +35,10 @@
           <a href="{% url 'device_list' %}">Device List</a>
         </li>
         <li>
-          <a href="{% url 'device' pk=view.kwargs.pk %}">Device Info <small>({{ view.kwargs.pk }})</small></a>
+          <a href="{% url 'device' pk=view.kwargs.pk %}">Device Info</a>
         </li>
         <li class="active">
-          {{ view.kwargs.table | upper }} Schedule
+          Schedule
         </li>
       </ul>
       <div class="page-header">
