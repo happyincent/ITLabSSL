@@ -14,7 +14,7 @@ services:
       - |
           trap "docker rm -f edge-service" SIGTERM
           echo "Init work ..."
-          docker rm -f edge-service
+          docker rm -f edge-${id}
           docker rmi itlabstar/edge:ddl
           if [[ -z $$SERIAL_PORT ]]; then \
             docker run  --name=edge-${id} \
