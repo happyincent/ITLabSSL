@@ -1,33 +1,36 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-OUTDIR=$DIR/config
+OUTDIR=$DIR/yml
 
 mkdir -p $OUTDIR
 
-BASE=(edge.yml ffmpeg.yml)
+BASE_YMLS=(edge.yml ffmpeg.yml)
 
-for FILE in "$@"; do
-    echo "Gernerating ymls from config: $FILE ..."
+for JSON in "$@"; do
+    echo "Gernerating yml from config: $JSON ..."
 
-    NODE_NAME=$(cat $FILE | jq '.NODE_NAME' | xargs)
+    NODE_NAME=$(cat $JSON | jq '.NODE_NAME' | xargs)
     rm -f $OUTDIR/[$NODE_NAME]*.yml
 
-    cat $FILE | jq -r '.DEVICES' | jq -c '.[]' | while read i; do
+    cat $JSON | jq -r '.DEVICES' | jq -c '.[]' | while read i_device; do
 
-        id=$(echo $i | jq '.id' | xargs)
-        token=$(echo $i | jq '.token' | xargs)
+        id=$(echo $i_device | jq '.id' | xargs)
+        token=$(echo $i_device | jq '.token' | xargs)
+        rtsp_uri=$(echo $i_device | jq '.rtsp_uri' | xargs)
+        postinfo_timetout=$(echo $i_device | jq '.postinfo_timetout' | xargs)
+        serial_port=$(echo $i_device | jq '.serial_port' | xargs)
+        serial_baud=$(echo $i_device | jq '.serial_baud' | xargs)
         
-        for f in "${BASE[@]}"; do
+        for YML in "${BASE_YMLS[@]}"; do
             sed "\
                 s|\${NODE_NAME}|${NODE_NAME}|g; \
                 s|\${id}|${id}|g; \
-                s|\${token}|${token}|g" \
-                $DIR/$f > $OUTDIR/${NODE_NAME}_${id}-$f
-        
-            # For VM* use live555 rtsp proxy server
-            if [[ ${id} = VM* ]] && [[ $f = ffmpeg.yml ]] ; then
-                sed -i "s|\${RTSP_URI}|\${RTSP_PROXY_URI}|;" $OUTDIR/${NODE_NAME}_${id}-$f
-            fi
+                s|\${token}|${token}|g; \
+                s|\${postinfo_timetout}|${postinfo_timetout}|g; \
+                s|\${serial_port}|${serial_port}|g; \
+                s|\${serial_baud}|${serial_baud}|g; \
+                s|\${rtsp_uri}|${rtsp_uri}|g;" \
+                $DIR/$YML > $OUTDIR/${NODE_NAME}_${id}-$YML
         done
 
     done

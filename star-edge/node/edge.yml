@@ -1,19 +1,39 @@
 version: '3'
 
-services:
+networks:
+  docker_host:
+    external:
+      name: 'host'
 
+services:
   ${NODE_NAME}_${id}-edge:
-    image: itlabstar/edge:ddl
+    image: docker:latest
     command:
       - "/bin/sh"
       - -c
       - |
-          python -u /app/edge.py \
-                    --netloc ${WS_NETLOC} \
-                    --path $$WS_PATH \
-                    --device $$DEVICE \
-                    --token $$TOKEN \
-                    --timeout $$WS_POSTINFO_TIMEOUT
+          trap "docker rm -f edge-service" SIGTERM
+          echo "Init work ..."
+          docker rm -f edge-service
+          docker rmi itlabstar/edge:ddl
+          if [[ -z $$SERIAL_PORT ]]; then \
+            docker run  --name=edge-${id} \
+                      --net=host \
+                      itlabstar/edge:ddl \
+                      python -u /app/edge.py --netloc ${WS_NETLOC} --path ${WS_PATH} --device $$ID --token $$TOKEN --timeout $$POSTINFO_TIMEOUT --serial_port=$$SERIAL_PORT --serial_baud=$$SERIAL_BAUD &
+          else
+            docker run  --name=edge-${id} \
+                      --net=host \
+                      --device=$$SERIAL_PORT \
+                      itlabstar/edge:ddl \
+                      python -u /app/edge.py --netloc ${WS_NETLOC} --path ${WS_PATH} --device $$ID --token $$TOKEN --timeout $$POSTINFO_TIMEOUT --serial_port=$$SERIAL_PORT --serial_baud=$$SERIAL_BAUD &
+          fi
+          child=$$!
+          echo "Wait for edge-service ..."
+          wait $$child
+          echo "Exit ..."
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
     networks:
       - 'docker_host'
     deploy:
@@ -25,7 +45,8 @@ services:
         constraints:
           - node.hostname == ${NODE_NAME}
     environment:
-      WS_PATH: ${WS_PATH}
-      WS_POSTINFO_TIMEOUT: ${WS_POSTINFO_TIMEOUT}
-      DEVICE: ${id}
+      ID: ${id}
       TOKEN: ${token}
+      POSTINFO_TIMEOUT: ${postinfo_timetout}
+      SERIAL_PORT: ${serial_port}
+      SERIAL_BAUD: ${serial_baud}

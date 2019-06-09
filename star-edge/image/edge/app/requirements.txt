@@ -1,5 +1,5 @@
 #websocket-client==0.56.0
-#python-dotenv==0.10.1
+#pyserial==3.4
 
 websocket-client
-#python-dotenv
+pyserial

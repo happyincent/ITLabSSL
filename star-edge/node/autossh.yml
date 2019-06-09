@@ -1,5 +1,13 @@
 version: '3'
 
+networks:
+  docker_host:
+    external:
+      name: 'host'
+
+volumes:
+  keys:
+
 services:
   
   autossh:
@@ -8,9 +16,9 @@ services:
       - '/bin/sh'
       - -c
       - |
-          cat /keys/id_rsa.pub || \
+          cat /keys/id_rsa.pub ||
           yes n | ssh-keygen -t rsa -b 2048 -N '' -C 'autossh' -f /keys/id_rsa &&
-          cat /keys/id_rsa.pub; \
+          cat /keys/id_rsa.pub
           autossh -4 -M 0 -N \
                   -o StrictHostKeyChecking=no \
                   -o ServerAliveInterval=60 \
@@ -31,6 +39,3 @@ services:
         delay: 30s
       placement:
         constraints: [node.role != manager]
-
-volumes:
-  keys:

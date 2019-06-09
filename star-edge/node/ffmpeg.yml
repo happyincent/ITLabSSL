@@ -1,5 +1,10 @@
 version: '3'
 
+networks:
+  docker_host:
+    external:
+      name: 'host'
+
 services:
 
   ${NODE_NAME}_${id}-ffmpeg:
@@ -13,7 +18,7 @@ services:
           -r 15 -rtsp_transport tcp \
           -i $$RTSP_URI \
           -fflags +genpts -vcodec copy -an -bsf:v h264_mp4toannexb \
-          -f flv -y rtmp://${RTMP_NETLOC}$$RTMP_PATH$$DEVICE?token=$$TOKEN \
+          -f flv -y rtmp://${RTMP_NETLOC}${RTMP_PATH}$$ID?token=$$TOKEN \
           -nostdin -loglevel warning
     networks:
       - 'docker_host'
@@ -26,7 +31,6 @@ services:
         constraints:
           - node.hostname == ${NODE_NAME}
     environment:
-      RTMP_PATH: ${RTMP_PATH}
-      RTSP_URI: ${RTSP_URI}
-      DEVICE: ${id}
+      ID: ${id}
       TOKEN: ${token}
+      RTSP_URI: ${rtsp_uri}
