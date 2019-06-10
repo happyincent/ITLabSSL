@@ -23,10 +23,10 @@ services:
     image: web:star
     build: ./web
     restart: always
-    command: sh -c "/run.sh"
+    command: sh /run.sh
     volumes:      
       - './web/app:/www/'
-      - './web/supervisord.conf:/supervisord.conf'
+      - './web/supervisord.conf:/etc/supervisord.conf'
       - './web/logrotate.conf:/logrotate.conf'
       - './web/crontab:/crontab'
       - './web/run.sh:/run.sh'
@@ -42,7 +42,7 @@ services:
     image: nginx:star
     build: ./nginx
     restart: always
-    command: sh -c "/run.sh"
+    command: sh /run.sh
     ports:
       - "80:80"
       - "443:443"
@@ -67,7 +67,7 @@ services:
     image: nginx-rtmp:star
     build: ./nginx-rtmp
     restart: always
-    command: sh -c "/run.sh"
+    command: sh /run.sh
     volumes:
       - './nginx-rtmp/nginx-rtmp.conf:/opt/nginx/nginx.conf'
       - './nginx-rtmp/logrotate.conf:/logrotate.conf'
@@ -104,12 +104,13 @@ services:
     image: sshd:star
     build: ./sshd
     restart: always
-    command: sh -c "/run.sh"
+    command: sh /run.sh
     ports:
       - "62422:22"
     volumes:
       - './sshd/host_keys/:/host_keys/'
       - './sshd/authorized_keys:/home/limited-user/.ssh/authorized_keys'
+      - './sshd/run.sh:/run.sh'
     depends_on:
       - web
       - nginx-rtmp

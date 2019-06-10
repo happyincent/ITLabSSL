@@ -4,7 +4,8 @@
 chmod 644 /logrotate.conf
 chown root:root /logrotate.conf
 
-# load crontab and start in background
+# remove & load & start crontab (in background)
+find /etc/periodic/ -type f -exec rm {} \;
 cat /crontab > /var/spool/cron/crontabs/root
 crond -b
 

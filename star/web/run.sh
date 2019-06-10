@@ -13,7 +13,7 @@ find /www/home/static/home/plugin/ -type f -exec sed -i '/sourceMappingURL/d' {}
 python /www/manage.py collectstatic --noinput
 
 # load and start supervisord jobs
-supervisord -c /supervisord.conf
+supervisord -c /etc/supervisord.conf
 supervisorctl start gunicorn
 supervisorctl start daphne
 
