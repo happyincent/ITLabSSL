@@ -19,7 +19,8 @@ services:
           -i $$RTSP_URI \
           -fflags +genpts -vcodec copy -an -bsf:v h264_mp4toannexb \
           -f flv -y rtmp://${RTMP_NETLOC}${RTMP_PATH}$$ID?token=$$TOKEN \
-          -nostdin -loglevel warning
+          -nostdin -loglevel warning \
+          -timeout 10 -stimeout 10000000 -rw_timeout 10000
     networks:
       - 'docker_host'
     deploy:
