@@ -1,4 +1,4 @@
-# FROM python:3.7.2-alpine3.9
+# FROM python:3.7.3-alpine3.9
 FROM python:3-alpine3.9
 MAINTAINER ddl <itlab.ee.ncku.edu.tw>
 
@@ -25,7 +25,6 @@ RUN sed -i "s|return uri|return 'https://ssl.itlab.ee.ncku.edu.tw/' + uri.partit
 # Install packages
 RUN apk add --update --no-cache nano logrotate
 RUN apk add --update --no-cache supervisor
-COPY supervisord.conf /etc/supervisord.conf
 
 # Setup timezone
 RUN apk add --update --no-cache tzdata && \

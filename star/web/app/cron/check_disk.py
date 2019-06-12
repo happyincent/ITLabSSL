@@ -20,7 +20,7 @@ class LimitDiskUsage(CronJobBase):
                 files = [os.path.join(dp, f) for dp, dn, fn in os.walk(settings.VOD_DIR) for f in fn]
                 files.sort(key=lambda i: os.path.getmtime(os.path.join(settings.VOD_DIR, i)))
                 
-                del_files = files[0 : int(len(files) * settings.DEL_OLDEST_VOD_PERCENT)]
+                del_files = files[0 : int(len(files) * (settings.DEL_OLDEST_VOD_PERCENT / 100))]
                 
                 for file in del_files:
                     os.remove(os.path.join(settings.VOD_DIR, file))

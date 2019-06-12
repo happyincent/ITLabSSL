@@ -110,7 +110,18 @@ services:
     volumes:
       - './sshd/host_keys/:/host_keys/'
       - './sshd/authorized_keys:/home/limited-user/.ssh/authorized_keys'
+      - './sshd/supervisord.conf:/etc/supervisord.conf'
+      - './sshd/logrotate.conf:/logrotate.conf'
+      - './sshd/crontab:/crontab'
+      - './sshd/monitor_keys.sh:/monitor_keys.sh'
+      - './sshd/monitor_sshd.sh:/monitor_sshd.sh'
       - './sshd/run.sh:/run.sh'
+      - './log/sshd/:/var/log/'
+    environment:
+      USERNAME: limited-user
+      HOSTKEY_DIR: /host_keys
+      SSHD_LOG: /var/log/sshd.log
+      SSHD_ONLINE_LOG: /var/log/online/user.log
     depends_on:
       - web
       - nginx-rtmp
