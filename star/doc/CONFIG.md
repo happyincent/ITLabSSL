@@ -25,8 +25,8 @@
   * `./nginx/run.sh` : startup script for the container 
   * `./web/app` : root path of django **(web & nginx)**
   * `./log/nginx/` : log file for access, rtmp_access, error
-  * `/tmp/hls` : [nginx-rtmp.conf](../nginx-rtmp/nginx-rtmp.conf) - hls_path
-  * `/tmp/key` : [nginx-rtmp.conf](../nginx-rtmp/nginx-rtmp.conf) - hls_key_path
+  * `/tmp/hls` : [nginx.conf](../nginx-rtmp/nginx.conf) - hls_path
+  * `/tmp/key` : [nginx.conf](../nginx-rtmp/nginx.conf) - hls_key_path
   * `/media/data/record` : [nginx.conf](../nginx/nginx.conf) - record_path  **(web & nginx)** **(mount disk)**
   * `/tmp/letsencrypt-www` : temporary path for letsencrypt **(nginx & letsencrypt)**
   * `./letsencrypt/letsencrypt/:/etc/letsencrypt/` : path for https key files **(nginx & letsencrypt)**
@@ -106,7 +106,7 @@
 
 * Dockerfile, crontab same as ngin
 
-* nginx-rtmp.conf
+* nginx.conf
   * rtmp (port 1935)
     * `http://web:8000/hooks/on_publish` : rtmp hook to web (django)
     * `/media/data/record` : vod path

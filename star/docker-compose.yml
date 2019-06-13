@@ -26,9 +26,9 @@ services:
     command: sh /run.sh
     volumes:      
       - './web/app:/www/'
-      - './web/supervisord.conf:/etc/supervisord.conf'
-      - './web/logrotate.conf:/logrotate.conf'
-      - './web/crontab:/crontab'
+      - './web/conf/supervisord.conf:/etc/supervisord.conf'
+      - './web/conf/logrotate.conf:/logrotate.conf'
+      - './web/conf/crontab:/crontab'
       - './web/run.sh:/run.sh'
       - './sshd/authorized_keys:/authorized_keys'
       - './log/web/:/var/log/'
@@ -47,10 +47,10 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      # - './nginx/nginx_init.conf:/opt/nginx/nginx.conf'
-      - './nginx/nginx.conf:/opt/nginx/nginx.conf'
-      - './nginx/logrotate.conf:/logrotate.conf'
-      - './nginx/crontab:/crontab'
+      # - './nginx/conf/nginx_init.conf:/opt/nginx/nginx.conf'
+      - './nginx/conf/nginx.conf:/opt/nginx/nginx.conf'
+      - './nginx/conf/logrotate.conf:/logrotate.conf'
+      - './nginx/conf/crontab:/crontab'
       - './nginx/run.sh:/run.sh'
       - './web/app/:/www/'
       - './log/nginx/:/opt/nginx/logs/'
@@ -69,9 +69,9 @@ services:
     restart: always
     command: sh /run.sh
     volumes:
-      - './nginx-rtmp/nginx-rtmp.conf:/opt/nginx/nginx.conf'
-      - './nginx-rtmp/logrotate.conf:/logrotate.conf'
-      - './nginx-rtmp/crontab:/crontab'
+      - './nginx-rtmp/conf/nginx.conf:/opt/nginx/nginx.conf'
+      - './nginx-rtmp/conf/logrotate.conf:/logrotate.conf'
+      - './nginx-rtmp/conf/crontab:/crontab'
       - './nginx-rtmp/run.sh:/run.sh'
       - './log/nginx-rtmp/:/opt/nginx/logs/'
       - '/tmp/hls/:/tmp/hls/'
@@ -110,12 +110,12 @@ services:
     volumes:
       - './sshd/host_keys/:/host_keys/'
       - './sshd/authorized_keys:/home/limited-user/.ssh/authorized_keys'
-      - './sshd/supervisord.conf:/etc/supervisord.conf'
-      - './sshd/logrotate.conf:/logrotate.conf'
-      - './sshd/crontab:/crontab'
-      - './sshd/monitor_keys.sh:/monitor_keys.sh'
-      - './sshd/monitor_sshd.sh:/monitor_sshd.sh'
-      - './sshd/check_online.sh:/check_online.sh'
+      - './sshd/conf/supervisord.conf:/etc/supervisord.conf'
+      - './sshd/conf/logrotate.conf:/logrotate.conf'
+      - './sshd/conf/crontab:/crontab'
+      - './sshd/scripts/monitor_keys.sh:/monitor_keys.sh'
+      - './sshd/scripts/monitor_sshd.sh:/monitor_sshd.sh'
+      - './sshd/scripts/check_online.sh:/check_online.sh'
       - './sshd/run.sh:/run.sh'
       - './log/sshd/:/var/log/'
     environment:
