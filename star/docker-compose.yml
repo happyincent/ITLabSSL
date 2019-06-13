@@ -115,6 +115,7 @@ services:
       - './sshd/crontab:/crontab'
       - './sshd/monitor_keys.sh:/monitor_keys.sh'
       - './sshd/monitor_sshd.sh:/monitor_sshd.sh'
+      - './sshd/check_online.sh:/check_online.sh'
       - './sshd/run.sh:/run.sh'
       - './log/sshd/:/var/log/'
     environment:

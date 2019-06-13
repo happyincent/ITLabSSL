@@ -7,3 +7,4 @@
 # 0       5       1       *       *       run-parts /etc/periodic/monthly
 
 59        *       *       *       *       logrotate /logrotate.conf
+*/15      *       *       *       *       bash /check_online.sh >> /var/log/monitor_sshd.log

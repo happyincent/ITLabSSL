@@ -12,7 +12,7 @@ while read event; do
         PID=`echo $line | awk -F':' '{print $NF}' | tr -d "\r\n"`
         let ++lineno
         if [[ ! " ${KEYS[*]} " == *"$KEY"* ]]; then
-            echo `date '+%Y-%m-%d %H:%M:%S'`:PID=$PID:disconnected
+            echo `date '+%Y-%m-%d %H:%M:%S'`:PID=$PID:disconnected \(killed\) | tee -a /var/log/monitor_sshd.log
             kill $PID
             sed -i "$lineno d" ${SSHD_ONLINE_LOG}
             ((lineno -= 1))

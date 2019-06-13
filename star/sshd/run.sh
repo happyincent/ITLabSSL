@@ -17,7 +17,7 @@ touch ${SSHD_LOG}
 
 # setup permission
 chmod 644 ${SSHD_ONLINE_LOG}
-chmod 644 ${SSHD_LOG}
+chmod 644 /var/log/*.log
 chmod 644 /home/${USERNAME}/.ssh/authorized_keys
 chmod 644 /logrotate.conf
 chown root:root /logrotate.conf
