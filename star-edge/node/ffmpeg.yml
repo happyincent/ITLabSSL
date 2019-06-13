@@ -14,13 +14,13 @@ services:
       - -c
       - |
           ffmpeg \
+          -y -loglevel warning \
           -use_wallclock_as_timestamps 1 -flags global_header \
           -r 15 -rtsp_transport tcp \
           -i $$RTSP_URI \
           -fflags +genpts -vcodec copy -an -bsf:v h264_mp4toannexb \
-          -f flv -y rtmp://${RTMP_NETLOC}${RTMP_PATH}$$ID?token=$$TOKEN \
-          -nostdin -loglevel warning \
-          -timeout 10 -stimeout 10000000 -rw_timeout 10000
+          -f flv -rtmp_live live -rtmp_buffer 0 -timeout 0 \
+          rtmp://${RTMP_NETLOC}${RTMP_PATH}$$ID?token=$$TOKEN
     networks:
       - 'docker_host'
     deploy:
