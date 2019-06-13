@@ -26,7 +26,7 @@
                   <div class="btn-toolbar">
                     {% bootstrap_button button_type='submit' content='Sign Up' button_class='btn-success' value='submit' extra_classes='margin-right-15' %}
                     {% url 'account_login' as account_login %}
-                    <a href="{{request.META.HTTP_REFERER|escape}}" class="btn btn-default">Back</a>
+                    <a href="{% url 'account_login' %}" class="btn btn-default">Back</a>
                   </div>
                 </div>
               </div>
