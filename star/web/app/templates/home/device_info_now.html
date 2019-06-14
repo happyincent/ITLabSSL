@@ -31,7 +31,7 @@
   <div class="row clearfix">
     <div class="col-md-6 column">
       {% if device_info %}
-      <div class="alert alert-info">
+      <div id="timestamp-div" class="alert alert-danger">
         <strong id="timestamp">{{ device_info.timestamp | default_if_none:"Disconnected" }}</strong>
       </div>
       <div class="table-responsive">
@@ -76,7 +76,7 @@
         </table>
       </div>
       {% else %}
-      <div class="alert alert-info">
+      <div id="timestamp-div" class="alert alert-danger">
         <strong id="timestamp">Disconnected</strong>
       </div>
       <div class="table-responsive">
@@ -174,11 +174,14 @@
 {% if request.user.is_staff %}
 <script>
   function ui_disabled(disable, msg) {
-    document.querySelector('#led_ctrl_btn').disabled = disable;
-    document.querySelector('#pir_ctrl_btn').disabled = disable || document.querySelector('#led_status').checked;
+    document.getElementById('led_ctrl_btn').disabled = disable;
+    document.getElementById('pir_ctrl_btn').disabled = disable || document.getElementById('led_status').checked;
 
     if (disable == true) {
-      document.querySelector('#timestamp').innerHTML = 'Disconnected ' + msg;
+      document.getElementById('timestamp').innerHTML = 'Disconnected ' + msg;
+      document.getElementById('timestamp-div').className = "alert alert-danger";
+    } else {
+      document.getElementById('timestamp-div').className = "alert alert-info";
     }
   }
 </script>
@@ -186,7 +189,10 @@
 <script>
   function ui_disabled(disable) {
     if (disable == true) {
-      document.querySelector('#timestamp').innerHTML = 'Disconnected';
+      document.getElementById('timestamp').innerHTML = 'Disconnected';
+      document.getElementById('timestamp-div').className = "alert alert-danger";
+    } else {
+      document.getElementById('timestamp-div').className = "alert alert-info";
     }
   }
 </script>
@@ -209,7 +215,7 @@
   // check if now - timestamp > 15s every 10s
   async function check_edge() {
     while (true) {
-      var time = document.querySelector('#timestamp').innerHTML;
+      var time = document.getElementById('timestamp').innerHTML;
       if (time.includes('(Browser)')) break;
 
       var if_disconnected = (time.includes('Disconnected')) || ((new Date() - new Date(time)) > 15 * 1000);
@@ -232,13 +238,13 @@
   socket.onmessage = function (e) {
     var raw = JSON.parse(e.data);
     if (raw['cmd'] == 'update_info') {
-      document.querySelector('#timestamp').innerHTML = raw['data']['timestamp'];
-      document.querySelector('#temperature').innerHTML = raw['data']['temperature'] + ' °C';
-      document.querySelector('#humidity').innerHTML = raw['data']['humidity'] + ' %';
-      document.querySelector('#pmat25').innerHTML = raw['data']['pmat25'] + ' μg/m<sup>3</sup>';
-      document.querySelector('#loudness').innerHTML = raw['data']['loudness'] + ' dB';
-      document.querySelector('#light_intensity').innerHTML = raw['data']['light_intensity'] + ' lux';
-      document.querySelector('#uv_intensity').innerHTML = raw['data']['uv_intensity'] + ' mW/cm<sup>2</sup>';
+      document.getElementById('timestamp').innerHTML = raw['data']['timestamp'];
+      document.getElementById('temperature').innerHTML = raw['data']['temperature'] + ' °C';
+      document.getElementById('humidity').innerHTML = raw['data']['humidity'] + ' %';
+      document.getElementById('pmat25').innerHTML = raw['data']['pmat25'] + ' μg/m<sup>3</sup>';
+      document.getElementById('loudness').innerHTML = raw['data']['loudness'] + ' dB';
+      document.getElementById('light_intensity').innerHTML = raw['data']['light_intensity'] + ' lux';
+      document.getElementById('uv_intensity').innerHTML = raw['data']['uv_intensity'] + ' mW/cm<sup>2</sup>';
       switch_diabled_toggle('#led_status', raw['data']['led_status']);
       switch_diabled_toggle('#pir_status', raw['data']['pir_status']);
       ui_disabled(false, '');
@@ -255,14 +261,14 @@
 <script>
   function ws_send(cmd) {
     if (socket.readyState == 1) {
-      if (!document.querySelector('#timestamp').innerHTML.includes('Disconnected')) {
+      if (!document.getElementById('timestamp').innerHTML.includes('Disconnected')) {
 
         if (cmd == 'led_ctrl') {
-          var led_status = document.querySelector('#led_status').checked ? true : false;
+          var led_status = document.getElementById('led_status').checked ? true : false;
           var msg = { 'cmd': cmd, 'data': { 'led_status': !led_status } };
         }
         else if (cmd == 'pir_ctrl') {
-          var pir_status = document.querySelector('#pir_status').checked ? true : false;
+          var pir_status = document.getElementById('pir_status').checked ? true : false;
           var msg = { 'cmd': cmd, 'data': { 'pir_status': !pir_status } };
         }
 

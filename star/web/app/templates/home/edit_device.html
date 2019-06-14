@@ -44,7 +44,7 @@
               <label class="control-label" for="pir_timeout">PIR Timeout (ms)</label>
               <div class="input-group">
                 <input disabled type="number" name="pir_timeout" value="" class="form-control"
-                  placeholder="WebSocket Updating ..." id="pir_timeout">
+                  placeholder="WebSocket Connecting ..." id="pir_timeout">
                 <span class="input-group-btn">
                   <button disabled id="pir_timeout_btn" type="button" class="btn btn-primary"
                     onclick="ws_send('update_pir_millis');">Update</button>
@@ -52,7 +52,7 @@
               </div>
             </div>
             {% endif %}
-            <button class="btn btn-success" type="submit">Save</button>
+            <button class="btn btn-success" type="submit" onclick="ws_send('update_pir_millis');">Save</button>
             <a href="{% url 'device_list' %}" class="btn btn-default">Back</a>
           </form>
         </div>
@@ -67,8 +67,8 @@
 {% if object %}
 <script>
   function ui_disabled(disable) {
-    document.querySelector('#pir_timeout_btn').disabled = disable;
-    document.querySelector('#pir_timeout').disabled = disable;
+    document.getElementById('pir_timeout_btn').disabled = disable;
+    document.getElementById('pir_timeout').disabled = disable;
   }
 </script>
 
@@ -78,10 +78,14 @@
 
   var socket = new WebSocket(ws_scheme + window.location.host + '/ws/browser/device/' + '{{ object }}');
 
+  socket.onopen = function() {
+    document.getElementById('pir_timeout').placeholder = "WebSocket Updating ..."
+  };
+
   socket.onmessage = function (e) {
     var raw = JSON.parse(e.data);
     if (raw['cmd'] == 'update_info') {
-      document.querySelector('#pir_timeout').value = raw['data']['pir_timeout'];
+      document.getElementById('pir_timeout').value = raw['data']['pir_timeout'];
       ui_disabled(false);
     }
     console.log(raw);
@@ -97,13 +101,14 @@
   function ws_send(cmd) {
     if (socket.readyState == 1) {
       if (cmd == 'update_pir_millis') {
-        var msg = { 'cmd': cmd, 'data': { 'pir_timeout': document.querySelector('#pir_timeout').value } };
+        var msg = { 'cmd': cmd, 'data': { 'pir_timeout': document.getElementById('pir_timeout').value } };
       }
 
       socket.send(JSON.stringify(msg));
       console.log(JSON.stringify(msg));
 
-      document.querySelector('#pir_timeout').value = '';
+      document.getElementById('pir_timeout').value = '';
+      ui_disabled(true);
     } else {
       alert('WebSocket connection closed unexpectedly.\nPlease refresh the page.');
     }
