@@ -24,10 +24,13 @@ class CheckOwnerMixin(UserPassesTestMixin):
 
     # Class View already deal with device (pk) not exist
     def test_func(self):
-        return self.request.user.is_superuser or (
-            Device.objects.get(
-                pk = self.request.resolver_match.kwargs.get('pk')
-            ).user.username == self.request.user.username
+        device = Device.objects.filter(
+            pk = self.request.resolver_match.kwargs.get('pk')
+        ).first()
+
+        return  (device != None) and (
+            self.request.user.is_superuser or \
+            device.user.username == self.request.user.username
         )
 ##
 
@@ -125,10 +128,7 @@ class DeviceDelete(CheckOwnerMixin, DeleteView):
 @method_decorator(legal_staff_user + [csrf_protect], name='dispatch')
 class ResetToken(CheckOwnerMixin, View):
 
-    def post(self, request, **kwargs):
-        if not Device.objects.filter(pk=kwargs.get('pk')).exists():
-            raise Http404
-        
+    def post(self, request, **kwargs):        
         new_token = uuid.uuid4()
         Device.objects.filter(pk=kwargs.get('pk')).update(token=new_token)
         cache.set(kwargs.get('pk'), str(new_token), timeout=None)
