@@ -262,19 +262,21 @@
   function ws_send(cmd) {
     if (socket.readyState == 1) {
       if (!document.getElementById('timestamp').innerHTML.includes('Disconnected')) {
+        var msg = null;
 
         if (cmd == 'led_ctrl') {
           var led_status = document.getElementById('led_status').checked ? true : false;
-          var msg = { 'cmd': cmd, 'data': { 'led_status': !led_status } };
+          msg = { 'cmd': cmd, 'data': { 'led_status': !led_status } };
         }
         else if (cmd == 'pir_ctrl') {
           var pir_status = document.getElementById('pir_status').checked ? true : false;
-          var msg = { 'cmd': cmd, 'data': { 'pir_status': !pir_status } };
+          msg = { 'cmd': cmd, 'data': { 'pir_status': !pir_status } };
         }
 
-        socket.send(JSON.stringify(msg));
-        console.log(JSON.stringify(msg));
-
+        if (msg != null) {
+          socket.send(JSON.stringify(msg));
+          console.log(JSON.stringify(msg));
+        }
       } else {
         alert('Edge Device is disconnected.');
       }

@@ -87,13 +87,9 @@
   });
 
   $('#import').click(function () {
+    $('#schedule').jqs('reset');
     var ret = $('#schedule').jqs('import', last_schedule);
-
     console.log('import', ret);
-
-    if ($.isEmptyObject(JSON.parse(ret))) {
-      $('#schedule').jqs('reset');
-    }
   });
 
   $('#reset').click(function () {

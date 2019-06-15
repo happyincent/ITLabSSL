@@ -68,13 +68,10 @@ class DeviceProfile(View):
 class DeviceCreate(CreateView):
     model = Device
     template_name = 'home/edit_device.html'
-    fields = ['id', 'longitude', 'latitude', 'ssh_pub']
+    fields = ['id', 'longitude', 'latitude']
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-
-        if not UpdatePubKey(form.instance.id, form.instance.ssh_pub).add():
-            form.instance.ssh_pub = ''
         
         cache.set(form.instance.id, str(form.instance.token), timeout=None)
         
