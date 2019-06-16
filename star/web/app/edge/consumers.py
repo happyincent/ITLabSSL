@@ -39,7 +39,7 @@ class StarConsumer(AsyncJsonWebsocketConsumer):
             cache.delete('{}{}'.format(self.device_id, settings.CHANNEL_POSTFIX))
             await self.channel_layer.group_send(
                 self.device_id, 
-                {'type': 'broatcast_json', 'content': {'cmd': 'error', 'data': 'Edge Device is disconnected.'}}
+                {'type': 'broadcast_json', 'content': {'cmd': 'error', 'data': 'Edge Device is disconnected.'}}
             )
 
         elif self.client_type == 'browser':
@@ -59,7 +59,7 @@ class StarConsumer(AsyncJsonWebsocketConsumer):
 
             await self.channel_layer.group_send(
                 self.device_id, 
-                {'type': 'broatcast_json', 'content': content}
+                {'type': 'broadcast_json', 'content': content}
             )
 
             cache.set('{}{}'.format(self.device_id, settings.INFO_POSTFIX), pickle.dumps(content['data']), settings.INFO_TIMEOUT)
@@ -85,5 +85,5 @@ class StarConsumer(AsyncJsonWebsocketConsumer):
     async def unicast_json(self, event):
         await self.send_json(event['content'])
 
-    async def broatcast_json(self, event):
+    async def broadcast_json(self, event):
         await self.send_json(event['content'])

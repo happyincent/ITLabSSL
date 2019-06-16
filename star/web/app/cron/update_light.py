@@ -4,6 +4,7 @@ from django_cron import CronJobBase, Schedule
 from django.utils import timezone
 from django.conf import settings
 
+from django.core.cache import cache
 from home.models import Device
 
 from channels.layers import get_channel_layer
@@ -46,18 +47,26 @@ class UpdateLight(CronJobBase):
                 led_check_lst = [(period[0] <= now_time < period[1]) for period in led_schedule_time]
                 pir_check_lst = [(period[0] <= now_time < period[1]) for period in pir_schedule_time]
 
-                # LED first
-                async_to_sync(channel_layer.group_send)(device.id, {
-                    'type': 'broatcast_json', 'content': {
-                        'cmd': 'led_ctrl', 'data': {'led_status': 1 if True in led_check_lst else 0}
-                    }
-                })
+                channel_name = cache.get('{}{}'.format(device.id, settings.CHANNEL_POSTFIX))
+                if channel_name == None:
+                    continue
 
-                async_to_sync(channel_layer.group_send)(device.id, {
-                    'type': 'broatcast_json', 'content': {
-                        'cmd': 'pir_ctrl', 'data': {'pir_status': 1 if True in pir_check_lst else 0}
+                # LED first
+                async_to_sync(channel_layer.send)(
+                    channel_name, {
+                        'type': 'unicast_json', 'content': {
+                            'cmd': 'led_ctrl', 'data': {'led_status': 1 if True in led_check_lst else 0}
+                        }
                     }
-                })
+                )
+
+                async_to_sync(channel_layer.send)(
+                    channel_name, {
+                        'type': 'unicast_json', 'content': {
+                            'cmd': 'pir_ctrl', 'data': {'pir_status': 1 if True in pir_check_lst else 0}
+                        }
+                    }
+                )
 
             print('UpdateLight SUCCESS ... {}'.format(utc_now))
             return 'UpdateLight SUCCESS ... {}'.format(utc_now)
