@@ -3,8 +3,6 @@ from django.urls import path
 from . import consumers
 
 websocket_urlpatterns = [
-    path('ws/browser/device/<slug:device_id>', consumers.StarConsumer),
-    
-    # block request from edge by nginx (allow from edge by ssh encryption)
-    path('ws/edge/device/<slug:device_id>', consumers.StarConsumer),
+    # block request if (device_type == edge) in nginx (allow only from ssh tunnel)
+    path('ws/<slug:client_type>/device/<slug:device_id>', consumers.StarConsumer),
 ]

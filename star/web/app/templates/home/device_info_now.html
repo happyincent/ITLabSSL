@@ -187,9 +187,9 @@
 </script>
 {% else %}
 <script>
-  function ui_disabled(disable) {
+  function ui_disabled(disable, msg) {
     if (disable == true) {
-      document.getElementById('timestamp').innerHTML = 'Disconnected';
+      document.getElementById('timestamp').innerHTML = 'Disconnected ' + msg;
       document.getElementById('timestamp-div').className = "alert alert-danger";
     } else {
       document.getElementById('timestamp-div').className = "alert alert-info";
@@ -248,6 +248,9 @@
       switch_diabled_toggle('#led_status', raw['data']['led_status']);
       switch_diabled_toggle('#pir_status', raw['data']['pir_status']);
       ui_disabled(false, '');
+    } else if (raw['cmd'] == 'error') {
+      alert(raw['data']);
+      ui_disabled(true, '(Edge)');
     }
   };
 

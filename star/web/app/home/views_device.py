@@ -93,12 +93,14 @@ class DeviceUpdate(CheckOwnerMixin, UpdateView):
     fields = ['longitude', 'latitude', 'ssh_pub']
 
     def form_valid(self, form):
-        
-        if not UpdatePubKey(form.instance.id, form.instance.ssh_pub).update():
+        self.object = form.save()
+
+        if 'ssh_pub' in form.changed_data and (
+            not UpdatePubKey(form.instance.id, form.instance.ssh_pub).update()
+        ):
             Device.objects.filter(pk=form.instance.id).update(ssh_pub='')
             return HttpResponseRedirect(reverse('device_edit_fail', kwargs={'pk': form.instance.id}))
 
-        self.object = form.save()
         return HttpResponseRedirect(self.get_success_url())
     
     def get_success_url(self):
