@@ -85,20 +85,26 @@ New Device | ITLab SSL
   var socket = new WebSocket(ws_scheme + window.location.host + '/ws/browser/device/' + '{{ object }}');
 
   socket.onopen = function() {
-    document.getElementById('pir_timeout').placeholder = "WebSocket Updating ..."
+    document.getElementById('pir_timeout').placeholder = "Waiting Edge ..."
   };
 
   socket.onmessage = function (e) {
     var raw = JSON.parse(e.data);
+    
     if (raw['cmd'] == 'update_info') {
       document.getElementById('pir_timeout').value = raw['data']['pir_timeout'];
       ui_disabled(false);
+    } else if (raw['cmd'] == 'error') {
+      document.getElementById('pir_timeout').placeholder = "Waiting Edge ..."
+      ui_disabled(true);
     }
+
     console.log(raw);
   };
 
   socket.onclose = function (e) {
     alert('WebSocket connection closed unexpectedly.\nPlease refresh the page.');
+    document.getElementById('pir_timeout').placeholder = "WebSocket Connecting ..."
     ui_disabled(true);
   };
 </script>
