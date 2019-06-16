@@ -81,7 +81,7 @@ void loop() {
     }
 
     // 每 1 秒 update 一次 sensor data
-    if ( millis() % update_delay == 0) {
+    if (millis() % update_delay == 0) {
         update_PMS();
         update_lux();
         update_uv();
@@ -218,7 +218,7 @@ void change_pir_timeout() {
 void led_ctrl(bool led_opt, bool pir_opt) {
     bool print_msg = led_status != led_opt || pir_status != pir_opt;
   
-    if (led_status != led_opt) {      
+    if (led_status != led_opt) {
         digitalWrite(led, led_opt);
         led_status = led_opt;
     }
@@ -239,6 +239,7 @@ void led_ctrl(bool led_opt, bool pir_opt) {
 void pir_ctrl (bool opt) {
     // only enable/disable pir if led_off
     if (led_status == LOW && pir_status != opt) {
+        PIR_sensed_millis = 0;
         pir_status = opt;
 
         String out ="{\"type\":\"pir_ctrl\", \"content\": {"
