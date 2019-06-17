@@ -57,8 +57,10 @@ New Device | ITLab SSL
                 </span>
               </div>
             </div>
-            {% endif %}
             <button class="btn btn-success" type="submit" onclick="ws_send('update_pir_millis');">Save</button>
+            {% else %}
+            <button class="btn btn-success" type="submit">Save</button>
+            {% endif %}
             <a href="{% url 'device_list' %}" class="btn btn-default">Back</a>
           </form>
         </div>
