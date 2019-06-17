@@ -58,7 +58,7 @@ services:
       - '/tmp/key/:/tmp/key/'
       - '/media/data/record/:/media/data/record/'
       - '/tmp/letsencrypt-www/:/tmp/letsencrypt/'
-      - './letsencrypt/letsencrypt/:/etc/letsencrypt/'
+      - './certbot/letsencrypt/:/etc/letsencrypt/'
     depends_on:
       - web
   
@@ -80,15 +80,15 @@ services:
     depends_on:
       - web
   
-  letsencrypt:
-    container_name: letsencrypt-star
+  certbot:
+    container_name: certbot-star
     restart: always
-    build: ./letsencrypt
-    image: letsencrypt:star
+    build: ./certbot
+    image: certbot:star
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
       - '/tmp/letsencrypt-www/:/tmp/letsencrypt/'
-      - './letsencrypt/letsencrypt/:/etc/letsencrypt/'
+      - './certbot/letsencrypt/:/etc/letsencrypt/'
     environment:
       LE_RENEW_ID: nginx-star  # nginx's container name
       DOMAINS: ssl.itlab.ee.ncku.edu.tw

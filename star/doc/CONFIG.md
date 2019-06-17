@@ -28,13 +28,13 @@
   * `/tmp/hls` : [nginx.conf](../nginx-rtmp/nginx.conf) - hls_path
   * `/tmp/key` : [nginx.conf](../nginx-rtmp/nginx.conf) - hls_key_path
   * `/media/data/record` : [nginx.conf](../nginx/nginx.conf) - record_path  **(web & nginx)** **(mount disk)**
-  * `/tmp/letsencrypt-www` : temporary path for letsencrypt **(nginx & letsencrypt)**
-  * `./letsencrypt/letsencrypt/:/etc/letsencrypt/` : path for https key files **(nginx & letsencrypt)**
+  * `/tmp/letsencrypt-www` : temporary path for letsencrypt **(nginx & certbot)**
+  * `./certbot/letsencrypt/:/etc/letsencrypt/` : path for https key files **(nginx & certbot)**
   
-* letsencrypt
-  * `/var/run/docker.sock` : restart nginx container after renew certificate **(letsencrypt & host)**
-  * `/tmp/letsencrypt-www` : temporary path for letsencrypt **(nginx & letsencrypt)**
-  * `./letsencrypt/letsencrypt/:/etc/letsencrypt/` : path for https key files **(nginx & letsencrypt)**
+* certbot
+  * `/var/run/docker.sock` : restart nginx container after renew certificate **(certbot & host)**
+  * `/tmp/letsencrypt-www` : temporary path for letsencrypt **(nginx & certbot)**
+  * `./certbot/letsencrypt/:/etc/letsencrypt/` : path for https key files **(nginx & certbot)**
 
 * sshd
   * `./sshd/host_keys` : path for sshd server's key files
@@ -58,7 +58,7 @@
 
 ### ports
 * nginx
-  * `80` : http port for letsencrypt
+  * `80` : http port for certbot
   * `443` : https port
 * sshd
   * `62422` : ssh port for clients (edge)
@@ -72,7 +72,7 @@
   * sshd
     * nginx-rtmp:1935, web:8001
 * startup order
-  * db & redis -> web -> nginx / nginx-rtmp -> sshd, letsencrypt
+  * db & redis -> web -> nginx / nginx-rtmp -> sshd, certbot
 
 ---
 
@@ -89,7 +89,7 @@
   
   * http (port 80, 443)
     * `ssl.itlab.ee.ncku.edu.tw` : server domain name
-    * `/tmp/letsencrypt` : temporary path for letsencrypt
+    * `/tmp/letsencrypt` : temporary path for certbot
     * `/static/` : path to static files (`/www/static/`)
     * `/media/data/record` : vod path
     * `/tmp/hls` : hls m3u8, ts path

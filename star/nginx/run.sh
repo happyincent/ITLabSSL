@@ -9,10 +9,10 @@ find /etc/periodic/ -type f -exec rm {} \;
 cat /crontab > /var/spool/cron/crontabs/root
 crond -b
 
-# check DH key
-if [ ! -f /etc/letsencrypt/live/ssl.itlab.ee.ncku.edu.tw/dhparam.pem ]; then
-    openssl dhparam 4096 -out /etc/letsencrypt/live/ssl.itlab.ee.ncku.edu.tw/dhparam.pem
-fi
+# if fullchain.pem exist && dhparam.pem not exist -> generate DH key (might take a "long" time)
+test -f /etc/letsencrypt/live/ssl.itlab.ee.ncku.edu.tw/fullchain.pem && \
+test ! -f /etc/letsencrypt/live/ssl.itlab.ee.ncku.edu.tw/dhparam.pem && \
+openssl dhparam 4096 -out /etc/letsencrypt/live/ssl.itlab.ee.ncku.edu.tw/dhparam.pem
 
 # run nginx foreground
 nginx -g 'daemon off;'

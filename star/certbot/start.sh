@@ -1,4 +1,5 @@
 #!/bin/bash
+# Modified: https://github.com/kvaps/docker-letsencrypt-webroot
 
 if [ -z "$DOMAINS" ] ; then
   echo "No domains set, please fill -e 'DOMAINS=example.com www.example.com'"
@@ -23,33 +24,8 @@ exp_limit="${EXP_LIMIT:-30}"
 check_freq="${CHECK_FREQ:-30}"
 
 le_hook() {
-    command="docker exec -it $LE_RENEW_ID nginx -s reload"
+    command="docker exec $LE_RENEW_ID nginx -s reload"
     eval $command
-    # all_links=($(env | grep -oP '^[0-9A-Z_-]+(?=_ENV_LE_RENEW_HOOK)'))
-    # compose_links=($(env | grep -oP '^[0-9A-Z]+_[a-zA-Z0-9_.-]+_[0-9]+(?=_ENV_LE_RENEW_HOOK)'))
-    
-    # except_links=($(
-    #     for link in ${compose_links[@]}; do
-    #         compose_project=$(echo $link | cut -f1 -d"_")
-    #         compose_name=$(echo $link | cut -f2- -d"_" | sed 's/_[^_]*$//g')
-    #         compose_instance=$(echo $link | grep -o '[^_]*$')
-    #         echo ${compose_name}_${compose_instance}
-    #         echo ${compose_name}
-    #     done
-    # ))
-    
-    # containers=($(
-    #     for link in ${all_links[@]}; do
-    #         [[ " ${except_links[@]} " =~ " ${link} " ]] || echo $link
-    #     done
-    # ))
-    
-    # for container in ${containers[@]}; do
-    #     command=$(eval echo \$${container}_ENV_LE_RENEW_HOOK)
-    #     command=$(echo $command | sed "s/@CONTAINER_NAME@/${container,,}/g")
-    #     echo "[INFO] Run: $command"
-    #     eval $command
-    # done
 }
 
 le_fixpermissions() {
@@ -86,7 +62,7 @@ le_check() {
 
         echo "Checking domains for $DARRAYS..."
 
-        domains=($(openssl x509  -in $cert_file -text -noout | grep -oP '(?<=DNS:)[^,]*'))
+        domains=($(openssl x509  -in $cert_file -text -noout | grep DNS | cut -d':' -f2))
         new_domains=($(
             for domain in ${DARRAYS[@]}; do
                 [[ " ${domains[@]} " =~ " ${domain} " ]] || echo $domain

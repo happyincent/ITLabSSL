@@ -7,7 +7,7 @@
 ```
 # docker-compose.yml -> nginx -> volumes: nginx_init.conf
 docker-compose up -d --no-deps nginx
-docker-compose up --no-deps letsencrypt
+docker-compose up --no-deps certbot
 (Ctrl+C)
 
 # docker-compose.yml -> nginx -> volumes: nginx.conf
