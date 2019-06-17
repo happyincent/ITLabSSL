@@ -6,7 +6,8 @@ RUN apk add --update --no-cache \
     openssh \
     inotify-tools \
     supervisor \
-    bash
+    bash \
+    logrotate
 
 # Cleanup
 RUN rm -rf /var/cache/* /tmp/*
