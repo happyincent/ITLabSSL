@@ -1,5 +1,5 @@
-# FROM docker:18.09.6
-FROM docker:latest
+FROM docker:18.09.6
+# FROM docker:latest
 MAINTAINER ddl <itlab.ee.ncku.edu.tw>
 
 # Install packages for certbot

@@ -1,5 +1,5 @@
-# FROM python:3.7.3-alpine3.9
-FROM python:3-alpine3.9
+FROM python:3.7.3-alpine3.9
+# FROM python:3-alpine3.9
 MAINTAINER ddl <itlab.ee.ncku.edu.tw>
 
 # Environment
