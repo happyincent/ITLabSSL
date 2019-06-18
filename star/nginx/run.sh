@@ -15,7 +15,7 @@ if [   -f /etc/letsencrypt/live/ssl.itlab.ee.ncku.edu.tw/fullchain.pem ] && \
 then
     echo "Generating DH key..."
     FILE=`mktemp`
-    openssl dhparam -out $FILE 4096 2> /dev/null && cat $FILE > /etc/letsencrypt/live/ssl.itlab.ee.ncku.edu.tw/dhparam.pem
+    openssl dhparam -dsaparam -out $FILE 4096 2> /dev/null && cat $FILE > /etc/letsencrypt/live/ssl.itlab.ee.ncku.edu.tw/dhparam.pem
     echo "Generating DH key...OK"
 fi
 

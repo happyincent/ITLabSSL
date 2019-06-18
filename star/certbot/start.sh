@@ -41,7 +41,7 @@ le_renew() {
     echo "Generating DH key..."
     FILE=`mktemp`
     dh_file="/etc/letsencrypt/live/$DARRAYS/dhparam.pem"
-    openssl dhparam -out $FILE 4096 2> /dev/null && cat $FILE > $dh_file
+    openssl dhparam -dsaparam -out $FILE 4096 2> /dev/null && cat $FILE > $dh_file
     echo "Generating DH key...OK"
     
     le_fixpermissions
