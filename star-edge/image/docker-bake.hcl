@@ -3,34 +3,34 @@ group "default" {
 }
 target "autossh" {
     context = "./autossh"
-    dockerfile = "./autossh/Dockerfile"
+    dockerfile = "Dockerfile"
     platforms = [
         "linux/amd64",
         "linux/arm64",
         "linux/arm/v7"
     ]
-    tags = ["itlabstar/autossh:ddl"]
+    tags = ["itlabstar/autossh"]
     output = ["type=registry"]
 }
 target "ffmpeg" {
     context = "./ffmpeg"
-    dockerfile = "./ffmpeg/Dockerfile"
+    dockerfile = "Dockerfile"
     platforms = [
         "linux/amd64",
         "linux/arm64",
         "linux/arm/v7"
     ]
-    tags = ["itlabstar/ffmpeg:ddl"]
+    tags = ["itlabstar/ffmpeg"]
     output = ["type=registry"]
 }
 target "edge" {
     context = "./edge"
-    dockerfile = "./edge/Dockerfile"
+    dockerfile = "Dockerfile"
     platforms = [
         "linux/amd64",
         "linux/arm64",
         "linux/arm/v7"
     ]
-    tags = ["itlabstar/edge:ddl"]
+    tags = ["itlabstar/edge"]
     output = ["type=registry"]
 }

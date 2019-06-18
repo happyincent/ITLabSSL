@@ -14,9 +14,7 @@ sudo cp qemu-static-conf/qemu-{aarch64,arm}-static.conf  /etc/binfmt.d
 
 sudo systemctl restart systemd-binfmt.service
 
+cd /tmp
 git clone git://github.com/docker/buildx && cd buildx
 make install
-```
-
-```
 ```

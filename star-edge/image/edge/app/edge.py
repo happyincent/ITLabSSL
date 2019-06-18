@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 import json
 import random
@@ -203,6 +204,9 @@ if __name__ == "__main__":
         print('Fail to connect Serial Port')
         serial_handler = None
     
+    if args.serial_port != "" and serial_handler == None:
+        sys.exit(1)
+
     try:
         EdgeService(
             args.netloc,

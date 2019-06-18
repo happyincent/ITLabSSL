@@ -11,14 +11,15 @@ volumes:
 services:
   
   autossh:
-    image: itlabstar/autossh:ddl
+    image: itlabstar/autossh
     command:
       - '/bin/sh'
       - -c
       - |
-          cat /keys/id_rsa.pub ||
-          yes n | ssh-keygen -t rsa -b 2048 -N '' -C 'autossh' -f /keys/id_rsa &&
-          cat /keys/id_rsa.pub
+          cat /keys/id_rsa.pub || ( \
+            yes n | ssh-keygen -t rsa -b 2048 -N '' -C 'autossh' -f /keys/id_rsa && \
+            cat /keys/id_rsa.pub
+          )
           autossh -4 -M 0 -N \
                   -o StrictHostKeyChecking=no \
                   -o ServerAliveInterval=60 \
@@ -36,6 +37,6 @@ services:
       mode: global
       restart_policy:
         condition: any
-        delay: 30s
+        delay: 10s
       placement:
         constraints: [node.role != manager]

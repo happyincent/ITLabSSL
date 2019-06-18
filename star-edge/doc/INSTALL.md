@@ -3,9 +3,12 @@
 
 ## Environment
 ```
-$ cat <(echo "OS:     " `lsb_release -d | cut -f2`) <(echo "Kernel: " `uname -a | cut -d' ' -f1,3,14`)
+$ cat <(echo "OS:     " `lsb_release -d | cut -f2`) <(echo "Kernel: " `uname -a | cut -d' ' -f1,3,14`) <(docker --version) <(docker-compose --version) <(docker buildx version)
 OS:      Ubuntu 18.04.2 LTS
-Kernel:  Linux 4.18.0-18-generic x86_64
+Kernel:  Linux 4.18.0-20-generic x86_64
+Docker version 19.03.0-beta4, build e4666ebe81
+docker-compose version 1.24.0, build 0aa5906
+github.com/docker/buildx v0.2.2-6-g2b03339 2b03339235021a481300385977ca5a70a403b7c0
 ```
 
 ## API Install

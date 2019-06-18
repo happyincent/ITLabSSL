@@ -8,17 +8,21 @@ networks:
 services:
 
   ${NODE_NAME}_${id}-ffmpeg:
-    image: itlabstar/ffmpeg:ddl
+    image: itlabstar/ffmpeg
     command:
       - '/bin/sh'
       - -c
       - |
           ffmpeg \
           -y -loglevel warning \
-          -use_wallclock_as_timestamps 1 -flags global_header \
+          -use_wallclock_as_timestamps 1 \
+          -flags global_header \
+          -fflags +genpts \
           -r 15 -rtsp_transport tcp \
           -i $$RTSP_URI \
-          -fflags +genpts -vcodec copy -an -bsf:v h264_mp4toannexb \
+          -vcodec copy -an \
+          -bsf:v h264_mp4toannexb \
+          -tune zerolatency \
           -f flv -rtmp_live live -rtmp_buffer 0 -timeout 0 \
           rtmp://${RTMP_NETLOC}${RTMP_PATH}$$ID?token=$$TOKEN
     networks:
@@ -27,7 +31,7 @@ services:
       replicas: 1
       restart_policy:
         condition: any
-        delay: 30s
+        delay: 10s
       placement:
         constraints:
           - node.hostname == ${NODE_NAME}
