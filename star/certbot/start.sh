@@ -37,6 +37,13 @@ le_fixpermissions() {
 
 le_renew() {
     certbot certonly --rsa-key-size 4096 --webroot --agree-tos --renew-by-default --text --email ${EMAIL_ADDRESS} -w ${WEBROOT_PATH} ${LE_DOMAINS}
+    
+    echo "Generating DH key..."
+    FILE=`mktemp`
+    dh_file="/etc/letsencrypt/live/$DARRAYS/dhparam.pem"
+    openssl dhparam -out $FILE 4096 2> /dev/null && cat $FILE > $dh_file
+    echo "Generating DH key...OK"
+    
     le_fixpermissions
     le_hook
 }
