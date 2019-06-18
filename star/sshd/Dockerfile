@@ -1,4 +1,5 @@
-FROM alpine:3.9
+# FROM alpine:3.9
+FROM alpine:latest
 MAINTAINER  ddl <itlab.ee.ncku.edu.tw>
 
 # Install packages
