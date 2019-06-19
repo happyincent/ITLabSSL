@@ -144,6 +144,22 @@
             "serial_baud": "9600",
             "serial_port": "",
             "rtsp_uri": "rtsp://store.itlab.ee.ncku.edu.tw:50001/proxyStream"
+        },
+        {
+            "id": "VM0_19",
+            "token": "1456cffb-a939-4d89-b951-8d9672b7dab4",
+            "postinfo_timetout": "10",
+            "serial_baud": "9600",
+            "serial_port": "",
+            "rtsp_uri": "rtsp://store.itlab.ee.ncku.edu.tw:50001/proxyStream"
+        },
+        {
+            "id": "VM0_20",
+            "token": "6e7888b1-016e-40b3-86db-905942d067c7",
+            "postinfo_timetout": "10",
+            "serial_baud": "9600",
+            "serial_port": "",
+            "rtsp_uri": "rtsp://store.itlab.ee.ncku.edu.tw:50001/proxyStream"
         }
     ]
 }

@@ -10,7 +10,7 @@ for JSON in "$@"; do
     echo "Gernerating yml from config: $JSON ..."
 
     NODE_NAME=$(cat $JSON | jq '.NODE_NAME' | xargs)
-    rm -f $OUTDIR/[$NODE_NAME]*.yml
+    rm -f $OUTDIR/$NODE_NAME*.yml
 
     cat $JSON | jq -r '.DEVICES' | jq -c '.[]' | while read i_device; do
 

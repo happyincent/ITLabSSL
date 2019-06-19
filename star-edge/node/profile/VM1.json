@@ -1,0 +1,85 @@
+{
+    "NODE_NAME": "VM1",
+    "DEVICES": [
+        {
+            "id": "VM1_1",
+            "token": "2c098bed-8c5c-4bb0-a52a-14d7482ad5f3",
+            "postinfo_timetout": "10",
+            "serial_baud": "9600",
+            "serial_port": "",
+            "rtsp_uri": "rtsp://store.itlab.ee.ncku.edu.tw:50001/proxyStream"
+        },
+        {
+            "id": "VM1_2",
+            "token": "053dd272-735f-4b5f-8023-8629ab54ccb9",
+            "postinfo_timetout": "10",
+            "serial_baud": "9600",
+            "serial_port": "",
+            "rtsp_uri": "rtsp://store.itlab.ee.ncku.edu.tw:50001/proxyStream"
+        },
+        {
+            "id": "VM1_3",
+            "token": "8c641758-f7e0-4baa-b051-507a45fcdd9b",
+            "postinfo_timetout": "10",
+            "serial_baud": "9600",
+            "serial_port": "",
+            "rtsp_uri": "rtsp://store.itlab.ee.ncku.edu.tw:50001/proxyStream"
+        },
+        {
+            "id": "VM1_4",
+            "token": "78107ece-921c-4390-adb6-6e10233d9858",
+            "postinfo_timetout": "10",
+            "serial_baud": "9600",
+            "serial_port": "",
+            "rtsp_uri": "rtsp://store.itlab.ee.ncku.edu.tw:50001/proxyStream"
+        },
+        {
+            "id": "VM1_5",
+            "token": "54f8bf41-cd6f-4f5e-974f-3eaf84783a5b",
+            "postinfo_timetout": "10",
+            "serial_baud": "9600",
+            "serial_port": "",
+            "rtsp_uri": "rtsp://store.itlab.ee.ncku.edu.tw:50001/proxyStream"
+        },
+        {
+            "id": "VM1_6",
+            "token": "445db74a-cb2c-441a-a059-33bebbccc989",
+            "postinfo_timetout": "10",
+            "serial_baud": "9600",
+            "serial_port": "",
+            "rtsp_uri": "rtsp://store.itlab.ee.ncku.edu.tw:50001/proxyStream"
+        },
+        {
+            "id": "VM1_7",
+            "token": "e16762c5-1eaa-4bda-95e2-7149484b8e04",
+            "postinfo_timetout": "10",
+            "serial_baud": "9600",
+            "serial_port": "",
+            "rtsp_uri": "rtsp://store.itlab.ee.ncku.edu.tw:50001/proxyStream"
+        },
+        {
+            "id": "VM1_8",
+            "token": "826aea0d-4ef8-45af-9806-7c2f41328703",
+            "postinfo_timetout": "10",
+            "serial_baud": "9600",
+            "serial_port": "",
+            "rtsp_uri": "rtsp://store.itlab.ee.ncku.edu.tw:50001/proxyStream"
+        },
+        {
+            "id": "VM1_9",
+            "token": "a6c96842-0d8e-4942-ac31-bc842f21335c",
+            "postinfo_timetout": "10",
+            "serial_baud": "9600",
+            "serial_port": "",
+            "rtsp_uri": "rtsp://store.itlab.ee.ncku.edu.tw:50001/proxyStream"
+        },
+        {
+            "id": "VM1_10",
+            "token": "c55f2403-e248-4034-bbde-a4cf65895d92",
+            "postinfo_timetout": "10",
+            "serial_baud": "9600",
+            "serial_port": "",
+            "rtsp_uri": "rtsp://store.itlab.ee.ncku.edu.tw:50001/proxyStream"
+        }
+    ]
+}

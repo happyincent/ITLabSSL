@@ -43,7 +43,7 @@ sudo service systemd-logind restart
 
 ## UFW
 ```
-sudo ufw default denyApply the new resolution in the Display settings
+sudo ufw default deny
 
 sudo ufw allow from 140.116.164.128/27 to any port 22019    # ssh
 sudo ufw allow from 140.116.221.10/32 to any port 22019     # ssh for VPN
