@@ -5,7 +5,7 @@ while read event; do
 
     case "$event" in 
         *Accepted\ publickey*)
-            KEY=`echo $event | awk -F':' '{print $NF}' | tr -d "\r\n"` >> ${SSHD_ONLINE_LOG}
+            KEY=`echo $event | awk -F':' '{print $NF}' | tr -d "\r\n"`
         ;;
         *User\ child*)
             PID=`echo $event | awk '{print $NF}'`
