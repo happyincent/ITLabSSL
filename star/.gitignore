@@ -8,3 +8,4 @@ redis/data/
 sshd/host_keys/
 certbot/letsencrypt/
 log/
+authorized_keys
