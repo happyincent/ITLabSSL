@@ -1,6 +1,13 @@
 #!/bin/sh
 
 # Record pipdeptree
+_required=`mktemp`
+_installed=`mktemp`
+cat /www/requirements.txt | cut -d'=' -f1 | cut -d'>' -f1 | cut -d'[' -f1 | sed -e '/^#/d' -e '/^$/d' > $_required
+pip freeze > $_installed
+sed -i '/^##/d' /www/requirements.txt
+grep -F -f $_required $_installed | sed -e 's/djongo/djongo[json]/' -e 's/^/## /g' >> /www/requirements.txt
+rm $_required $_installed
 pipdeptree > /www/pipdeptree.txt
 
 # migrage DB

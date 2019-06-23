@@ -6,9 +6,11 @@ from django.conf import settings
 from django.core.cache import cache
 from home.models import Device
 
+from channels.auth import get_user
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 
 class StarConsumer(AsyncJsonWebsocketConsumer):
+    
     async def connect(self):
         self.client_type = self.scope['url_route']['kwargs']['client_type']
         self.device_id = self.scope['url_route']['kwargs']['device_id']
@@ -20,6 +22,7 @@ class StarConsumer(AsyncJsonWebsocketConsumer):
             if self.client_type == 'edge' and self.scope['token'] == cache.get(self.device_id):
                 cache.set('{}{}'.format(self.device_id, settings.CHANNEL_POSTFIX), self.channel_name, timeout=None)
                 await self.accept()
+                return
 
             # /ws/browser
             elif self.client_type == 'browser' and self.scope['user'].is_authenticated:
@@ -28,11 +31,10 @@ class StarConsumer(AsyncJsonWebsocketConsumer):
                     self.channel_name
                 )
                 await self.accept()
-            
-            else:
-                await self.close()
-        else:
-            await self.close()
+                return
+
+        # close connection
+        await self.close()
 
     async def disconnect(self, close_code):
         if self.client_type == 'edge':
@@ -63,24 +65,32 @@ class StarConsumer(AsyncJsonWebsocketConsumer):
             )
 
             cache.set('{}{}'.format(self.device_id, settings.INFO_POSTFIX), pickle.dumps(content['data']), settings.INFO_TIMEOUT)
+            return
 
         # /ws/browser (check user for each request)
         elif content['cmd'] in ['led_ctrl', 'pir_ctrl', 'update_pir_millis'] and (
-            self.client_type == 'browser' and self.scope['user'].is_authenticated and self.scope['user'].is_staff
+            self.client_type == 'browser'
         ):
-            if cache.get('{}{}'.format(self.device_id, settings.CHANNEL_POSTFIX)) != None:
-                await self.channel_layer.send(
-                    cache.get('{}{}'.format(self.device_id, settings.CHANNEL_POSTFIX)),
-                    {'type': 'unicast_json', 'content': content}
-                )
-            else:
-                await self.channel_layer.send(
-                    self.channel_name,
-                    {'type': 'unicast_json', 'content': {'cmd': 'error', 'data': 'Edge Device is disconnected.'}}
-                )
+
+            # not update after user logout QQ (https://github.com/django/channels/issues/718)
+            self.scope['user'] = await get_user(self.scope)
+
+            if self.scope['user'].is_authenticated and self.scope['user'].is_staff:
+                
+                if cache.get('{}{}'.format(self.device_id, settings.CHANNEL_POSTFIX)) != None:
+                    await self.channel_layer.send(
+                        cache.get('{}{}'.format(self.device_id, settings.CHANNEL_POSTFIX)),
+                        {'type': 'unicast_json', 'content': content}
+                    )
+                else:
+                    await self.channel_layer.send(
+                        self.channel_name,
+                        {'type': 'unicast_json', 'content': {'cmd': 'error', 'data': 'Edge Device is disconnected.'}}
+                    )
+                return
         
-        else:
-            await self.close()
+        # close connection
+        await self.close()
     
     async def unicast_json(self, event):
         await self.send_json(event['content'])
