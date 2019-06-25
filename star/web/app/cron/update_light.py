@@ -28,6 +28,10 @@ class UpdateLight(CronJobBase):
 
             for device in Device.objects.all():
                 
+                channel_name = cache.get('{}{}'.format(device.id, settings.CHANNEL_POSTFIX))
+                if channel_name == None:
+                    continue
+                
                 led_schedule_time = [
                     (
                         datetime.datetime.strptime(i['start'], '%H:%M').time(),
@@ -46,10 +50,6 @@ class UpdateLight(CronJobBase):
 
                 led_check_lst = [(period[0] <= now_time < period[1]) for period in led_schedule_time]
                 pir_check_lst = [(period[0] <= now_time < period[1]) for period in pir_schedule_time]
-
-                channel_name = cache.get('{}{}'.format(device.id, settings.CHANNEL_POSTFIX))
-                if channel_name == None:
-                    continue
 
                 # LED first
                 async_to_sync(channel_layer.send)(

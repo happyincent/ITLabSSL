@@ -49,8 +49,8 @@
         Server would set up {{ view.kwargs.table | upper }} every 15 mins.
         {% endifequal %}
         {% ifequal view.kwargs.table 'pir' %}
-        Server would set up {{ view.kwargs.table | upper }} every 15 mins. (note: <strong>Doing LED control force
-          disable PIR</strong>)
+        Server would set up {{ view.kwargs.table | upper }} every 15 mins.
+        <p>(note: <strong>Doing LED control force disable PIR</strong>)</p>
         {% endifequal %}
       </div>
       <div class="btn-group">
