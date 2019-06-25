@@ -21,14 +21,24 @@ from .models import Device
 ##
 from functools import wraps
 
-def check_api_token(function):
+def check_api_valid(function):
     @wraps(function)
     def wrap(request, *args, **kwargs):
+
+        # Load JSON
         try:
             data = json.loads(request.body.decode("utf-8"))
         except:
             return HttpResponseBadRequest()
         
+        # Check Valid Input
+        pk = kwargs.get('pk')
+        ts = data.get('ts_begin', None)
+        ts_next = data.get('ts_end', None)
+        if pk == None or not Device.objects.filter(pk=pk).exists() or ts == None or ts_next == None:
+            raise Http404
+        
+        # Check Session or Token
         if request.user.is_authenticated or (
             data.get('token') != None and 
             data.get('token') == cache.get(data.get('user'))
@@ -65,12 +75,12 @@ class ResetAPIToken(View):
         cache.set(request.user, str(uuid.uuid4()), settings.API_TOKEN_TIMEOUT)
         return HttpResponseRedirect(reverse('opendata'))
 
-@method_decorator([csrf_exempt, check_api_token], name='dispatch')
+@method_decorator([csrf_exempt, check_api_valid], name='dispatch')
 class APIDevice(View):
     def post(self, request, **kwargs):
         return JsonResponse(list(Device.objects.all().values('id', 'longitude', 'latitude')), safe=False)
 
-@method_decorator([csrf_exempt, check_api_token], name='dispatch')
+@method_decorator([csrf_exempt, check_api_valid], name='dispatch')
 class APIHistory(View):
     
     def post(self, request, **kwargs):
@@ -79,9 +89,6 @@ class APIHistory(View):
         data = json.loads(request.body.decode("utf-8"))
         ts = data.get('ts_begin', None)
         ts_next = data.get('ts_end', None)
-        
-        if pk == None or ts == None or ts_next == None or not Device.objects.filter(pk=pk).exists():
-            raise Http404
         
         ts = datetime.datetime.fromtimestamp(int(ts), datetime.timezone.utc)
         ts_next = datetime.datetime.fromtimestamp(int(ts_next), datetime.timezone.utc)
