@@ -23,6 +23,8 @@ class UpdateLight(CronJobBase):
         now_week = now.isoweekday()
         now_time = now.time()
 
+        print('UpdateLight START ... {}'.format(utc_now))
+
         try:
             channel_layer = get_channel_layer()
 
@@ -70,6 +72,6 @@ class UpdateLight(CronJobBase):
 
             print('UpdateLight SUCCESS ... {}'.format(utc_now))
             return 'UpdateLight SUCCESS ... {}'.format(utc_now)
-        except Exception as e:
-            print('UpdateLight FAIL: {} ... {}'.format(e, utc_now))
-            return 'UpdateLight FAIL: {} ... {}'.format(e, utc_now)
+        except:
+            print('UpdateLight FAIL: ... {}'.format(utc_now))
+            return 'UpdateLight FAIL: ... {}'.format(utc_now)

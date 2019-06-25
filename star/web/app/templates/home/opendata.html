@@ -99,7 +99,7 @@
               <div class="row api-border-title">
                 <div class="col-md-2 api-doc-item">Request body example</div>
                 <div class="col-md-10 api-doc-item-data">
-                  <small>{ "user":"itlab", "token":"89771c95-88c7-46c7-a77d-300d8a7f8b35" }</small>
+                  <small>{ "user":"itlab", "token":"54c51ef2-cb2f-4000-9500-6d4af31e7a02" }</small>
                 </div>
               </div>
 
@@ -132,8 +132,8 @@
                 <div class="col-md-2 api-doc-item">Response message parameters</div>
                 <div class="col-md-10 api-doc-item-data">
                   <p>● "id" : Device ID (String)</p>
-                  <p>● "longitude" : Longitude (Float)</p>
-                  <p>● "latitude" : Latitude (Float)</p>
+                  <p>● "longitude" : Longitude (Double)</p>
+                  <p>● "latitude" : Latitude (Double)</p>
                 </div>
               </div>
 
@@ -141,7 +141,7 @@
                 <div class="col-md-2 api-doc-item">Response example</div>
                 <div class="col-md-10 api-doc-item-data">
                   <small>[{"id": "TX2_1", "longitude": 120.22283, "latitude": 22.99672}, {"id": "RPi_1", "longitude":
-                    120.22283, "latitude": 22.99872}</small>
+                    120.22283, "latitude": 22.99872}, ...]</small>
                 </div>
               </div>
 
@@ -229,8 +229,8 @@
               <div class="row api-border-title">
                 <div class="col-md-2 api-doc-item">Request body example</div>
                 <div class="col-md-10 api-doc-item-data">
-                  <small>{ "user":"itlab", "token":"89771c95-88c7-46c7-a77d-300d8a7f8b35", "ts_begin":"1560381077",
-                    "ts_end":"1560383077" }</small>
+                  <small>{ "user":"itlab", "token":"54c51ef2-cb2f-4000-9500-6d4af31e7a02", "ts_begin":"1560801000",
+                    "ts_end":"1560803000" }</small>
                 </div>
               </div>
 
@@ -264,12 +264,12 @@
                 <div class="col-md-10 api-doc-item-data">
                   <p>● "id" : id (Integer)</p>
                   <p>● "device_id" : Device ID (String)</p>
-                  <p>● "temperature" : °C (Float)</p>
-                  <p>● "humidity" : % (Float)</p>
-                  <p>● "pmat25" : μg/m<sup>3</sup> (Float)</p>
-                  <p>● "loudness" : dB (Float)</p>
-                  <p>● "light_intensity" : lux (Float)</p>
-                  <p>● "uv_intensity" : mW/cm<sup>2</sup> (Float)</p>
+                  <p>● "temperature" : °C (Double)</p>
+                  <p>● "humidity" : % (Double)</p>
+                  <p>● "pmat25" : μg/m<sup>3</sup> (Double)</p>
+                  <p>● "loudness" : dB (Double)</p>
+                  <p>● "light_intensity" : lux (Double)</p>
+                  <p>● "uv_intensity" : mW/cm<sup>2</sup> (Double)</p>
                   <p>● "led_status" : ture or false (Boolean)</p>
                   <p>● "timestamp" : date and time (ISO 8601)</p>
                 </div>
@@ -278,11 +278,11 @@
               <div class="row api-border-title">
                 <div class="col-md-2 api-doc-item">Response example</div>
                 <div class="col-md-10 api-doc-item-data">
-                  <small>[{"id": 52538, "device_id": "TX2_1", "temperature": 24.4, "humidity": 44.8, "pmat25": 6.0,
-                    "loudness": 53.96, "light_intensity": 56.67, "uv_intensity": 0.33, "led_status": false, "timestamp":
-                    "2019-06-13T07:14:55+08:00"}, {"id": 52558, "device_id": "TX2_1", "temperature": 24.4, "humidity":
-                    45.5, "pmat25": 6.0, "loudness": 53.71, "light_intensity": 55.83, "uv_intensity": 0.33,
-                    "led_status": false, "timestamp": "2019-06-13T07:29:56+08:00"}]</small>
+                  <small>[{"id": 61746, "device_id": "TX2_1", "temperature": 24.5, "humidity": 46.7, "pmat25": 6.0,
+                    "loudness": 54.69, "light_intensity": 62.5, "uv_intensity": 0.67, "led_status": false, "timestamp":
+                    "2019-06-18T03:59:59+08:00"}, {"id": 61766, "device_id": "TX2_1", "temperature": 24.5, "humidity":
+                    46.6, "pmat25": 6.0, "loudness": 53.71, "light_intensity": 1133.33, "uv_intensity": 0.54,
+                    "led_status": true, "timestamp": "2019-06-18T04:15:00+08:00"}]</small>
                 </div>
               </div>
 

@@ -6,7 +6,7 @@ headers = {'content-type': "application/json; charset=utf-8"}
 
 payload = {
    "user":"itlab",
-   "token":"89771c95-88c7-46c7-a77d-300d8a7f8b35"
+   "token":"54c51ef2-cb2f-4000-9500-6d4af31e7a02"
 }
 
 response = requests.post(url, headers=headers, json=payload)
