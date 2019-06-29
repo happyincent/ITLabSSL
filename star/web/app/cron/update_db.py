@@ -1,3 +1,4 @@
+import time
 import pickle
 import datetime
 
@@ -16,6 +17,9 @@ class UpdateHistory(CronJobBase):
     code = 'cron.update_db.UpdateHistory'
 
     def do(self):
+        # delay 30 s
+        time.sleep(30)
+
         now = timezone.localtime(timezone.now()).replace(microsecond=0).isoformat()
         history_fields = [field.name for field in HistoryInfo._meta.get_fields()]
 
