@@ -1,6 +1,7 @@
 import os
 import psutil
-import datetime
+
+from django.utils import timezone
 
 from django_cron import CronJobBase, Schedule
 from django.conf import settings
@@ -11,7 +12,7 @@ class LimitDiskUsage(CronJobBase):
     code = 'cron.check_disk.LimitDiskUsage'
 
     def do(self):
-        now = datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
+        now = timezone.localtime(timezone.now()).replace(microsecond=0).isoformat()
 
         try:
             curr = psutil.disk_usage(settings.VOD_DIR).percent

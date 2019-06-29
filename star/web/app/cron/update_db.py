@@ -10,13 +10,13 @@ from home.models import Device, HistoryInfo
 
 class UpdateHistory(CronJobBase):
     RUN_EVERY_MINS = settings.UPDATE_HISTORY_EVERY_MINS
-    RUN_AT_TIMES = ['00:00']
+    RUN_AT_TIMES = settings.UPDATE_AT
 
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS, run_at_times=RUN_AT_TIMES)
     code = 'cron.update_db.UpdateHistory'
 
     def do(self):
-        now = datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
+        now = timezone.localtime(timezone.now()).replace(microsecond=0).isoformat()
         history_fields = [field.name for field in HistoryInfo._meta.get_fields()]
 
         try:

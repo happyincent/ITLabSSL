@@ -13,8 +13,9 @@ class PurgeOldHistory(CronJobBase):
 
     def do(self):
         ts = datetime.datetime.now(datetime.timezone.utc)
-        now = ts.strftime('%Y-%m-%d %H:%M:%S')
         ts_oldest = ts - datetime.timedelta(weeks = int(settings.PURGE_HISTORY_OLDER_WEEKS))
+        
+        now = timezone.localtime(ts).replace(microsecond=0).isoformat()
 
         try:
             data = HistoryInfo.objects.filter(timestamp__lt=(timezone.localtime(ts_oldest)))

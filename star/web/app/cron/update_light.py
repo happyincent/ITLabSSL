@@ -12,18 +12,15 @@ from asgiref.sync import async_to_sync
 
 class UpdateLight(CronJobBase):
     RUN_EVERY_MINS = settings.UPDATE_LIGHT_EVERY_MINS
-    RUN_AT_TIMES = ['00:00']
+    RUN_AT_TIMES = settings.UPDATE_AT
 
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS, run_at_times=RUN_AT_TIMES)
     code = 'cron.update_light.UpdateLight'
 
     def do(self):
-        utc_now = datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
         now = timezone.localtime(timezone.now())
         now_week = now.isoweekday()
         now_time = now.time()
-
-        print('UpdateLight START ... {}'.format(utc_now))
 
         try:
             channel_layer = get_channel_layer()
@@ -70,8 +67,8 @@ class UpdateLight(CronJobBase):
                     }
                 )
 
-            print('UpdateLight SUCCESS ... {}'.format(utc_now))
-            return 'UpdateLight SUCCESS ... {}'.format(utc_now)
+            print('UpdateLight SUCCESS ... {}'.format(now.replace(microsecond=0).isoformat()))
+            return 'UpdateLight SUCCESS ... {}'.format(now.replace(microsecond=0).isoformat())
         except:
-            print('UpdateLight FAIL: ... {}'.format(utc_now))
-            return 'UpdateLight FAIL: ... {}'.format(utc_now)
+            print('UpdateLight FAIL: ... {}'.format(now.replace(microsecond=0).isoformat()))
+            return 'UpdateLight FAIL: ... {}'.format(now.replace(microsecond=0).isoformat())
