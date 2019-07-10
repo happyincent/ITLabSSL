@@ -26,7 +26,7 @@ const int led = 3;
 const unsigned long update_delay = 1000;
 
 // 紅外線控制
-bool pir_status = true;
+bool pir_status = false;
 unsigned long PIR_sensed_millis = 0;
 
 const int pir_timeout_default = 8000;    // 紅外線感測到預設亮約 8 (+2) 秒
@@ -82,6 +82,7 @@ void loop() {
 
     // 每 1 秒 update 一次 sensor data
     if (millis() % update_delay == 0) {
+        led_status = digitalRead(led);
         update_PMS();
         update_lux();
         update_uv();
