@@ -7,7 +7,7 @@ mkdir -p $OUTDIR
 BASE_YMLS=(edge.yml ffmpeg.yml)
 
 for JSON in "$@"; do
-    echo "Gernerating yml from config: $JSON ..."
+    echo "Gernerating YAMLs from the profile: $JSON ..."
 
     NODE_NAME=$(cat $JSON | jq '.NODE_NAME' | xargs)
     rm -f $OUTDIR/$NODE_NAME*.yml

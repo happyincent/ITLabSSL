@@ -15,9 +15,9 @@ services:
           trap "docker rm -f edge-${id}" SIGTERM
           echo "Init work ..."
           docker rm -f edge-${id}
-          if DOCKER_CLI_EXPERIMENTAL=enabled docker manifest inspect $$EDGE_IMAGE > /dev/null; then
-            docker rmi $$EDGE_IMAGE
-          fi
+          # if DOCKER_CLI_EXPERIMENTAL=enabled docker manifest inspect $$EDGE_IMAGE > /dev/null; then
+          #   docker rmi $$EDGE_IMAGE
+          # fi
           if [[ -z $$SERIAL_PORT ]]; then \
             docker run  --name=edge-${id} \
                         --net=host \

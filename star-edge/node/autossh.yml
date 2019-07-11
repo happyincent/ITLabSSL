@@ -39,4 +39,5 @@ services:
         condition: any
         delay: 10s
       placement:
-        constraints: [node.role != manager]
+        constraints:
+          - node.role != manager
