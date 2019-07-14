@@ -29,7 +29,7 @@ const unsigned long update_delay = 1000;
 bool pir_status = false;
 unsigned long PIR_sensed_millis = 0;
 
-const int pir_timeout_default = 8000;    // 紅外線感測到預設亮約 8 (+2) 秒
+const int pir_timeout_default = 1000;    // 紅外線感測到預設亮約 1 (+2) 秒
 int pir_timeout = pir_timeout_default;
 
 // Serial String
