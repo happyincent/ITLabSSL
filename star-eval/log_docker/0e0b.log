@@ -1,0 +1,248 @@
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.03%               20.72MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.01%               4.598MiB / 23.52GiB
+web-star            0.12%               231.4MiB / 23.52GiB
+db-star             0.80%               17.79MiB / 23.52GiB
+redis-star          0.09%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.02%               20.72MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.13%               231.4MiB / 23.52GiB
+db-star             0.30%               17.79MiB / 23.52GiB
+redis-star          0.10%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.03%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.14%               231.4MiB / 23.52GiB
+db-star             0.30%               17.79MiB / 23.52GiB
+redis-star          0.10%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.02%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.01%               4.598MiB / 23.52GiB
+web-star            0.14%               231.3MiB / 23.52GiB
+db-star             0.31%               17.79MiB / 23.52GiB
+redis-star          0.09%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.02%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.14%               231.3MiB / 23.52GiB
+db-star             0.29%               17.79MiB / 23.52GiB
+redis-star          0.09%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.03%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.15%               231.3MiB / 23.52GiB
+db-star             1.22%               18.04MiB / 23.52GiB
+redis-star          0.09%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.03%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.01%               4.598MiB / 23.52GiB
+web-star            0.15%               231.3MiB / 23.52GiB
+db-star             0.29%               17.84MiB / 23.52GiB
+redis-star          0.09%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.02%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.18%               231.3MiB / 23.52GiB
+db-star             0.30%               17.84MiB / 23.52GiB
+redis-star          0.09%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.02%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.12%               231.3MiB / 23.52GiB
+db-star             0.28%               17.84MiB / 23.52GiB
+redis-star          0.09%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.02%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.13%               231.3MiB / 23.52GiB
+db-star             0.32%               17.84MiB / 23.52GiB
+redis-star          0.09%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.03%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.13%               231.3MiB / 23.52GiB
+db-star             0.85%               17.96MiB / 23.52GiB
+redis-star          0.09%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.02%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.12%               231.3MiB / 23.52GiB
+db-star             0.32%               17.96MiB / 23.52GiB
+redis-star          0.10%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.02%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.13%               231.3MiB / 23.52GiB
+db-star             0.30%               17.84MiB / 23.52GiB
+redis-star          0.09%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.03%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.13%               231.3MiB / 23.52GiB
+db-star             0.31%               17.84MiB / 23.52GiB
+redis-star          0.09%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.02%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.13%               231.3MiB / 23.52GiB
+db-star             0.30%               17.84MiB / 23.52GiB
+redis-star          0.09%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.03%               20.7MiB / 23.52GiB
+nginx-star          0.01%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.01%               4.598MiB / 23.52GiB
+web-star            0.15%               231.3MiB / 23.52GiB
+db-star             0.88%               17.95MiB / 23.52GiB
+redis-star          0.10%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.02%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.13%               231.3MiB / 23.52GiB
+db-star             0.30%               17.84MiB / 23.52GiB
+redis-star          0.09%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.03%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.17%               231.3MiB / 23.52GiB
+db-star             0.31%               17.84MiB / 23.52GiB
+redis-star          0.09%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.03%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.13%               231.3MiB / 23.52GiB
+db-star             0.30%               17.84MiB / 23.52GiB
+redis-star          0.09%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.03%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.13%               231.3MiB / 23.52GiB
+db-star             0.32%               17.84MiB / 23.52GiB
+redis-star          0.09%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.03%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.14%               231.3MiB / 23.52GiB
+db-star             0.86%               17.84MiB / 23.52GiB
+redis-star          0.09%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.03%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.15%               231.3MiB / 23.52GiB
+db-star             0.32%               17.84MiB / 23.52GiB
+redis-star          0.10%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.03%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.15%               231.3MiB / 23.52GiB
+db-star             0.29%               17.84MiB / 23.52GiB
+redis-star          0.10%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.03%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.14%               231.3MiB / 23.52GiB
+db-star             0.32%               17.84MiB / 23.52GiB
+redis-star          0.09%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.03%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.17%               231.3MiB / 23.52GiB
+db-star             0.29%               17.84MiB / 23.52GiB
+redis-star          0.09%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.03%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.16%               231.3MiB / 23.52GiB
+db-star             0.91%               17.95MiB / 23.52GiB
+redis-star          0.09%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.03%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.13%               231.3MiB / 23.52GiB
+db-star             0.29%               17.86MiB / 23.52GiB
+redis-star          0.10%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.03%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.13%               231.3MiB / 23.52GiB
+db-star             0.31%               17.86MiB / 23.52GiB
+redis-star          0.09%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.03%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.15%               231.3MiB / 23.52GiB
+db-star             0.30%               17.86MiB / 23.52GiB
+redis-star          0.09%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.03%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.13%               231.3MiB / 23.52GiB
+db-star             0.28%               17.86MiB / 23.52GiB
+redis-star          0.09%               2.789MiB / 23.52GiB
+NAME                CPU %               MEM USAGE / LIMIT
+certbot-star        0.00%               3.473MiB / 23.52GiB
+sshd-star           0.03%               20.7MiB / 23.52GiB
+nginx-star          0.00%               27.74MiB / 23.52GiB
+nginx-rtmp-star     0.00%               4.598MiB / 23.52GiB
+web-star            0.14%               231.3MiB / 23.52GiB
+db-star             0.28%               17.98MiB / 23.52GiB
+redis-star          0.10%               2.789MiB / 23.52GiB
