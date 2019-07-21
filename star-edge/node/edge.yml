@@ -15,6 +15,7 @@ services:
           trap "docker rm -f edge-${id}" SIGTERM
           echo "Init work ..."
           docker rm -f edge-${id}
+          docker network disconnect --force host edge-${id}
           # if DOCKER_CLI_EXPERIMENTAL=enabled docker manifest inspect $$EDGE_IMAGE > /dev/null; then
           #   docker rmi $$EDGE_IMAGE
           # fi
