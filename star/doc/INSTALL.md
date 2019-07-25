@@ -74,6 +74,7 @@ sudo mount -a
 sudo ufw default deny
 
 sudo ufw allow from 140.116.164.128/27 to any port 22019    # ssh
+sudo ufw allow from 140.116.215.192/28 to any port 22019    # ssh
 sudo ufw allow from 10.27.164.151/32 to any port 22019      # ssh for RPi
 sudo ufw allow from 10.27.164.153/32 to any port 22019      # ssh for edge
 sudo ufw allow from 140.116.221.10/32 to any port 22019     # ssh for VPN
@@ -85,10 +86,11 @@ sudo sed -i '/ufw-before-input.*icmp/s/ACCEPT/DROP/g' /etc/ufw/before.rules
 $ sudo nano /etc/ufw/before.rules
 # add ↓ above ufw-before-input.*icmp
 -A ufw-before-input -s 140.116.164.128/27 -p icmp --icmp-type echo-request -j ACCEPT
+-A ufw-before-input -s 140.116.215.192/28 -p icmp --icmp-type echo-request -j ACCEPT
 -A ufw-before-input -s 140.116.221.10/32  -p icmp --icmp-type echo-request -j ACCEPT
 
 sudo ufw enable
-sudo service ufw restart
+sudo service ufw **restart**
 ```
 
 ## Install opensssh-server
@@ -121,7 +123,9 @@ https://gist.github.com/happyincent/c5c56a73ff35212a3bf0af365b03daee
 ## Change welcome message
 ```
 $ sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/10-help-text
+$ sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/80-livepatch
 $ sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/91-release-upgrade
+$ sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/95-hwe-eol
 $ sudo nano /etc/update-motd.d/10-help-text
 printf "  _____ _______ _           _\n"
 printf " |_   _|__   __| |         | |\n"
