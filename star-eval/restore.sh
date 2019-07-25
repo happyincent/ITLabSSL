@@ -11,7 +11,7 @@ echo Restore star project ...
 time sudo tar --same-owner -zxpf star.tar.gz && echo -e "\nOK\n"
 
 echo Restore Docker images ...
-time ls *:star.tar.gz | xargs -P7 -I{} sh -c "gunzip -c {} | docker load" &> /dev/null && echo -e "\nOK\n"
+time ls *:star.tar.gz | xargs -P7 -I{} sh -c "gunzip -c {} | sudo docker load" &> /dev/null && echo -e "\nOK\n"
 
 echo Start all Docker containers ...
-time sudo docker-compose -f star/docker-compose.yml up -d &> /dev/null && echo -e "\nOK"
+time /home/itlab/.local/bin/docker-compose -f star/docker-compose.yml up -d &> /dev/null && echo -e "\nOK"
