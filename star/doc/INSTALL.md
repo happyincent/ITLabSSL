@@ -29,16 +29,12 @@ sudo apt install ./code.deb
 
 ### docker
 ```
-$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-$ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-$ sudo apt update
-$ sudo apt install -y docker-ce
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker $USER
 
-$ sudo usermod -aG docker $USER
-# logout & login
-$ docker --version
-
-$ sudo nano /etc/docker/daemon.json
+sudo mkdir -p /etc/docker/
+sudo nano /etc/docker/daemon.json
 {
   "log-driver": "json-file",
   "log-opts": {
@@ -46,24 +42,15 @@ $ sudo nano /etc/docker/daemon.json
     "max-file": "3"
   }
 }
-$ sudo systemctl daemon-reload
-$ sudo systemctl restart docker
+
+sudo systemctl restart docker
 ```
 
 ### docker-compose
 ```
-$ sudo apt install jq
-
-$ nano ~/Downloads/install-docker-compose.sh
-#!/bin/bash
-compose_version=$(curl https://api.github.com/repos/docker/compose/releases/latest | jq .name -r)
-output='/usr/local/bin/docker-compose'
-curl -L https://github.com/docker/compose/releases/download/$compose_version/docker-compose-$(uname -s)-$(uname -m) -o $output
-chmod +x $output
-echo $(docker-compose --version)
-
-$ chmod +x ~/Downloads/install-docker-compose.sh
-sudo ~/Downloads/install-docker-compose.sh
+pip install docker-compose
+nano .profile
+> PATH="$HOME/.local/bin:$PATH"
 ```
 
 ## Mount disk

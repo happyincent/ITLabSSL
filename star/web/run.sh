@@ -21,8 +21,8 @@ python /www/manage.py collectstatic --noinput
 
 # load and start supervisord jobs
 supervisord -c /etc/supervisord.conf
-supervisorctl start gunicorn
-supervisorctl start daphne
+supervisorctl start gunicorn # or python manage.py runserver 0.0.0.0:8000
+supervisorctl start daphne # or python manage.py runserver 0.0.0.0:8001
 
 # setup permission
 chmod 644 /logrotate.conf
