@@ -4,10 +4,10 @@
 ## Enviornment
 ```
 $ cat <(echo "OS:     " `lsb_release -d | cut -f2`) <(echo "Kernel: " `uname -a | cut -d' ' -f1,3,14`) <(docker --version) <(docker-compose --version)
-OS:      Ubuntu 16.04.6 LTS
-Kernel:  Linux 4.15.0-48-generic x86_64
-Docker version 18.09.5, build e8ff056
-docker-compose version 1.24.0, build 0aa59064
+OS:      Ubuntu 18.04.2 LTS
+Kernel:  Linux 4.18.0-25-generic x86_64
+Docker version 19.03.0, build aeac949
+docker-compose version 1.24.1, build 4667896
 ```
 
 ## APT Install
@@ -123,6 +123,7 @@ https://gist.github.com/happyincent/c5c56a73ff35212a3bf0af365b03daee
 ## Change welcome message
 ```
 $ sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/10-help-text
+$ sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/50-motd-news
 $ sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/80-livepatch
 $ sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/91-release-upgrade
 $ sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/95-hwe-eol
