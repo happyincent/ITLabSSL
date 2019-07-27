@@ -1,6 +1,6 @@
 #!/bin/bash
 DIR=/home/itlab/Desktop/star
-BACKUP_DIR=/home/itlab/Desktop/backup-`date +"%Y%m%d"`
+BACKUP_DIR=`ls -d /home/itlab/Desktop/backup*[0-9] | sort -n | tail -n1`
 
 echo Remove star project ...
 sudo rm -rf $DIR && echo -e "OK\n"
