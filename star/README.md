@@ -16,14 +16,11 @@ docker-compose up -d
 
 ### Backup & Restore
 ```
-# git
-git clone git@itlab7f.ddns.net:ddl/star.git
+# Backup
+sudo bash doc/backup.sh
 
-# backup
-sudo tar -cvpf ~/Desktop/backup-star-data.tar db/data/ sshd/host_keys
-
-# restore (username=itlab)
-sudo tar --same-owner -xvf ~/Desktop/backup-star-data.tar
+# Restore (warning: it will remove star project!)
+sudo bash doc/restore.sh
 ```
 
 ### Configuration
