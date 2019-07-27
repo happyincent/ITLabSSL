@@ -31,7 +31,7 @@ pipdeptree
 ## daphne==2.3.0
 ## Django==2.2.3
 ## django-allauth==0.39.1
-## django-bootstrap3==11.0.0
+## django-bootstrap3==11.1.0
 ## django-cron==0.5.1
 ## django-redis==4.10.0
 ## djongo[json]==1.2.33

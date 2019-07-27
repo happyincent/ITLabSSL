@@ -23,7 +23,13 @@ Navigate to `/admin/sites/site/1/change/` with the superuser account.
 ---
 
 ## Usage
-`(sudo) docker-compose up -d`
+```
+# (Build Image)
+sudo docker-compose build
+
+# Run
+sudo docker-compose up -d
+```
 
 ### Debugging
 ```

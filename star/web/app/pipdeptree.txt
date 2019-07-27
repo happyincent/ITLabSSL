@@ -2,15 +2,12 @@ channels-redis==2.4.0
   - aioredis [required: ~=1.0, installed: 1.2.0]
     - async-timeout [required: Any, installed: 3.0.1]
     - hiredis [required: Any, installed: 1.0.0]
-  - asgiref [required: ~=3.0, installed: 3.1.2]
-    - async-timeout [required: >=2.0,<4.0, installed: 3.0.1]
+  - asgiref [required: ~=3.0, installed: 3.1.4]
   - channels [required: ~=2.2, installed: 2.2.0]
-    - asgiref [required: ~=3.0, installed: 3.1.2]
-      - async-timeout [required: >=2.0,<4.0, installed: 3.0.1]
+    - asgiref [required: ~=3.0, installed: 3.1.4]
     - daphne [required: ~=2.3, installed: 2.3.0]
-      - asgiref [required: ~=3.0, installed: 3.1.2]
-        - async-timeout [required: >=2.0,<4.0, installed: 3.0.1]
-      - autobahn [required: >=0.18, installed: 19.6.2]
+      - asgiref [required: ~=3.0, installed: 3.1.4]
+      - autobahn [required: >=0.18, installed: 19.7.2]
         - cryptography [required: >=2.7, installed: 2.7]
           - asn1crypto [required: >=0.21.0, installed: 0.24.0]
           - cffi [required: >=1.8,!=1.11.3, installed: 1.12.3]
@@ -55,7 +52,7 @@ django-allauth==0.39.1
       - chardet [required: >=3.0.2,<3.1.0, installed: 3.0.4]
       - idna [required: >=2.5,<2.9, installed: 2.8]
       - urllib3 [required: >=1.21.1,<1.26,!=1.25.1,!=1.25.0, installed: 1.25.3]
-django-bootstrap3==11.0.0
+django-bootstrap3==11.1.0
 django-cron==0.5.1
   - Django [required: >=1.8.0, installed: 2.2.3]
     - pytz [required: Any, installed: 2019.1]
@@ -66,7 +63,7 @@ django-cron==0.5.1
       - sqlparse [required: Any, installed: 0.2.4]
 django-jsoneditor==0.1.4
   - packaging [required: Any, installed: 19.0]
-    - pyparsing [required: >=2.0.2, installed: 2.4.0]
+    - pyparsing [required: >=2.0.2, installed: 2.4.1.1]
     - six [required: Any, installed: 1.12.0]
 django-redis==4.10.0
   - Django [required: >=1.11, installed: 2.2.3]
@@ -88,7 +85,7 @@ jsonfield==2.0.2
     - pytz [required: Any, installed: 2019.1]
     - sqlparse [required: Any, installed: 0.2.4]
 pipdeptree==0.13.2
-  - pip [required: >=6.0.0, installed: 19.1.1]
+  - pip [required: >=6.0.0, installed: 19.2.1]
 psutil==5.6.3
 sshpubkeys==3.1.0
   - cryptography [required: >=2.1.4, installed: 2.7]
