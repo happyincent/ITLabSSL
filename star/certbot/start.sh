@@ -26,6 +26,10 @@ check_freq="${CHECK_FREQ:-30}"
 le_hook() {
     command="docker exec $LE_RENEW_ID nginx -s reload"
     eval $command
+    
+    # For GitLab
+    command="docker restart gitlab"
+    eval $command
 }
 
 le_fixpermissions() {

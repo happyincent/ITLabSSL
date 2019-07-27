@@ -89,6 +89,7 @@ services:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
       - '/tmp/letsencrypt-www/:/tmp/letsencrypt/'
       - './certbot/letsencrypt/:/etc/letsencrypt/'
+      - './certbot/start.sh:/bin/start.sh'
     environment:
       LE_RENEW_ID: nginx-star  # nginx's container name
       DOMAINS: ssl.itlab.ee.ncku.edu.tw
