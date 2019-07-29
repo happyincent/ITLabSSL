@@ -10,6 +10,5 @@ sudo usermod -aG docker $USER
 ## Docker Compose
 ```
 pip install docker-compose
-nano .profile
-> PATH="$HOME/.local/bin:$PATH"
+source .profile
 ```
