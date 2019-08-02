@@ -25,7 +25,7 @@ curl -o code.deb -L http://go.microsoft.com/fwlink/?LinkID=760868
 sudo apt install ./code.deb
 ```
 
-## Screen Resolution & Ignore LidSwitch
+## Screen Resolution & Ignore LidSwitch (Optional)
 ```
 cvt 1920 1080 # Calculate mode lines
 sudo xrandr --newmode "1920x1080_60.00"  173.00  1920 2048 2248 2576  1080 1083 1088 1120 -hsync +vsync
@@ -41,24 +41,22 @@ echo 'HandleLidSwitchDocked=ignore' | tee --append /etc/systemd/logind.conf
 sudo service systemd-logind restart
 ```
 
-## UFW
+## iptables
 ```
-sudo ufw default deny
+sudo iptables -P INPUT DROP
+sudo iptables -P FORWARD DROP
+sudo iptables -A INPUT -i lo -j ACCEPT
+sudo iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 
-sudo ufw allow from 140.116.164.128/27 to any port 22019    # ssh
-sudo ufw allow from 140.116.221.10/32 to any port 22019     # ssh for VPN
-sudo ufw allow from 0.0.0.0/0 to any port 5938              # teamviewer (accept exclusively)
+sudo iptables -A INPUT -s 140.116.164.128/27 -p icmp --icmp-type echo-request -j ACCEPT
+sudo iptables -A INPUT -s 140.116.215.192/28 -p icmp --icmp-type echo-request -j ACCEPT
+sudo iptables -A INPUT -s 140.116.221.10/32 -p icmp --icmp-type echo-request -j ACCEPT
 
-# drop icmp (allow ping)
-sudo sed -i '/ufw-before-input.*icmp/s/ACCEPT/DROP/g' /etc/ufw/before.rules
+sudo iptables -A INPUT -s 140.116.164.128/27 -p tcp --dport 22019 -j ACCEPT
+sudo iptables -A INPUT -s 140.116.215.192/28 -p tcp --dport 22019 -j ACCEPT
+sudo iptables -A INPUT -s 140.116.221.10/32 -p tcp --dport 22019 -j ACCEPT
 
-$ sudo nano /etc/ufw/before.rules
-# add ↓ above ufw-before-input.*icmp
--A ufw-before-input -s 140.116.164.128/27 -p icmp --icmp-type echo-request -j ACCEPT
--A ufw-before-input -s 140.116.221.10/32  -p icmp --icmp-type echo-request -j ACCEPT
-
-sudo ufw enable
-sudo service ufw restart
+sudo dpkg-reconfigure iptables-persistent
 ```
 
 ## Install opensssh-server
@@ -66,16 +64,13 @@ sudo service ufw restart
 sudo apt install openssh-server -y
 sudo update-rc.d -f ssh remove
 sudo update-rc.d -f ssh defaults
+
 cd /etc/ssh/
 sudo mkdir insecure_original_default_keys
 sudo mv ssh_host_* insecure_original_default_keys/
 sudo dpkg-reconfigure openssh-server
 
-sudo sed -i \
-         -e 's|#Port 22|Port 22019|' \
-         -e 's|#PasswordAuthentication yes|PasswordAuthentication no|' \
-         /etc/ssh/sshd_config
-
+sudo sed -i 's|#Port 22|Port 22019|' /etc/ssh/sshd_config
 sudo service ssh restart
 
 ssh-keygen -t rsa
@@ -87,12 +82,14 @@ chmod 640 ~/.ssh/authorized_keys
 ## Change welcome message
 ```
 sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/10-help-text
-sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/91-release-upgrade
-sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/80-livepatch
 sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/50-motd-news
+sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/80-livepatch
+sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/91-release-upgrade
 sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/95-hwe-eol
+sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/98-fsck-at-reboot
 
 sudo nano /etc/update-motd.d/10-help-text
+
 printf "  _____ _______ _           _\n"
 printf " |_   _|__   __| |         | |\n"
 printf "   | |    | |  | |     __ _| |__\n"
