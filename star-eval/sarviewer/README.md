@@ -44,7 +44,7 @@ If your current distribution (for example, CentOS 6) doesn't have these versions
         
 If you want to generate the graphs using **matplotlib** (in **Python 2.7**) you can install it with **pip**. In case you don't have pip [check the official guide](https://pip.pypa.io/en/stable/installing/#using-linux-package-managers) to install it using your chosen package manager. Once you have pip just:
 ```bash
-pip install matplotlib
+pip install matplotlib==1.5.3 --user
 ```
 
 * If you are going to use the mail option (to send the graphs via email) you will need **mutt**:

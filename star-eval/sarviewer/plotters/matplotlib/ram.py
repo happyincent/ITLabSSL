@@ -54,10 +54,10 @@ def generate_graph():
             cached_mem.append(str(int(row[5])/1024))
     
     # Plot lines
-    plt.plot(x,free_mem, label='Free', color='g', antialiased=True)
+    # plt.plot(x,free_mem, label='Free', color='g', antialiased=True)
     plt.plot(x,used_mem, label='Used', color='r', antialiased=True)
-    plt.plot(x,buffer_mem, label='Buffer', color='b', antialiased=True)
-    plt.plot(x,cached_mem, label='Cached', color='c', antialiased=True)
+    # plt.plot(x,buffer_mem, label='Buffer', color='b', antialiased=True)
+    # plt.plot(x,cached_mem, label='Cached', color='c', antialiased=True)
     
     # Graph properties
     plt.xlabel('Time',fontstyle='italic')

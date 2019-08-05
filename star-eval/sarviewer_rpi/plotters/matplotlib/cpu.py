@@ -54,7 +54,7 @@ def generate_graph():
     # Plot lines
     plt.plot(x,user_cpu, label='User %', color='g', antialiased=True)
     plt.plot(x,system_cpu, label='System %', color='r', antialiased=True)
-    plt.plot(x,idle_cpu, label='Idle %', color='b', antialiased=True)
+    # plt.plot(x,idle_cpu, label='Idle %', color='b', antialiased=True)
     
     # Graph properties
     plt.xlabel('Time',fontstyle='italic')
