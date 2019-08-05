@@ -78,28 +78,35 @@ sudo mkdir /media/data
 sudo mount -a
 ```
 
-## UFW
+## iptables
 ```
-sudo ufw default deny
+# Note: Docker daemon will add rules to allow all Docker services by default.
 
-sudo ufw allow from 140.116.164.128/27 to any port 22019    # ssh
-sudo ufw allow from 140.116.215.192/28 to any port 22019    # ssh
-sudo ufw allow from 10.27.164.151/32 to any port 22019      # ssh for RPi
-sudo ufw allow from 10.27.164.153/32 to any port 22019      # ssh for edge
-sudo ufw allow from 140.116.221.10/32 to any port 22019     # ssh for VPN
-sudo ufw allow from 0.0.0.0/0 to any port 5938              # teamviewer (accept exclusively)
+# Ping
+sudo iptables -A INPUT -s 140.116.164.128/27 -p icmp --icmp-type echo-request -j ACCEPT
+sudo iptables -A INPUT -s 140.116.215.192/28 -p icmp --icmp-type echo-request -j ACCEPT
+sudo iptables -A INPUT -s 140.116.221.10/32 -p icmp --icmp-type echo-request -j ACCEPT
 
-# drop icmp (allow ping)
-sudo sed -i '/ufw-before-input.*icmp/s/ACCEPT/DROP/g' /etc/ufw/before.rules
+# SSH
+sudo iptables -A INPUT -s 140.116.164.128/27 -p tcp --dport 22019 -j ACCEPT
+sudo iptables -A INPUT -s 140.116.215.192/28 -p tcp --dport 22019 -j ACCEPT
+sudo iptables -A INPUT -s 140.116.221.10/32 -p tcp --dport 22019 -j ACCEPT
 
-$ sudo nano /etc/ufw/before.rules
-# add ↓ above ufw-before-input.*icmp
--A ufw-before-input -s 140.116.164.128/27 -p icmp --icmp-type echo-request -j ACCEPT
--A ufw-before-input -s 140.116.215.192/28 -p icmp --icmp-type echo-request -j ACCEPT
--A ufw-before-input -s 140.116.221.10/32  -p icmp --icmp-type echo-request -j ACCEPT
+# TeamViewer
+sudo iptables -A INPUT -s 140.116.164.128/27 -p tcp --dport 5938 -j ACCEPT
+sudo iptables -A INPUT -s 140.116.215.192/28 -p tcp --dport 5938 -j ACCEPT
+sudo iptables -A INPUT -s 140.116.221.10/32 -p tcp --dport 5938 -j ACCEPT
 
-sudo ufw enable
-sudo service ufw **restart**
+# Accept localhost, exist & related packets
+sudo iptables -A INPUT -i lo -j ACCEPT
+sudo iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+
+# Drop other packet (make sure SSH has been accepted !!)
+sudo iptables -P INPUT DROP
+sudo iptables -P FORWARD DROP
+
+# Save rules
+sudo dpkg-reconfigure iptables-persistent
 ```
 
 ## Install opensssh-server
@@ -131,12 +138,15 @@ https://gist.github.com/happyincent/c5c56a73ff35212a3bf0af365b03daee
 
 ## Change welcome message
 ```
-$ sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/10-help-text
-$ sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/50-motd-news
-$ sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/80-livepatch
-$ sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/91-release-upgrade
-$ sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/95-hwe-eol
-$ sudo nano /etc/update-motd.d/10-help-text
+sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/10-help-text
+sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/50-motd-news
+sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/80-livepatch
+sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/91-release-upgrade
+sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/95-hwe-eol
+sudo sed -i '/^#/! s/^/# /g' /etc/update-motd.d/98-fsck-at-reboot
+
+sudo nano /etc/update-motd.d/10-help-text
+
 printf "  _____ _______ _           _\n"
 printf " |_   _|__   __| |         | |\n"
 printf "   | |    | |  | |     __ _| |__\n"
