@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block bootstrap3_title %}Home | ITLab SSL{% endblock %}
+
+{% block head %}
+<style>
+  .jumbotron {
+    height: 100%;
+    width: 100%;
+  }
+
+  .myimg {
+    max-height: 500px;
+  }
+
+  @media (max-height: 768px) {
+    .myimg {
+      max-height: 350px;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row clearfix">
+    <div class="col-md-12 column">
+      <div class="jumbotron center-block" style="padding-top: 10px;">
+        <h2>
+          Wellcome to ITLab Smart Street Light !
+        </h2>
+        <p>
+          This is a demo website.
+        </p>
+        <p>
+          <a class="btn btn-primary btn-large" href="{% url 'device_list' %}">Device List</a>
+          <a class="btn btn-success btn-large" href="{% url 'opendata' %}">Open Data</a>
+          <a class="btn btn-info btn-large" href="{% url 'aboutus' %}">About Us</a>
+        </p>
+        {% if user.is_superuser %}
+        <p>
+          <a class="btn btn-warning btn-large" href="{% url 'admin:auth_user_changelist' %}">Change User Permission</a>
+        </p>
+        {% endif %}
+        <br />
+        <img src="/static/home/image/system_architecture.png" class="myimg img-responsive center-block">
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}

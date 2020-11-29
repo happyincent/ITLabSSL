@@ -1,0 +1,21 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [ITLab SSL] Password Reset E-mail
+From: webmaster@localhost
+To: happyincent@gmail.com
+Date: Fri, 23 Nov 2018 11:04:51 -0000
+Message-ID: <154297109150.823.11176912478642794597@581634bc82b1>
+
+Hello from web!
+
+You're receiving this e-mail because you or someone else has requested a password for your user account.
+It can be safely ignored if you did not request a password reset. Click the link below to reset your password.
+
+https://ssl.itlab.ee.ncku.edu.tw:62400/accounts/password/reset/key/6-51j-e0b71eb03f5a45924da3/
+
+In case you forgot, your username is ddl.
+
+Thank you for using web!
+web
+-------------------------------------------------------------------------------

@@ -1,0 +1,11 @@
+*.pyc
+**/app/static/
+*.sock
+*.pid
+web/app/account/
+db/data/
+redis/data/
+sshd/host_keys/
+certbot/letsencrypt/
+log/
+authorized_keys

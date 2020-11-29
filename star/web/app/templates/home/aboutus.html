@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block bootstrap3_title %}About Us | ITLab SSL{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row clearfix">
+    <div class="col-md-12 column">
+      <ul class="breadcrumb">
+        <li>
+          <a href="{% url 'home' %}">Home</a>
+        </li>
+        <li class="active">
+          About Us
+        </li>
+      </ul>
+      <div class="row clearfix">
+        <div class="col-md-6 column">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">
+                <strong>DDL</strong>
+                <small>Full-Stack Developer</small>
+              </h3>
+            </div>
+            <div class="panel-body">
+              <img src="/static/home/email/ddl.png">
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">
+                <strong>bemore0127</strong>
+                <small>Sensor Engineer</small>
+              </h3>
+            </div>
+            <div class="panel-body">
+              <img src="/static/home/email/bemore0127.png">
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">
+                <strong>Beargoer</strong>
+                <small>Advisor</small>
+              </h3>
+            </div>
+            <div class="panel-body">
+              <img src="/static/home/email/beargoer.png">
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">
+                <strong>C.S. Yang</strong>
+                <small>Professor</small>
+              </h3>
+            </div>
+            <div class="panel-body">
+              <img src="/static/home/email/csyang.png">
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 column">
+          <div class="embed-responsive embed-responsive-16by9">
+            <a href="https://itlab.ee.ncku.edu.tw/" target="_blank" style="display:inline-block;">
+              <div class="embed-responsive-item" style="z-index: 2; background-color: transparent;"></div>
+              <iframe class="embed-responsive-item" style="z-index: 1;" src="/static/home/pac-man.html"
+                frameborder="0"></iframe>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}

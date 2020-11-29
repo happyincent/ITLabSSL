@@ -1,0 +1,340 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block bootstrap3_title %}Open Data API | ITLab SSL{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/home/opendata.css" />
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row clearfix">
+    <div class="col-md-12 column">
+      <ul class="breadcrumb">
+        <li>
+          <a href="{% url 'home' %}">Home</a>
+        </li>
+        <li class="active">
+          Open Data API
+        </li>
+      </ul>
+      <form method="post" id="ResetForm" action="{% url 'reset_api_token' %}"
+        onsubmit="return confirm('Are you sure you want to reset?');">{% csrf_token %}</form>
+      <div class="form-group">
+        <label class="control-label" for="id_api_token">API token (TTL: <strong
+            id="id_ttl">{{ api_token_ttl }}</strong>)</label>
+        <div class="input-group">
+          <input type="text" name="apikey" value="{{ api_token }}" class="form-control" placeholder="EXPIRED"
+            id="id_api_token">
+          <span class="input-group-btn">
+            <input type="submit" value="Reset" form="ResetForm" class="btn btn-danger">
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row clearfix">
+    <div class="col-md-12">
+      <label class="control-label">API usage</label>
+      <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
+        <div class="panel panel-default panel-change">
+          <!-- 項目1 -->
+          <div class="panel-heading panel-heading-change" role="tab" id="collapseRawdata">
+            <div class="row content-row content-row-api">
+              <div class="col-md-2   label-success label-padding"><strong>POST</strong></div>
+              <div class="col-md-6   alert-success ellipsis label-padding">
+                <a class="api_a" role="button" data-toggle="collapse" data-parent="#accordion"
+                  href="#collapseRawdataOne" aria-expanded="false" aria-controls="collapseRawdataOne">
+                  /api/device</a>
+              </div>
+              <div class="col-md-4   alert-success  label-padding text-right label-notes">Query device list</div>
+            </div>
+          </div>
+          <div id="collapseRawdataOne" class="panel-collapse collapse" role="tabpanel"
+            aria-labelledby="collapseRawdata">
+            <div class="panel-body panel-body-change panel-body-api">
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">Description</div>
+                <div class="col-md-10 api-doc-item-data">
+                  List all devices
+                </div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-12 label-info label-padding"><strong>Request</strong></div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">Method</div>
+                <div class="col-md-10 api-doc-item-data">
+                  <strong>POST</strong>
+                </div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">URI</div>
+                <div class="col-md-10 api-doc-item-data">
+                  <a>https://ssl.itlab.ee.ncku.edu.tw/api/device</a>
+                </div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">Request header</div>
+                <div class="col-md-10 api-doc-item-data">
+                  <p>● Content-Type : application/json; charset=utf-8</p>
+                </div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">Request body</div>
+                <div class="col-md-10 api-doc-item-data">
+                  <p>● "user" : Username (String)</p>
+                  <p>● "token" : API token (String)</p>
+                </div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">Request body example</div>
+                <div class="col-md-10 api-doc-item-data">
+                  <p></p>
+                  <small>{ "user":"itlab", "token":"54c51ef2-cb2f-4000-9500-6d4af31e7a02" }</small>
+                  <p></p>
+                </div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">Sample code</div>
+                <div class="col-md-10 api-doc-item-data">
+                  <a href="/static/home/code/api_device.py.txt" target="_blank">api_device.py.txt</a>
+                </div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-12 label-info label-padding"><strong>Success Response</strong></div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">Response CODE</div>
+                <div class="col-md-10 api-doc-item-data">
+                  <p>200 (OK) : Query Successfully</p>
+                </div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">Data type</div>
+                <div class="col-md-10 api-doc-item-data">
+                  <strong>JSON</strong>
+                </div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">Response message parameters</div>
+                <div class="col-md-10 api-doc-item-data">
+                  <p>● "id" : Device ID (String)</p>
+                  <p>● "longitude" : Longitude (Double)</p>
+                  <p>● "latitude" : Latitude (Double)</p>
+                </div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">Response example</div>
+                <div class="col-md-10 api-doc-item-data">
+                  <small>[{"id": "TX2_1", "longitude": 120.22283, "latitude": 22.99672}, {"id": "RPi_1", "longitude":
+                    120.22283, "latitude": 22.99872}, ...]</small>
+                </div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-12 label-info label-padding"><strong>Error Response</strong></div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">Response CODE</div>
+                <div class="col-md-10 api-doc-item-data">
+                  <p>403 (Forbidden) : Token Authentication Fail</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <!-- 項目1 -->
+          <br>
+          <!-- 項目2 -->
+          <div class="panel-heading panel-heading-change" role="tab" id="collapseRawdata">
+            <div class="row content-row content-row-api">
+              <div class="col-md-2   label-success label-padding"><strong>POST</strong></div>
+              <div class="col-md-6   alert-success ellipsis label-padding">
+                <a class="api_a" role="button" data-toggle="collapse" data-parent="#accordion"
+                  href="#collapseRawdataTwo" aria-expanded="false" aria-controls="collapseRawdataTwo">
+                  /api/history/${Device_ID}</a>
+              </div>
+              <div class="col-md-4   alert-success  label-padding text-right label-notes">Query historical information
+              </div>
+            </div>
+          </div>
+          <div id="collapseRawdataTwo" class="panel-collapse collapse" role="tabpanel"
+            aria-labelledby="collapseRawdata">
+            <div class="panel-body panel-body-change panel-body-api">
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">Description</div>
+                <div class="col-md-10 api-doc-item-data">
+                  Get historical information within a period of time
+                </div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-12 label-info label-padding"><strong>Request</strong></div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">Method</div>
+                <div class="col-md-10 api-doc-item-data">
+                  <strong>POST</strong>
+                </div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">URI</div>
+                <div class="col-md-10 api-doc-item-data">
+                  <a>https://ssl.itlab.ee.ncku.edu.tw/api/history/<strong>${Device_ID}</strong></a>
+                </div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">Path parameters</div>
+                <div class="col-md-10 api-doc-item-data">
+                  <p>● Device_ID : Device ID of the streetlight</p>
+                </div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">Request header</div>
+                <div class="col-md-10 api-doc-item-data">
+                  <p>● Content-Type : application/json; charset=utf-8</p>
+                </div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">Request body</div>
+                <div class="col-md-10 api-doc-item-data">
+                  <p>● "user" : Username (String)</p>
+                  <p>● "token" : API token (String)</p>
+                  <p>● "ts_begin" : Unix timestamp - Start time (Integer)</p>
+                  <p>● "ts_end" : Unix timestamp - End time (Integer)</p>
+                </div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">Request body example</div>
+                <div class="col-md-10 api-doc-item-data">
+                  <p></p>
+                  <small>{ "user":"itlab", "token":"54c51ef2-cb2f-4000-9500-6d4af31e7a02", "ts_begin":"1560801000",
+                    "ts_end":"1560803000" }</small>
+                  <p></p>
+                </div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">Sample code</div>
+                <div class="col-md-10 api-doc-item-data">
+                  <a href="/static/home/code/api_history.py.txt" target="_blank">api_history.py.txt</a>
+                </div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-12 label-info label-padding"><strong>Success Response</strong></div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">Response CODE</div>
+                <div class="col-md-10 api-doc-item-data">
+                  <p>200 (OK) : Query Successfully</p>
+                </div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">Data type</div>
+                <div class="col-md-10 api-doc-item-data">
+                  <strong>JSON</strong>
+                </div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">Response message parameters</div>
+                <div class="col-md-10 api-doc-item-data">
+                  <p>● "id" : id (Integer)</p>
+                  <p>● "device_id" : Device ID (String)</p>
+                  <p>● "temperature" : °C (Double)</p>
+                  <p>● "humidity" : % (Double)</p>
+                  <p>● "pmat25" : μg/m<sup>3</sup> (Double)</p>
+                  <p>● "loudness" : dB (Double)</p>
+                  <p>● "light_intensity" : lux (Double)</p>
+                  <p>● "uv_intensity" : mW/cm<sup>2</sup> (Double)</p>
+                  <p>● "led_status" : ture or false (Boolean)</p>
+                  <p>● "timestamp" : date and time (ISO 8601)</p>
+                </div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">Response example</div>
+                <div class="col-md-10 api-doc-item-data">
+                  <small>[{"id": 61746, "device_id": "TX2_1", "temperature": 24.5, "humidity": 46.7, "pmat25": 6.0,
+                    "loudness": 54.69, "light_intensity": 62.5, "uv_intensity": 0.67, "led_status": false, "timestamp":
+                    "2019-06-18T03:59:59+08:00"}, {"id": 61766, "device_id": "TX2_1", "temperature": 24.5, "humidity":
+                    46.6, "pmat25": 6.0, "loudness": 53.71, "light_intensity": 1133.33, "uv_intensity": 0.54,
+                    "led_status": true, "timestamp": "2019-06-18T04:15:00+08:00"}]</small>
+                </div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-12 label-info label-padding"><strong>Error Response</strong></div>
+              </div>
+
+              <div class="row api-border-title">
+                <div class="col-md-2 api-doc-item">Response CODE</div>
+                <div class="col-md-10 api-doc-item-data">
+                  <p>403 (Forbidden) : Token Authentication Fail</p>
+                  <p>404 (Not Found) : Device_ID has no historical information in the period of time</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <!-- 項目2 -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script>
+  Number.prototype.toHHMMSS = function () {
+    var sec_num = parseInt(this, 10);
+    var hours = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    var seconds = sec_num - (hours * 3600) - (minutes * 60);
+    if (hours < 10) { hours = "0" + hours; }
+    if (minutes < 10) { minutes = "0" + minutes; }
+    if (seconds < 10) { seconds = "0" + seconds; }
+    return hours + ':' + minutes + ':' + seconds;
+  }
+
+  var ttl = Number("{{ api_token_ttl }}");
+
+  var x = setInterval(function () {
+    ttl -= 1;
+    document.getElementById("id_ttl").innerHTML = ttl.toHHMMSS();
+    if (ttl < 0) {
+      clearInterval(x);
+      document.getElementById("id_ttl").innerHTML = "EXPIRED";
+      document.getElementById("id_api_token").disabled = true;
+    }
+  }, 1000);
+</script>
+{% endblock %}

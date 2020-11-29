@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block bootstrap3_title %}Account | ITLab SSL{% endblock %}
+
+{% block content %}
+
+{% url 'account_login' as login %}
+{% url 'account_signup' as signup %}
+{% url 'account_logout' as logout %}
+{% url 'account_email' as email_url %}
+{% url 'account_change_password' as change_password %}
+
+{% block account_content %}
+{% endblock %}
+
+{% endblock %}

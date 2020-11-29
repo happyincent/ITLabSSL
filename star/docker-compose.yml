@@ -1,0 +1,129 @@
+version: '3'
+
+services:
+  db:
+    container_name: db-star
+    image: mongo:star
+    build: ./db
+    restart: always
+    volumes:
+      - './db/data/:/data/db/'
+  
+  redis:
+    container_name: redis-star
+    image: redis:star
+    build: ./redis
+    restart: always
+    command: redis-server --appendonly yes
+    volumes:
+      - './redis/data/:/data/'
+
+  web:
+    container_name: web-star
+    image: web:star
+    build: ./web
+    restart: always
+    command: sh /run.sh
+    volumes:      
+      - './web/app:/www/'
+      - './web/conf/supervisord.conf:/etc/supervisord.conf'
+      - './web/conf/logrotate.conf:/logrotate.conf'
+      - './web/conf/crontab:/crontab'
+      - './web/run.sh:/run.sh'
+      - './sshd/authorized_keys:/authorized_keys'
+      - './log/web/:/var/log/'
+      - '/media/data/record/:/media/data/record/'
+    depends_on:
+      - db
+      - redis
+  
+  nginx:
+    container_name: nginx-star
+    image: nginx:star
+    build: ./nginx
+    restart: always
+    command: sh /run.sh
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # - './nginx/conf/nginx_init.conf:/opt/nginx/nginx.conf'
+      - './nginx/conf/nginx.conf:/opt/nginx/nginx.conf'
+      - './nginx/conf/logrotate.conf:/logrotate.conf'
+      - './nginx/conf/crontab:/crontab'
+      - './nginx/run.sh:/run.sh'
+      - './web/app/:/www/'
+      - './log/nginx/:/opt/nginx/logs/'
+      - '/tmp/hls/:/tmp/hls/'
+      - '/tmp/key/:/tmp/key/'
+      - '/media/data/record/:/media/data/record/'
+      - '/tmp/letsencrypt-www/:/tmp/letsencrypt/'
+      - './certbot/letsencrypt/:/etc/letsencrypt/'
+    depends_on:
+      - web
+  
+  nginx-rtmp:
+    container_name: nginx-rtmp-star
+    image: nginx-rtmp:star
+    build: ./nginx-rtmp
+    restart: always
+    command: sh /run.sh
+    volumes:
+      - './nginx-rtmp/conf/nginx.conf:/opt/nginx/nginx.conf'
+      - './nginx-rtmp/conf/logrotate.conf:/logrotate.conf'
+      - './nginx-rtmp/conf/crontab:/crontab'
+      - './nginx-rtmp/run.sh:/run.sh'
+      - './log/nginx-rtmp/:/opt/nginx/logs/'
+      - '/tmp/hls/:/tmp/hls/'
+      - '/tmp/key/:/tmp/key/'
+      - '/media/data/record/:/media/data/record/'
+    depends_on:
+      - web
+  
+  certbot:
+    container_name: certbot-star
+    restart: always
+    build: ./certbot
+    image: certbot:star
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'
+      - '/tmp/letsencrypt-www/:/tmp/letsencrypt/'
+      - './certbot/letsencrypt/:/etc/letsencrypt/'
+      - './certbot/start.sh:/bin/start.sh'
+    environment:
+      LE_RENEW_ID: nginx-star  # nginx's container name
+      DOMAINS: ssl.itlab.ee.ncku.edu.tw
+      EMAIL: ddl.itlab@gmail.com
+      WEBROOT_PATH: /tmp/letsencrypt
+      EXP_LIMIT: 30
+      CHECK_FREQ: 15
+    depends_on:
+      - nginx
+
+  sshd:
+    container_name: sshd-star
+    image: sshd:star
+    build: ./sshd
+    restart: always
+    command: sh /run.sh
+    ports:
+      - "62422:22"
+    volumes:
+      - './sshd/host_keys/:/host_keys/'
+      - './sshd/authorized_keys:/home/limited-user/.ssh/authorized_keys'
+      - './sshd/conf/supervisord.conf:/etc/supervisord.conf'
+      - './sshd/conf/logrotate.conf:/logrotate.conf'
+      - './sshd/conf/crontab:/crontab'
+      - './sshd/scripts/monitor_keys.sh:/monitor_keys.sh'
+      - './sshd/scripts/monitor_sshd.sh:/monitor_sshd.sh'
+      - './sshd/scripts/check_online.sh:/check_online.sh'
+      - './sshd/run.sh:/run.sh'
+      - './log/sshd/:/var/log/'
+    environment:
+      USERNAME: limited-user
+      HOSTKEY_DIR: /host_keys
+      SSHD_LOG: /var/log/sshd.log
+      SSHD_ONLINE_LOG: /var/log/online/user.log
+    depends_on:
+      - web
+      - nginx-rtmp

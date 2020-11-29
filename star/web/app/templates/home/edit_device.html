@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block bootstrap3_title %}
+{% if object %}
+Edit Device | ITLab SSL
+{% else %}
+New Device | ITLab SSL
+{% endif %}
+{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-3 col-lg-4 col-lg-offset-4">
+      <div class="page-header">
+        <h1>
+          {% if object %}
+          Edit Device <small>{{ object }}</small>
+          {% else %}
+          New Device
+          {% endif %}
+        </h1>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          {% if object %}
+          <form method="post" id="ResetForm" action="{% url 'reset_token' pk=object %}"
+            onsubmit="return confirm('Are you sure you want to reset?');">{% csrf_token %}</form>
+          {% endif %}
+          <form method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% if object %}
+            <div class="form-group">
+              <label class="control-label" for="id_token">Token</label>
+              <div class="input-group">
+                <input type="text" name="token" value="{{ form.instance.token }}" class="form-control"
+                  placeholder="Error" id="id_token">
+                <span class="input-group-btn">
+                  <input type="submit" value="Reset" form="ResetForm" class="btn btn-danger">
+                </span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label" for="pir_timeout">PIR Timeout (ms)</label>
+              <div class="input-group">
+                <input disabled type="number" name="pir_timeout" value="" class="form-control"
+                  placeholder="WebSocket Connecting ..." id="pir_timeout">
+                <span class="input-group-btn">
+                  <button disabled id="pir_timeout_btn" type="button" class="btn btn-primary"
+                    onclick="ws_send('update_pir_millis');">Update</button>
+                </span>
+              </div>
+            </div>
+            <button class="btn btn-success" type="submit" onclick="ws_send('update_pir_millis');">Save</button>
+            {% else %}
+            <button class="btn btn-success" type="submit">Save</button>
+            {% endif %}
+            <a href="{% url 'device_list' %}" class="btn btn-default">Back</a>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+
+{% if object %}
+<script>
+  function ui_disabled(disable) {
+    document.getElementById('pir_timeout_btn').disabled = disable;
+    document.getElementById('pir_timeout').disabled = disable;
+  }
+</script>
+
+<!-- Websocket -->
+<script>
+  var ws_scheme = window.location.protocol == "https:" ? "wss://" : "ws://";
+
+  var socket = new WebSocket(ws_scheme + window.location.host + '/ws/browser/device/' + '{{ object }}');
+
+  socket.onopen = function() {
+    document.getElementById('pir_timeout').placeholder = "Waiting Edge ..."
+  };
+
+  socket.onmessage = function (e) {
+    var raw = JSON.parse(e.data);
+    
+    if (raw['cmd'] == 'update_info') {
+      document.getElementById('pir_timeout').value = raw['data']['pir_timeout'];
+      ui_disabled(false);
+    } else if (raw['cmd'] == 'error') {
+      document.getElementById('pir_timeout').placeholder = "Waiting Edge ..."
+      ui_disabled(true);
+    }
+
+    console.log(raw);
+  };
+
+  socket.onclose = function (e) {
+    alert('WebSocket connection closed unexpectedly.\nPlease refresh the page.');
+    document.getElementById('pir_timeout').placeholder = "WebSocket Connecting ..."
+    ui_disabled(true);
+  };
+</script>
+
+<script>
+  function ws_send(cmd) {
+    if (socket.readyState == 1) {
+      var pir_timeout = document.getElementById('pir_timeout').value;
+
+      if (cmd == 'update_pir_millis' && pir_timeout !== "") {
+        var msg = { 'cmd': cmd, 'data': { 'pir_timeout': pir_timeout } };
+
+        socket.send(JSON.stringify(msg));
+        console.log(JSON.stringify(msg));
+
+        ui_disabled(true);
+        document.getElementById('pir_timeout').value = '';
+      }
+    } else {
+      alert('WebSocket connection closed unexpectedly.\nPlease refresh the page.');
+    }
+  }
+</script>
+{% endif %}
+{% endblock %}

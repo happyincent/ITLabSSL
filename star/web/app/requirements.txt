@@ -1,0 +1,43 @@
+sqlparse==0.2.4
+# https://github.com/nesdis/djongo/issues/153
+
+Django>2
+
+djongo[json]
+# https://github.com/nesdis/djongo/issues/222
+
+django-redis
+
+gunicorn
+gevent
+
+channels
+channels-redis
+daphne
+
+django-allauth==0.39.1
+django-bootstrap3
+django-cron
+
+sshpubkeys
+psutil
+
+pipdeptree
+
+# ------------------------------------------------------
+
+## channels==2.2.0
+## channels-redis==2.4.0
+## daphne==2.3.0
+## Django==2.2.3
+## django-allauth==0.39.1
+## django-bootstrap3==11.1.0
+## django-cron==0.5.1
+## django-redis==4.10.0
+## djongo[json]==1.2.33
+## gevent==1.4.0
+## gunicorn==19.9.0
+## pipdeptree==0.13.2
+## psutil==5.6.3
+## sqlparse==0.2.4
+## sshpubkeys==3.1.0

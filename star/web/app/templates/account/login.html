@@ -1,0 +1,50 @@
+{% extends "account/base.html" %}
+{% load bootstrap3 %}
+{% load account %}
+
+{% block account_content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-3 col-lg-4 col-lg-offset-4">
+      <div class="page-header">
+        <h1>
+          Log In
+        </h1>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <form class="login" method="POST" action="{% url 'account_login' %}">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+            {% endif %}
+            <div class="form-actions">
+              <div class="row margin-bottom-20">
+                <div class="col-xs-12">
+                  <div class="btn-toolbar">
+                    {% bootstrap_button button_type='submit' content='Log In' button_class='btn-primary' value='submit' extra_classes='margin-right-15' %}
+                    {% url 'account_signup' as account_signup %}
+                    {% bootstrap_button button_type='link' content='Sign Up' button_class='btn-success' href=account_signup %}
+                  </div>
+                </div>
+              </div>
+
+              <p></p>
+
+              <div class="row">
+                <div class="col-xs-12 link-wrapper">
+                  {% url 'account_reset_password' as account_reset_password %}
+                  <a href="{{ account_reset_password }}" style="font-weight: bold !important;">Forgot password?</a>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

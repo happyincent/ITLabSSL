@@ -1,0 +1,292 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load static %}
+
+{% block bootstrap3_title %}{{ view.kwargs.pk }} | ITLab SSL{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/home/plugin/bootstrap-toggle.min-2.2.2.css" />
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row clearfix">
+    <div class="col-md-12 column">
+      <ul class="breadcrumb">
+        <li>
+          <a href="{% url 'home' %}">Home</a>
+        </li>
+        <li>
+          <a href="{% url 'device_list' %}">Device List</a>
+        </li>
+        <li class="active">
+          Device Info
+        </li>
+      </ul>
+      <div class="page-header">
+        <h3>{{ view.kwargs.pk }}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="row clearfix">
+    <div class="col-md-6 column">
+      {% if device_info %}
+      <div id="timestamp-div" class="alert alert-danger">
+        <strong id="timestamp">{{ device_info.timestamp | default_if_none:"Disconnected" }}</strong>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <tbody>
+            <tr>
+              <th class="col-xs-8">Temperature</th>
+              <td id="temperature">{{ device_info.temperature | default_if_none:"null" }} °C</td>
+            </tr>
+            <tr>
+              <th>Humidity</th>
+              <td id="humidity">{{ device_info.humidity | default_if_none:"null" }} %</td>
+            </tr>
+            <tr>
+              <th>PM2.5</th>
+              <td id="pmat25">{{ device_info.pmat25 | default_if_none:"null" }} μg/m<sup>3</sup></td>
+            </tr>
+            <tr>
+              <th>Loudness</th>
+              <td id="loudness">{{ device_info.loudness | default_if_none:"null" }} dB</td>
+            </tr>
+            <tr>
+              <th>Light Intensity</th>
+              <td id="light_intensity">{{ device_info.light_intensity | default_if_none:"null" }} lux</td>
+            </tr>
+            <tr>
+              <th>UV Intensity</th>
+              <td id="uv_intensity">{{ device_info.uv_intensity | default_if_none:"null" }} mW/cm<sup>2</sup></td>
+            </tr>
+            <tr>
+              <th>LED Status</th>
+              <td>
+                <p>
+                  <input disabled id="led_status" type="checkbox" data-toggle="toggle" data-onstyle="success"
+                    data-size="small">
+                  <input disabled id="pir_status" checked type="checkbox" data-toggle="toggle" data-on="PIR On"
+                    data-off="PIR Off" data-onstyle="warning" data-size="small">
+                </p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div id="timestamp-div" class="alert alert-danger">
+        <strong id="timestamp">Disconnected</strong>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <tbody>
+            <tr>
+              <th class="col-xs-8">Temperature</th>
+              <td id="temperature">null °C</td>
+            </tr>
+            <tr>
+              <th>Humidity</th>
+              <td id="humidity">null %</td>
+            </tr>
+            <tr>
+              <th>PM2.5</th>
+              <td id="pmat25">null μg/m<sup>3</sup></td>
+            </tr>
+            <tr>
+              <th>Loudness</th>
+              <td id="loudness">null dB</td>
+            </tr>
+            <tr>
+              <th>Light Intensity</th>
+              <td id="light_intensity">null lux</td>
+            </tr>
+            <tr>
+              <th>UV Intensity</th>
+              <td id="uv_intensity">null mW/cm<sup>2</sup></td>
+            </tr>
+            <tr>
+              <th>LED Status</th>
+              <td>
+                <input disabled id="led_status" type="checkbox" data-toggle="toggle" data-onstyle="success"
+                  data-size="small">
+                <input disabled id="pir_status" checked type="checkbox" data-toggle="toggle" data-on="PIR On"
+                  data-off="PIR Off" data-onstyle="warning" data-size="small">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+      {% if request.user.is_staff %}
+      <div class="row clearfix">
+        <div class="col-md-12 column">
+          <div class="btn-group">
+            <button disabled id="led_ctrl_btn" class="btn btn-primary" onclick="ws_send('led_ctrl');">LED On /
+              Off</button>
+            <button disabled id="pir_ctrl_btn" class="btn btn-success" onclick="ws_send('pir_ctrl');">PIR On /
+              Off</button>
+          </div>
+          <p></p>
+          <div class="btn-group">
+            <a href="{% url 'schedule' pk=view.kwargs.pk table='led' %}" class="btn btn-default">LED Schedule Table</a>
+            <a href="{% url 'schedule' pk=view.kwargs.pk table='pir' %}" class="btn btn-default">PIR Schedule Table</a>
+          </div>
+          <p></p>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+    <div class="col-md-6 column">
+      <div class="embed-responsive embed-responsive-16by9">
+        <video id="video1" class="embed-responsive-item" playsinline controls muted autoplay></video>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script src="/static/home/plugin/bootstrap-toggle.min-2.2.2.js"></script>
+
+<!-- Play HLS Video -->
+<script src="/static/home/plugin/hls.min-0.12.4.js"></script>
+<script>
+  var video = document.getElementById('video1');
+  if (Hls.isSupported()) {
+    var hls = new Hls();
+    hls.loadSource('{{ hls_url }}{{ view.kwargs.pk }}.m3u8');
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED, function () {
+      video.play();
+    });
+  }
+  else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = '{{ hls_url }}{{ view.kwargs.pk }}.m3u8';
+    video.addEventListener('loadedmetadata', function () {
+      video.play();
+    });
+  }
+</script>
+
+<!-- UI enable / disable function -->
+{% if request.user.is_staff %}
+<script>
+  function ui_disabled(disable, msg) {
+    document.getElementById('led_ctrl_btn').disabled = disable;
+    document.getElementById('pir_ctrl_btn').disabled = disable || document.getElementById('led_status').checked;
+
+    if (disable == true) {
+      document.getElementById('timestamp').innerHTML = 'Disconnected ' + msg;
+      document.getElementById('timestamp-div').className = "alert alert-danger";
+    } else {
+      document.getElementById('timestamp-div').className = "alert alert-info";
+    }
+  }
+</script>
+{% else %}
+<script>
+  function ui_disabled(disable, msg) {
+    if (disable == true) {
+      document.getElementById('timestamp').innerHTML = 'Disconnected ' + msg;
+      document.getElementById('timestamp-div').className = "alert alert-danger";
+    } else {
+      document.getElementById('timestamp-div').className = "alert alert-info";
+    }
+  }
+</script>
+{% endif %}
+
+<!-- Other functions -->
+<script>
+  function switch_diabled_toggle(id, opt) {
+    if (opt) {
+      $(id).bootstrapToggle('enable');
+      $(id).bootstrapToggle(Number(opt) ? 'on' : 'off');
+      $(id).bootstrapToggle('disable');
+    }
+  }
+
+  // Init with the last status of led, pir
+  switch_diabled_toggle('#led_status', '{{ device_info.led_status | default_if_none:"0" }}');
+  switch_diabled_toggle('#pir_status', '{{ device_info.pir_status | default_if_none:"0" }}');
+
+  // check if now - timestamp > 15s every 10s
+  async function check_edge() {
+    while (true) {
+      var time = document.getElementById('timestamp').innerHTML;
+      if (time.includes('(Browser)')) break;
+
+      var if_disconnected = (time.includes('Disconnected')) || ((new Date() - new Date(time)) > 15 * 1000);
+
+      ui_disabled(if_disconnected, '(Edge)');
+
+      await new Promise(resolve => setTimeout(resolve, 10 * 1000));
+    }
+  }
+
+  check_edge();
+</script>
+
+<!-- Websocket -->
+<script>
+  var ws_scheme = window.location.protocol == "https:" ? "wss://" : "ws://";
+
+  var socket = new WebSocket(ws_scheme + window.location.host + '/ws/browser/device/' + '{{ view.kwargs.pk }}');
+
+  socket.onmessage = function (e) {
+    var raw = JSON.parse(e.data);
+    if (raw['cmd'] == 'update_info') {
+      document.getElementById('timestamp').innerHTML = raw['data']['timestamp'];
+      document.getElementById('temperature').innerHTML = raw['data']['temperature'] + ' °C';
+      document.getElementById('humidity').innerHTML = raw['data']['humidity'] + ' %';
+      document.getElementById('pmat25').innerHTML = raw['data']['pmat25'] + ' μg/m<sup>3</sup>';
+      document.getElementById('loudness').innerHTML = raw['data']['loudness'] + ' dB';
+      document.getElementById('light_intensity').innerHTML = raw['data']['light_intensity'] + ' lux';
+      document.getElementById('uv_intensity').innerHTML = raw['data']['uv_intensity'] + ' mW/cm<sup>2</sup>';
+      switch_diabled_toggle('#led_status', raw['data']['led_status']);
+      switch_diabled_toggle('#pir_status', raw['data']['pir_status']);
+      ui_disabled(false, '');
+    } else if (raw['cmd'] == 'error') {
+      alert(raw['data']);
+      ui_disabled(true, '(Edge)');
+    }
+  };
+
+  socket.onclose = function (e) {
+    alert('WebSocket connection closed unexpectedly.\nPlease refresh the page.');
+    ui_disabled(true, '(Browser)');
+  };
+</script>
+
+{% if request.user.is_staff %}
+<script>
+  function ws_send(cmd) {
+    if (socket.readyState == 1) {
+      if (!document.getElementById('timestamp').innerHTML.includes('Disconnected')) {
+        var msg = null;
+
+        if (cmd == 'led_ctrl') {
+          var led_status = document.getElementById('led_status').checked ? true : false;
+          msg = { 'cmd': cmd, 'data': { 'led_status': !led_status } };
+        }
+        else if (cmd == 'pir_ctrl') {
+          var pir_status = document.getElementById('pir_status').checked ? true : false;
+          msg = { 'cmd': cmd, 'data': { 'pir_status': !pir_status } };
+        }
+
+        if (msg != null) {
+          socket.send(JSON.stringify(msg));
+          console.log(JSON.stringify(msg));
+        }
+      } else {
+        alert('Edge Device is disconnected.');
+      }
+    } else {
+      alert('WebSocket connection closed unexpectedly.\nPlease refresh the page.');
+    }
+  }
+</script>
+{% endif %}
+{% endblock %}
