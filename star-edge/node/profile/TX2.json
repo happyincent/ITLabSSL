@@ -1,0 +1,13 @@
+{
+    "NODE_NAME": "TX2",
+    "DEVICES": [
+        {
+            "id": "TX2_1",
+            "token": "57becf68-4228-462f-9cca-ddc3289ec233",
+            "postinfo_timetout": "10",
+            "serial_baud": "9600",
+            "serial_port": "/dev/ttyACM0",
+            "rtsp_uri": "rtsp://root:xxxxx@10.27.164.152/live3.sdp"
+        }
+    ]
+}
