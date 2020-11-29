@@ -1,0 +1,56 @@
+version: '3'
+
+networks:
+  docker_host:
+    external:
+      name: 'host'
+
+services:
+  ${NODE_NAME}_${id}-edge:
+    image: docker:latest
+    command:
+      - "/bin/sh"
+      - -c
+      - |
+          trap "docker rm -f edge-${id}" SIGTERM
+          echo "Init work ..."
+          docker rm -f edge-${id}
+          docker network disconnect --force host edge-${id}
+          # if DOCKER_CLI_EXPERIMENTAL=enabled docker manifest inspect $$EDGE_IMAGE > /dev/null; then
+          #   docker rmi $$EDGE_IMAGE
+          # fi
+          if [[ -z $$SERIAL_PORT ]]; then \
+            docker run  --name=edge-${id} \
+                        --net=host \
+                        $$EDGE_IMAGE \
+                        python -u /app/edge.py --netloc ${WS_NETLOC} --path ${WS_PATH} --device $$ID --token $$TOKEN --timeout $$POSTINFO_TIMEOUT --serial_port=$$SERIAL_PORT --serial_baud=$$SERIAL_BAUD &
+          else
+            docker run  --name=edge-${id} \
+                        --net=host \
+                        --device=$$SERIAL_PORT \
+                        $$EDGE_IMAGE \
+                        python -u /app/edge.py --netloc ${WS_NETLOC} --path ${WS_PATH} --device $$ID --token $$TOKEN --timeout $$POSTINFO_TIMEOUT --serial_port=$$SERIAL_PORT --serial_baud=$$SERIAL_BAUD &
+          fi
+          child=$$!
+          echo "Wait for edge-${id} PID=$$child ..."
+          wait $$child
+          echo "Exit ..."
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      - 'docker_host'
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+        delay: 10s
+      placement:
+        constraints:
+          - node.hostname == ${NODE_NAME}
+    environment:
+      ID: ${id}
+      TOKEN: ${token}
+      POSTINFO_TIMEOUT: ${postinfo_timetout}
+      SERIAL_PORT: ${serial_port}
+      SERIAL_BAUD: ${serial_baud}
+      EDGE_IMAGE: itlabstar/edge

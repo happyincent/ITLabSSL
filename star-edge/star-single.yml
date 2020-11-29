@@ -1,0 +1,124 @@
+version: '3'
+
+services:
+  autossh:
+    container_name: autossh-starE
+    image: autossh:starE
+    build: ./image/autossh
+    network_mode: "host"
+    restart: always
+    command:
+      - '/bin/sh'
+      - -c
+      - |
+          cat /keys/id_rsa.pub || ( \
+            yes n | ssh-keygen -t rsa -b 2048 -N '' -C 'autossh' -f /keys/id_rsa && \
+            cat /keys/id_rsa.pub
+          )
+          autossh -4 -M 0 -N \
+                  -o StrictHostKeyChecking=no \
+                  -o ServerAliveInterval=60 \
+                  -o ServerAliveCountMax=3 \
+                  -o ExitOnForwardFailure=yes \
+                  -L ${RTMP_NETLOC}:${RTMP_REMOTE_NETLOC} \
+                  -L ${WS_NETLOC}:${WS_REMOTE_NETLOC} \
+                  -i /keys/id_rsa \
+                  -p ${SSH_PORT} ${SSH_USER}@${SSH_NETLOC}
+    volumes:
+      - './image/autossh/keys/:/keys/'
+  
+  ffmpeg:
+    container_name: ffmpeg-starE
+    image: ffmpeg:starE
+    build: ./image/ffmpeg
+    network_mode: "host"
+    restart: always
+    command:
+      - '/bin/sh'
+      - -c
+      - |
+          ffmpeg \
+          -y -loglevel warning \
+          -use_wallclock_as_timestamps 1 \
+          -flags global_header \
+          -fflags +genpts \
+          -r 15 -rtsp_transport tcp \
+          -i $$RTSP_URI \
+          -vcodec copy -an \
+          -bsf:v h264_mp4toannexb \
+          -tune zerolatency \
+          -f flv -rtmp_live live -rtmp_buffer 0 -timeout 0 \
+          rtmp://${RTMP_NETLOC}${RTMP_PATH}$$ID?token=$$TOKEN
+    depends_on:
+      - autossh
+    env_file:
+      - './star-single.env'
+
+  edge:
+    container_name: edge-docker
+    image: docker:latest
+    network_mode: "host"
+    restart: always
+    command:
+      - "/bin/sh"
+      - -c
+      - |
+          trap "docker rm -f edge-starE" SIGTERM
+          echo "Init work ..."
+          docker rm -f edge-starE
+          docker network disconnect --force host edge-starE
+          docker build -f /var/star-edge/image/edge/Dockerfile -t $$EDGE_IMAGE /var/star-edge/image/edge/
+          if [[ -z $$SERIAL_PORT ]]; then \
+            docker run  --name=edge-starE \
+                        --net=host \
+                        --volume /var/star-edge/image/edge/app/:/app/ \
+                        $$EDGE_IMAGE \
+                        python -u /app/edge.py --netloc ${WS_NETLOC} --path ${WS_PATH} --device $$ID --token $$TOKEN --timeout $$POSTINFO_TIMEOUT --serial_port=$$SERIAL_PORT --serial_baud=$$SERIAL_BAUD &
+          else
+            docker run  --name=edge-starE \
+                        --net=host \
+                        --volume /var/star-edge/image/edge/app/:/app/ \
+                        --device=$$SERIAL_PORT \
+                        $$EDGE_IMAGE \
+                        python -u /app/edge.py --netloc ${WS_NETLOC} --path ${WS_PATH} --device $$ID --token $$TOKEN --timeout $$POSTINFO_TIMEOUT --serial_port=$$SERIAL_PORT --serial_baud=$$SERIAL_BAUD &
+          fi
+          child=$$!
+          echo "Wait for edge-starE PID=$$child ..."
+          wait $$child
+          echo "Exit ..."
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - '/var/star-edge/:/var/star-edge/'
+    depends_on:
+      - autossh
+    env_file:
+      - './star-single.env'
+    environment:
+      EDGE_IMAGE: edge:starE
+
+  # edge:
+  #   container_name: edge-starE
+  #   image: edge:starE
+  #   build: ./image/edge
+  #   network_mode: "host"
+  #   restart: always
+  #   command:
+  #     - "/bin/sh"
+  #     - -c
+  #     - |
+  #         python -u /app/edge.py \
+  #                   --netloc ${WS_NETLOC} \
+  #                   --path ${WS_PATH} \
+  #                   --device $$ID \
+  #                   --token $$TOKEN \
+  #                   --timeout $$POSTINFO_TIMEOUT \
+  #                   --serial_port=$$SERIAL_PORT \
+  #                   --serial_baud=$$SERIAL_BAUD
+  #   devices:
+  #     - '/dev/ttyACM0:/dev/ttyACM0'
+  #   volumes:
+  #     - './image/edge/app/:/app/'
+  #   depends_on:
+  #     - autossh
+  #   env_file:
+  #     - './star-single.env'

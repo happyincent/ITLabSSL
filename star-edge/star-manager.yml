@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  
+  visualizer:
+    image: dockersamples/visualizer:latest
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    ports:
+      - "50000:8080"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+        delay: 10s
+      placement:
+        constraints:
+          - node.role == manager
+          - node.hostname == star-manager
+  
+  live555proxy:
+    image: migoller/live555proxyserverdocker:latest
+    command:
+      - -v
+      - |
+        rtsp://root:xxxxx@10.27.164.152/live3.sdp
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    ports:
+      - "50001:554"
+      # - "50002:80"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+        delay: 10s
+      placement:
+        constraints:
+          - node.role == manager
+          - node.hostname == star-manager

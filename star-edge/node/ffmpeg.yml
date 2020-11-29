@@ -1,0 +1,41 @@
+version: '3'
+
+networks:
+  docker_host:
+    external:
+      name: 'host'
+
+services:
+
+  ${NODE_NAME}_${id}-ffmpeg:
+    image: itlabstar/ffmpeg
+    command:
+      - '/bin/sh'
+      - -c
+      - |
+          ffmpeg \
+          -y -loglevel warning \
+          -use_wallclock_as_timestamps 1 \
+          -flags global_header \
+          -fflags +genpts \
+          -r 15 -rtsp_transport tcp \
+          -i $$RTSP_URI \
+          -vcodec copy -an \
+          -bsf:v h264_mp4toannexb \
+          -tune zerolatency \
+          -f flv -rtmp_live live -rtmp_buffer 0 -timeout 0 \
+          rtmp://${RTMP_NETLOC}${RTMP_PATH}$$ID?token=$$TOKEN
+    networks:
+      - 'docker_host'
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+        delay: 10s
+      placement:
+        constraints:
+          - node.hostname == ${NODE_NAME}
+    environment:
+      ID: ${id}
+      TOKEN: ${token}
+      RTSP_URI: ${rtsp_uri}

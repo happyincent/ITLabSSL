@@ -1,0 +1,13 @@
+{
+    "NODE_NAME": "RPi",
+    "DEVICES": [
+        {
+            "id": "RPi_1",
+            "token": "ff84d723-57fb-4dc9-a248-6d14e969b8b5",
+            "postinfo_timetout": "10",
+            "serial_baud": "9600",
+            "serial_port": "/dev/ttyACM0",
+            "rtsp_uri": "rtsp://root:xxxxx@10.27.164.152/live3.sdp"
+        }
+    ]
+}
